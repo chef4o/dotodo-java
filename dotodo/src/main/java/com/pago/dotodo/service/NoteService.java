@@ -18,7 +18,9 @@ public class NoteService {
     private final UserService userService;
     private final UserTokenDto loggedUser;
 
-    public NoteService(NoteRepository noteRepository, UserService userService, UserTokenDto loggedUser) {
+    public NoteService(NoteRepository noteRepository,
+                       UserService userService,
+                       UserTokenDto loggedUser) {
         this.noteRepository = noteRepository;
         this.userService = userService;
         this.loggedUser = loggedUser;

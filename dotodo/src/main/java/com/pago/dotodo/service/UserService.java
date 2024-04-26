@@ -1,7 +1,7 @@
 package com.pago.dotodo.service;
 
-import com.pago.dotodo.model.dto.binding.UserTokenDto;
 import com.pago.dotodo.model.dto.UserDto;
+import com.pago.dotodo.model.dto.binding.UserTokenDto;
 import com.pago.dotodo.model.entity.User;
 import com.pago.dotodo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +29,10 @@ public class UserService {
     }
 
     private UserDto mapToDto(User user) {
-        StringBuilder address = new StringBuilder()
-                .append(user.getAddress().getStreet()).append(", ")
-                .append(user.getAddress().getTown().getName()).append("\s")
-                .append(user.getAddress().getZipCode()).append(", ")
-                .append(user.getAddress().getTown().getCountry().getName());
+        String address = user.getAddress().getStreet() + ", " +
+                user.getAddress().getTown().getName() + " " +
+                user.getAddress().getZipCode() + ", " +
+                user.getAddress().getTown().getCountry().getName();
 
         return new UserDto()
                 .setFirstName(user.getFirstName())
@@ -43,7 +42,7 @@ public class UserService {
                 .setDob(user.getDateOfBirth())
                 .setRole(user.getRole())
                 .setAvatarId(user.getImageUrl())
-                .setAddress(String.valueOf(address));
+                .setAddress(address);
     }
 
     public Optional<User> getUser(Long id) {

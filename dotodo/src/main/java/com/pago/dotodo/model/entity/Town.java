@@ -3,7 +3,7 @@ package com.pago.dotodo.model.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="towns")
+@Table(name = "towns")
 public class Town extends BaseEntity {
     private String name;
     private Long population;

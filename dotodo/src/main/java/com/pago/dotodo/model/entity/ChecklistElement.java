@@ -6,7 +6,7 @@ import jakarta.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name="checklist_elements")
+@Table(name = "checklist_elements")
 public class ChecklistElement extends BaseEntity {
     private String content;
     private String checklist;

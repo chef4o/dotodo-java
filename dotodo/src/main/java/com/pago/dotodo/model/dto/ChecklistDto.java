@@ -1,10 +1,8 @@
 package com.pago.dotodo.model.dto;
 
 import com.pago.dotodo.model.entity.ChecklistElement;
-import com.pago.dotodo.model.entity.User;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 
 public class ChecklistDto {

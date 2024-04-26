@@ -7,7 +7,6 @@ import org.springframework.web.context.annotation.SessionScope;
 
 @Configuration
 public class AppBeanConfiguration {
-
     @Bean
     @SessionScope
     public UserTokenDto loggedUser() {

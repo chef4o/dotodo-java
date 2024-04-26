@@ -43,7 +43,8 @@ public class ChecklistController {
     }
 
     @PostMapping()
-    public ResponseEntity<ChecklistDto> createChecklist(@RequestBody ChecklistDto checklistDto, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<ChecklistDto> createChecklist(@RequestBody ChecklistDto checklistDto,
+                                                        UriComponentsBuilder uriComponentsBuilder) {
         long checklistId = checklistService.addChecklist(checklistDto);
 
         return ResponseEntity.created(uriComponentsBuilder

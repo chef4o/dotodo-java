@@ -1,7 +1,7 @@
 package com.pago.dotodo.web;
 
-import com.pago.dotodo.model.dto.binding.UserTokenDto;
 import com.pago.dotodo.model.dto.NoteDto;
+import com.pago.dotodo.model.dto.binding.UserTokenDto;
 import com.pago.dotodo.service.NoteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +43,8 @@ public class NoteController {
     }
 
     @PostMapping()
-    public ResponseEntity<NoteDto> createNote(@RequestBody NoteDto noteDto, UriComponentsBuilder uriComponentsBuilder) {
+    public ResponseEntity<NoteDto> createNote(@RequestBody NoteDto noteDto,
+                                              UriComponentsBuilder uriComponentsBuilder) {
         long noteId = noteService.addNote(noteDto);
 
         return ResponseEntity.created(uriComponentsBuilder

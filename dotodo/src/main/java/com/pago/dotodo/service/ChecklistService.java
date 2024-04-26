@@ -7,7 +7,9 @@ import com.pago.dotodo.repository.ChecklistRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,7 +18,9 @@ public class ChecklistService {
     private final UserService userService;
     private final UserTokenDto loggedUser;
 
-    public ChecklistService(ChecklistRepository checklistRepository, UserService userService, UserTokenDto loggedUser) {
+    public ChecklistService(ChecklistRepository checklistRepository,
+                            UserService userService,
+                            UserTokenDto loggedUser) {
         this.checklistRepository = checklistRepository;
         this.userService = userService;
         this.loggedUser = loggedUser;

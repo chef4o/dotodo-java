@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name="notes")
-public class Note extends BaseEntity{
+@Table(name = "notes")
+public class Note extends BaseEntity {
     private String title;
     private String content;
     private Boolean isArchived;
@@ -96,6 +96,7 @@ public class Note extends BaseEntity{
         this.peers = peers;
         return this;
     }
+
     @ManyToOne
     public User getOwner() {
         return owner;
