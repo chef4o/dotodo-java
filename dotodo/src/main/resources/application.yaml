@@ -1,0 +1,27 @@
+logging:
+  level:
+    blog: WARN
+    org: WARN
+    org.hibernate.SQL: DEBUG
+server:
+  port: ${SERVER_PORT}
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/dotodo?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=EET
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    packages-to-scan:
+      - com.pago.dotodo.model.entity
+    generate-ddl: true
+  mvc:
+    hidden-method:
+      filter:
+        enabled: true
