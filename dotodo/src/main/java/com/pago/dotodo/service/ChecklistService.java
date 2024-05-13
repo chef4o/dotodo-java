@@ -3,7 +3,9 @@ package com.pago.dotodo.service;
 import com.pago.dotodo.model.dto.ChecklistDto;
 import com.pago.dotodo.model.dto.binding.UserTokenDto;
 import com.pago.dotodo.model.entity.Checklist;
+import com.pago.dotodo.model.entity.User;
 import com.pago.dotodo.repository.ChecklistRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,27 +19,29 @@ public class ChecklistService {
     private final ChecklistRepository checklistRepository;
     private final UserService userService;
     private final UserTokenDto loggedUser;
+    private final ModelMapper modelMapper;
 
     public ChecklistService(ChecklistRepository checklistRepository,
                             UserService userService,
-                            UserTokenDto loggedUser) {
+                            UserTokenDto loggedUser,
+                            ModelMapper modelMapper) {
         this.checklistRepository = checklistRepository;
         this.userService = userService;
         this.loggedUser = loggedUser;
+        this.modelMapper = modelMapper;
     }
 
     public List<ChecklistDto> getAll(Long userId) {
         return this.checklistRepository
                 .findChecklistByOwnerId(userId)
                 .stream()
-                .map(this::mapToDto)
+                .map(checklist -> modelMapper.map(checklist, ChecklistDto.class))
                 .collect(Collectors.toList());
     }
 
     public Optional<ChecklistDto> getById(Long checklistId) {
-        return this.checklistRepository
-                .findById(checklistId)
-                .map(this::mapToDto);
+        return Optional.ofNullable(modelMapper
+                .map(this.checklistRepository.findById(checklistId), ChecklistDto.class));
     }
 
     public void deleteById(Long checklistId) {
@@ -51,21 +55,10 @@ public class ChecklistService {
                 .setArchived(false)
                 .setStartDate(LocalDateTime.now())
                 .setTrackProgress("New")
-                .setOwner(userService.getUser(loggedUser.getId()).orElseThrow())
+                .setOwner(modelMapper
+                        .map(userService.getUserById(loggedUser.getId()), User.class))
                 .setElements(new HashSet<>());
 
         return checklistRepository.save(newChecklist).getId();
-    }
-
-    private ChecklistDto mapToDto(Checklist checklist) {
-        return new ChecklistDto()
-                .setTitle(checklist.getTitle())
-                .setContent(checklist.getContent())
-                .setArchived(checklist.getArchived())
-                .setStartDate(checklist.getStartDate())
-                .setDueDate(checklist.getDueDate())
-                .setCompletedOn(checklist.getCompletedOn())
-                .setTrackProgress(checklist.getTrackProgress())
-                .setElements(checklist.getElements());
     }
 }

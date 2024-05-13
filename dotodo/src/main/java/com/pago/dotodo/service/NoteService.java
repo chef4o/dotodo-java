@@ -3,7 +3,9 @@ package com.pago.dotodo.service;
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.dto.binding.UserTokenDto;
 import com.pago.dotodo.model.entity.Note;
+import com.pago.dotodo.model.entity.User;
 import com.pago.dotodo.repository.NoteRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,27 +19,29 @@ public class NoteService {
     private final NoteRepository noteRepository;
     private final UserService userService;
     private final UserTokenDto loggedUser;
+    private final ModelMapper modelMapper;
 
     public NoteService(NoteRepository noteRepository,
                        UserService userService,
-                       UserTokenDto loggedUser) {
+                       UserTokenDto loggedUser,
+                       ModelMapper modelMapper) {
         this.noteRepository = noteRepository;
         this.userService = userService;
         this.loggedUser = loggedUser;
+        this.modelMapper = modelMapper;
     }
 
     public List<NoteDto> getAll(Long userId) {
         return this.noteRepository
                 .findNotesByOwnerId(userId)
                 .stream()
-                .map(this::mapToDto)
+                .map(note -> modelMapper.map(note, NoteDto.class))
                 .collect(Collectors.toList());
     }
 
     public Optional<NoteDto> getById(Long noteId) {
-        return this.noteRepository
-                .findById(noteId)
-                .map(this::mapToDto);
+        return Optional.ofNullable(modelMapper.map(this.noteRepository
+                .findById(noteId), NoteDto.class));
     }
 
     public void deleteById(Long noteId) {
@@ -51,22 +55,10 @@ public class NoteService {
                 .setArchived(false)
                 .setStartDate(LocalDateTime.now())
                 .setTrackProgress("New")
-                .setOwner(userService
-                        .getUser(loggedUser.getId())
-                        .orElseThrow())
+                .setOwner(modelMapper
+                        .map(userService.getUserById(loggedUser.getId()), User.class))
                 .setPeers(new HashSet<>());
 
         return noteRepository.save(newNote).getId();
-    }
-
-    private NoteDto mapToDto(Note note) {
-        return new NoteDto()
-                .setTitle(note.getTitle())
-                .setContent(note.getContent())
-                .setArchived(note.getArchived())
-                .setStartDate(note.getStartDate())
-                .setDueDate(note.getDueDate())
-                .setCompletedOn(note.getCompletedOn())
-                .setTrackProgress(note.getTrackProgress());
     }
 }
