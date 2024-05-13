@@ -7,7 +7,8 @@ import jakarta.persistence.*;
 public class Address extends BaseEntity {
     private String street;
     private String zipCode;
-    private Town town;
+    private String town;
+    private String country;
 
     public Address() {
     }
@@ -30,13 +31,21 @@ public class Address extends BaseEntity {
         return this;
     }
 
-    @ManyToOne
-    public Town getTown() {
+    public String getTown() {
         return town;
     }
 
-    public Address setTown(Town town) {
+    public Address setTown(String town) {
         this.town = town;
+        return this;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public Address setCountry(String country) {
+        this.country = country;
         return this;
     }
 }
