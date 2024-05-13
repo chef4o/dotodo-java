@@ -6,9 +6,9 @@ public class NoteDto {
     private String title;
     private String content;
     private Boolean isArchived;
-    private LocalDateTime startDate;
-    private LocalDateTime dueDate;
-    private LocalDateTime completedOn;
+    private String startDate;
+    private String dueDate;
+    private String completedOn;
     private String trackProgress;
 
     public String getTitle() {
@@ -38,29 +38,29 @@ public class NoteDto {
         return this;
     }
 
-    public LocalDateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public NoteDto setStartDate(LocalDateTime startDate) {
+    public NoteDto setStartDate(String startDate) {
         this.startDate = startDate;
         return this;
     }
 
-    public LocalDateTime getDueDate() {
+    public String getDueDate() {
         return dueDate;
     }
 
-    public NoteDto setDueDate(LocalDateTime dueDate) {
+    public NoteDto setDueDate(String dueDate) {
         this.dueDate = dueDate;
         return this;
     }
 
-    public LocalDateTime getCompletedOn() {
+    public String getCompletedOn() {
         return completedOn;
     }
 
-    public NoteDto setCompletedOn(LocalDateTime completedOn) {
+    public NoteDto setCompletedOn(String completedOn) {
         this.completedOn = completedOn;
         return this;
     }
