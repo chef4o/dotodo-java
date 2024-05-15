@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/notes")
-public class NoteController {
+public class NoteController extends BaseController {
 
     private final NoteService noteService;
     private final UserTokenDto loggedUser;
@@ -48,7 +48,7 @@ public class NoteController {
         long noteId = noteService.addNote(noteDto);
 
         return ResponseEntity.created(uriComponentsBuilder
-                        .path("/api/books/{id}").build(noteId))
+                        .path("/api/notes/{id}").build(noteId))
                 .build();
     }
 }

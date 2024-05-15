@@ -1,0 +1,98 @@
+.content.news {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.6vw;
+}
+
+.content.news h3 {
+    font-size: 2.2vw;
+    color: var(--color-body-background);
+    margin: 1vw 0 1.2vw;
+}
+
+.content.news .articles {
+    list-style: none;
+    padding: 0;
+    width: 50vw;
+    gap: 0.6vw;
+}
+
+.content.news li {
+    background: #fff;
+    box-shadow: var(--left-box-shadow);
+    margin-bottom: 1vw;
+}
+
+.content.news .news-article {
+    width: 55.5vw;
+}
+
+.content.news .news-article {
+    padding: 1vw 2vw;
+}
+
+.content.news .news-article img {
+    width: 100%;
+    height: auto;
+}
+
+.content.news .news-article h4 {
+    font-size: 1.6vw;
+    margin-top: 0.5vw;
+}
+
+.content.news .news-article .article-info * {
+    font-size: 1.2vw;
+}
+
+.content.news .news-article p {
+    font-size: 1.1vw;
+    line-height: 1.74vw;
+    text-align: justify;
+    max-height: 5vw;
+    overflow: hidden;
+}
+
+.content.news .news-article a {
+    color: var(--color-sky-blue);
+    font-size: 1.2vw;
+    text-decoration: none;
+}
+
+.content.news .news-article .comments {
+    font-size: 0.9vw;
+}
+
+.content.news .news-article .read-more {
+    font-size: 1.1vw;
+}
+
+.content.news .paging {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1vw;
+}
+
+.content.news .paging ul {
+    list-style: none;
+    display: flex;
+    gap: 0.6vw;
+    padding: 0;
+}
+
+.content.news .paging li {
+    padding: 0.1vh 0.5vw;
+}
+
+.content.news .paging li a {
+    text-decoration: none;
+    color: var(--color-body-background);
+    font-size: 1vw;
+}
+
+.content.news .paging span {
+    font-size: 0.9vw;
+    color: #666;
+    margin-left: 10px;
+}

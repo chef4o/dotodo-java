@@ -9,5 +9,4 @@ import java.util.List;
 @Repository
 public interface ChecklistRepository extends JpaRepository<Checklist, Long> {
     List<Checklist> findChecklistByOwnerId(Long ownerId);
-
 }

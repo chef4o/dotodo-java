@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/checklists")
-public class ChecklistController {
+public class ChecklistController extends BaseController {
 
     private final ChecklistService checklistService;
     private final UserTokenDto loggedUser;

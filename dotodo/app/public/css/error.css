@@ -1,0 +1,52 @@
+.error.auth {
+    color: var(--color-error-red);
+    font-size: 1vw;
+    padding-top: 0.1vw;
+    height: 1vw;
+}
+
+.error.contact {
+    color: var(--color-error-red);
+    font-size: 1.6vw;
+    padding-top: 0.1vw;
+}
+
+.error.auth.login {
+    font-size: 1vw;
+    width: 31vw;
+    text-align: right;
+}
+
+.error-field {
+    border-color: var(--color-error-red);
+}
+
+.error-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 5vw;
+}
+
+.error-page * {
+    margin-bottom: 2vw;
+}
+
+.error-page h1 {
+    font-size: 3vw;
+}
+
+.error-page i {
+    font-size: 5vw;
+}
+
+.error-page a {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.error-page p {
+    font-size: 2vw;
+    width: 30vw;
+}

@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+    padding-left: 10vw;
+    background-color: var(--color-body-background);
+}
+
+main {
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+    height: 100vh;
+    min-height: 465px;
+    gap: 5vw;
+    padding-right: 10vw;
+    background-color: var(--color-menu-cool-gray);
+}
+
+.content {
+    width: 60vw;
+    height: 93.1vh;
+    min-height: 430px;
+    margin-top: 3.5vh;
+    background-color: var(--color-gray-light);
+    box-shadow: var(--left-box-shadow);
+    overflow-y: auto;
+}
+
+main.home {
+    background-color: var(--color-menu-cool-gray);
+}
+
+main.notes {
+    background-color: var(--color-menu-soft-sky-blue);
+}
+
+main.checklists {
+    background-color: var(--color-menu-creamy-peach);
+}
+
+main.events {
+    background-color: var(--color-menu-green-light);
+}
+
+main.profile {
+    background-color: var(--color-menu-green-dark);
+}

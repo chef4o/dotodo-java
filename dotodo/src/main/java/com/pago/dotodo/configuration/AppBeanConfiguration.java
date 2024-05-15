@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.time.LocalDate;
@@ -53,6 +55,14 @@ public class AppBeanConfiguration {
                                 DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
             }
         });
+
+        modelMapper.addConverter(new Converter<Role, GrantedAuthority>() {
+            @Override
+            public GrantedAuthority convert(MappingContext<Role, GrantedAuthority> context) {
+                return new SimpleGrantedAuthority("ROLE_" + context.getSource().name());
+            }
+        });
+
         modelMapper.addConverter(new Converter<String, Role>() {
             @Override
             public Role convert(MappingContext<String, Role> mappingContext) {

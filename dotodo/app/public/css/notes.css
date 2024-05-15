@@ -1,0 +1,77 @@
+.content.notes .notes-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 2vw;
+    gap: 1.4vw;
+}
+
+.content.notes .note {
+    position: relative;
+    width: 17.8%;
+    height: 16vw;
+    background-color: var(--color-notes-bckgd);
+    box-shadow: var(--shadow-base);
+    padding: 1vw;
+    font-size: 1.2vw;
+    overflow: hidden;
+}
+
+.content.notes .note .delete-btn {
+    position: absolute;
+    bottom: -11vw;
+}
+
+.content.notes .note.active {
+    width: 38.5%;
+    overflow-y: auto;
+}
+
+.content.notes .note h3 {
+    border-bottom: 1px solid var(--color-notes-border);
+    margin-bottom: 0.8vw;
+}
+
+.content.notes .note button {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+}
+
+.content.notes .note.new {
+    background-color: var(--color-checklist-new-bckgd);
+}
+
+.content.notes .note.new input {
+    width: 8vw;
+    border: none;
+}
+
+.content.notes .note.new input.title {
+    background: none;
+    padding-bottom: 0.6vw;
+    border-bottom: 1px solid var(--color-notes-border);
+}
+
+.content.notes .note.new input.note-text {
+    margin-top: 1vw;
+}
+
+.content.notes .note.new button {
+    position: absolute;
+    bottom: -11vw;
+    right: 0.6vw;
+}
+
+.new-note {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.new-note button {
+    font-size: 2vw;
+    padding: 0.2vw 2vw;
+    height: 4vw;
+    background-color: var(--color-checklists-bckgd);
+}

@@ -4,7 +4,8 @@ public class UserTokenDto {
     private Long id;
     private String firstName;
     private String email;
-    private String nickname;
+    private String username;
+    private String role;
 
     public UserTokenDto() {
     }
@@ -36,12 +37,25 @@ public class UserTokenDto {
         return this;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getUsername() {
+        return username;
     }
 
-    public UserTokenDto setNickname(String nickname) {
-        this.nickname = nickname;
+    public UserTokenDto setUsername(String username) {
+        this.username = username;
         return this;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public UserTokenDto setRole(String role) {
+        this.role = role;
+        return this;
+    }
+
+    public boolean exists() {
+        return this.getId() != null;
     }
 }
