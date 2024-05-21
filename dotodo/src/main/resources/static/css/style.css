@@ -32,6 +32,9 @@
   --color-menu-icon-green-light: #676a5a;
   --color-menu-soft-gray: #909090;
   --color-menu-dark-soft-gray: #4c5b5b;
+  --color-menu-dark-soft-gray-transparent-01: rgba(76, 91, 91, 0.1);
+  --color-menu-dark-soft-gray-transparent-02: rgba(76, 91, 91, 0.2);
+  --color-menu-dark-soft-gray-transparent-04: rgba(76, 91, 91, 0.4);
   --color-ivory: #f2f0e6;
   --color-error-red: #5c0707;
   --color-notes-bckgd: #f7e971;
