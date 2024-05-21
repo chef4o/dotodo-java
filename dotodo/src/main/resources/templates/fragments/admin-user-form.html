@@ -1,0 +1,23 @@
+<form class="update-form" enctype="multipart/form-data" method="get">
+    <div class="param-group">
+        <div class="param">
+            <input id="email" type="text" name="email" th:value="${user.email}" disabled>
+        </div>
+
+        <div class="param">
+            <input id="nickname" type="text" name="nickName" th:value="${user.nickName}" disabled/>
+        </div>
+
+        <div class="param-role">
+            <input id="role" type="text" name="role" th:value="${user.role}" disabled/>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <a class="admin-form-btn"
+           th:href="@{'/admin-panel/edit/' + ${user.id}}">Edit</a>
+        <a class="admin-form-btn"
+           onclick="return confirm('Are you sure that you want to delete the marked user?');"
+           th:href="@{'/admin-panel/delete/' + ${user.id}}">Delete</a>
+    </div>
+</form>

@@ -1,0 +1,38 @@
+<form class="update-form" enctype="multipart/form-data"
+      th:method="patch"
+      th:action="@{/auth/login}">
+    <div class="param-group">
+        <div class="param">
+            <input id="email" type="text" name="email" th:value="${user.email}" required>
+        </div>
+
+        <div class="param">
+            <input id="nickname" type="text" name="nickName" th:value="${user.nickName}" required/>
+        </div>
+
+        <th:block th:if="${userToEdit != null && userToEdit.id == user.id}">
+            <select class="change-roles" name="new-role" required>
+                <option th:each="possibleRole : ${possibleRoles}"
+                        th:id="${user.role}"
+                        th:selected="${possibleRole == user.role}"
+                        th:value="${possibleRole}"
+                        th:text="${possibleRole}">
+                </option>
+            </select>
+        </th:block>
+
+        <th:block th:unless="${userToEdit != null && userToEdit.id == user.id}">
+            <div class="param-role">
+                <input id="role" type="text" name="role" th:value="${user.role}" disabled/>
+            </div>
+        </th:block>
+    </div>
+
+    <div class="btn-group">
+        <a class="admin-form-btn"
+           onclick="return confirm('Are you sure that you want to update the marked user?');"
+           th:href="@{'/admin-panel/edit/' + ${user.id}}">Update</a>
+        <a class="admin-form-btn"
+           th:href="@{'/admin-panel'}">Cancel</a>
+    </div>
+</form>
