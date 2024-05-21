@@ -1,0 +1,57 @@
+<div class="nav">
+    <div th:if="${showAuthModal != null}"
+         class="backdrop">
+    </div>
+
+    <div class="top-bar">
+        <p class="greeting"
+           th:if="${loggedUser != null}"
+           th:text="Hello, ${loggedUser.firstName ?: user.username}">
+        </p>
+
+        <ul class="top-bar-controls">
+            <th:block th:each="item : ${topbarNavItems}">
+                <li th:if="${loggedUser == null && item.get('name') != 'logout'}">
+                    <a th:href="${item.get('href')}" th:text="${item.get('name')}"></a>
+                </li>
+            </th:block>
+        </ul>
+    </div>
+
+    <div class="sidebar">
+        <div class="navigation">
+            <a th:href="@{/}" id="logo">
+                <img src="/images/logo_dark.png" alt="DOTODO"/>
+            </a>
+            <ul class="menu">
+                <th:block th:each="item: ${sidebarNavItems}">
+                    <th:block th:if="${item.get('name') != 'profile' ||
+                                    (item.get('name') == 'profile' && user != null && user._id != null)}">
+                        <li th:class="${pageName == item.get('name') ? item.get('name') + ' active' : item.get('name')}">
+                            <a th:href="${item.get('href')}">
+                                <i th:class="${item.get('icon')}"></i>
+                                <p th:text="${item.get('name')}"></p>
+                            </a>
+                        </li>
+                    </th:block>
+                </th:block>
+            </ul>
+        </div>
+
+        <div class="connect">
+            <th:block th:each="item: ${connectNavItems}">
+                <a th:href="${item.get('href')}" th:id="${item.get('name')}" target="_blank" rel="noreferrer">
+                    <i th:class="${item.get('icon')}"></i>
+                </a>
+            </th:block>
+        </div>
+    </div>
+
+    <ul class="bottom-bar">
+        <th:block th:each="item : ${bottombarNavItems}">
+            <li>
+                <a th:href="${item.get('href')}" th:text="${item.get('name')}"></a>
+            </li>
+        </th:block>
+    </ul>
+</div>
