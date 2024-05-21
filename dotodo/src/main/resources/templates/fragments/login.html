@@ -1,0 +1,38 @@
+<form class="auth-form login">
+    <button class="xmark">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="auth-fields">
+        <div class="username">
+            <label for="username">Username</label>
+            <div class="form-input">
+                <i class="fa-solid fa-user"></i>
+                <input id="username" name="username" type="text" autocomplete="off"/>
+            </div>
+
+<!--            <ng-container *ngIf="emailInput.touched">-->
+<!--                <div *ngIf="emailInput.errors?.['required']" class="error auth login email">-->
+<!--                    Email is required-->
+<!--                </div>-->
+<!--            </ng-container>-->
+        </div>
+
+        <div class="password">
+            <label for="password">Password</label>
+            <div class="form-input">
+                <i class="fa-solid fa-key"></i>
+                <input id="password" name="password" type="password" autocomplete="off"/>
+            </div>
+
+<!--            <ng-container *ngIf="passwordInput.touched">-->
+<!--                <div *ngIf="passwordInput.errors?.['required']" class="error auth login password">Password is required-->
+<!--                </div>-->
+<!--            </ng-container>-->
+        </div>
+    </div>
+
+    <!-- {validationErrors.login && <div class="error auth login">{validationErrors.login}</div>} -->
+
+    <button class="login">Login</button>
+</form>

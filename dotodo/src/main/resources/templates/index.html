@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/head}"></th:block>
+<body>
+<div id="root">
+    <main th:class="${pageName ?: 'home'}">
+        <th:block th:insert="~{fragments/nav}"></th:block>
+        <th:block th:insert="~{fragments/footer}"></th:block>
+        <th:block th:insert="~{${'fragments/' + (pageName ?: 'home')}}"></th:block>
+    </main>
+</div>
+</body>
+</html>
