@@ -1,0 +1,30 @@
+<div class="content news">
+    <div>
+        <h3>Latest news and updates</h3>
+        <ul class="articles">
+            <li class="article" *ngFor="let article of news">
+                <h4><a href="{{article.href}}">{{article.header}}</a></h4>
+                <div>
+                    Posted on <a href="#">{{article.uploadDate | date: 'd MMM yyyy'}}</a> in <a href="#">{{article.category}}</a>
+                </div>
+                <a class="comments" href="#">{{article.comments.length}} Comments</a>
+                <p>{{article.content | shrinkToFit: 260 }}</p>
+                <a class="read-more" href="blog-single-with-image.html">Read More</a>
+            </li>
+        </ul>
+        <div class="paging">
+            <ul>
+                <li class="selected">
+                    <a href="#">1</a>
+                </li>
+                <li>
+                    <a href="#">2</a>
+                </li>
+                <li>
+                    <a href="#">></a>
+                </li>
+            </ul>
+            <span>Page 1 of 2</span>
+        </div>
+    </div>
+</div>
