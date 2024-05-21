@@ -1,8 +1,44 @@
-.content.about {
+.content.about-us {
     padding: 3vw;
+    display: flex;
+    flex-direction: row;
+    gap: 4%;
+    flex-wrap: wrap;
 }
 
-.content.about h3  {
-    font-size: 4vw;
-    padding-bottom: 2vw;
-  }
+.content.about-us .main-info,
+.content.about-us .location {
+    width: 48%;
+}
+
+.content.about-us .main-info h1 {
+    font-size: 2vw;
+    padding-bottom: 1vw;
+}
+
+.content.about-us .main-info p {
+    font-size: 1.2vw;
+    font-weight: 300;
+    text-align: justify;
+}
+
+.content.about-us .main-info h3 {
+    text-align: left;
+}
+
+.location h2 {
+    font-size: 1.2vw;
+    padding: 0.8vw 0 1.6vw;
+    text-align: right;
+}
+
+.location {
+    width: 25.4vw;
+    height: 24.4vw;
+}
+
+.location #bing-map {
+    z-index: 15;
+    width: 25.4vw;
+    height: 24.4vw;
+}

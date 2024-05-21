@@ -25,7 +25,12 @@
     flex-direction: column;
     justify-content: center;
     gap: 1vw;
-    width: 50%;
+    width: 30vw;
+}
+
+.content.contact textarea {
+    max-width: 30vw;
+    max-height: 50vh;
 }
 
 .content.contact form h4 {
