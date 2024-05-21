@@ -5,6 +5,9 @@ logging:
     org.hibernate.SQL: DEBUG
 server:
   port: ${SERVER_PORT}
+app:
+  default:
+    password: test123
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
