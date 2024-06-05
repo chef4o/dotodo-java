@@ -1,7 +1,6 @@
 package com.pago.dotodo.service;
 
 import com.pago.dotodo.model.dto.UserDto;
-import com.pago.dotodo.model.dto.binding.UserTokenDto;
 import com.pago.dotodo.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
