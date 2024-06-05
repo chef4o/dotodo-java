@@ -4,20 +4,20 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "addresses")
-public class Address extends BaseEntity {
+public class AddressEntity extends BaseEntity {
     private String street;
     private String zipCode;
     private String town;
     private String country;
 
-    public Address() {
+    public AddressEntity() {
     }
 
     public String getStreet() {
         return street;
     }
 
-    public Address setStreet(String street) {
+    public AddressEntity setStreet(String street) {
         this.street = street;
         return this;
     }
@@ -26,7 +26,7 @@ public class Address extends BaseEntity {
         return zipCode;
     }
 
-    public Address setZipCode(String zipCode) {
+    public AddressEntity setZipCode(String zipCode) {
         this.zipCode = zipCode;
         return this;
     }
@@ -35,7 +35,7 @@ public class Address extends BaseEntity {
         return town;
     }
 
-    public Address setTown(String town) {
+    public AddressEntity setTown(String town) {
         this.town = town;
         return this;
     }
@@ -44,7 +44,7 @@ public class Address extends BaseEntity {
         return country;
     }
 
-    public Address setCountry(String country) {
+    public AddressEntity setCountry(String country) {
         this.country = country;
         return this;
     }

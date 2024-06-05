@@ -7,21 +7,21 @@ import java.util.Date;
 
 @Entity
 @Table(name = "checklist_elements")
-public class ChecklistElement extends BaseEntity {
+public class ChecklistElementEntity extends BaseEntity {
     private String content;
     private String checklist;
     private String status;
     private Boolean isArchived;
     private Date dueDate;
 
-    public ChecklistElement() {
+    public ChecklistElementEntity() {
     }
 
     public String getContent() {
         return content;
     }
 
-    public ChecklistElement setContent(String content) {
+    public ChecklistElementEntity setContent(String content) {
         this.content = content;
         return this;
     }
@@ -30,7 +30,7 @@ public class ChecklistElement extends BaseEntity {
         return checklist;
     }
 
-    public ChecklistElement setChecklist(String checklist) {
+    public ChecklistElementEntity setChecklist(String checklist) {
         this.checklist = checklist;
         return this;
     }
@@ -39,7 +39,7 @@ public class ChecklistElement extends BaseEntity {
         return status;
     }
 
-    public ChecklistElement setStatus(String status) {
+    public ChecklistElementEntity setStatus(String status) {
         this.status = status;
         return this;
     }
@@ -48,7 +48,7 @@ public class ChecklistElement extends BaseEntity {
         return isArchived;
     }
 
-    public ChecklistElement setArchived(Boolean archived) {
+    public ChecklistElementEntity setArchived(Boolean archived) {
         isArchived = archived;
         return this;
     }
@@ -57,7 +57,7 @@ public class ChecklistElement extends BaseEntity {
         return dueDate;
     }
 
-    public ChecklistElement setDueDate(Date dueDate) {
+    public ChecklistElementEntity setDueDate(Date dueDate) {
         this.dueDate = dueDate;
         return this;
     }

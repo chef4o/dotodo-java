@@ -1,13 +1,16 @@
 package com.pago.dotodo.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name="checklists")
-public class Checklist extends BaseEntity{
+@Table(name = "notes")
+public class NoteEntity extends BaseEntity {
     private String title;
     private String content;
     private Boolean isArchived;
@@ -15,18 +18,17 @@ public class Checklist extends BaseEntity{
     private LocalDateTime dueDate;
     private LocalDateTime completedOn;
     private String trackProgress;
-    private Set<ChecklistElement> elements;
-    private Set<User> peers;
-    private User owner;
+    private Set<UserEntity> peers;
+    private UserEntity owner;
 
-    public Checklist() {
+    public NoteEntity() {
     }
 
     public String getTitle() {
         return title;
     }
 
-    public Checklist setTitle(String title) {
+    public NoteEntity setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -35,7 +37,7 @@ public class Checklist extends BaseEntity{
         return content;
     }
 
-    public Checklist setContent(String content) {
+    public NoteEntity setContent(String content) {
         this.content = content;
         return this;
     }
@@ -44,7 +46,7 @@ public class Checklist extends BaseEntity{
         return isArchived;
     }
 
-    public Checklist setArchived(Boolean archived) {
+    public NoteEntity setArchived(Boolean archived) {
         isArchived = archived;
         return this;
     }
@@ -53,7 +55,7 @@ public class Checklist extends BaseEntity{
         return startDate;
     }
 
-    public Checklist setStartDate(LocalDateTime startDate) {
+    public NoteEntity setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
         return this;
     }
@@ -62,7 +64,7 @@ public class Checklist extends BaseEntity{
         return dueDate;
     }
 
-    public Checklist setDueDate(LocalDateTime dueDate) {
+    public NoteEntity setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
         return this;
     }
@@ -71,7 +73,7 @@ public class Checklist extends BaseEntity{
         return completedOn;
     }
 
-    public Checklist setCompletedOn(LocalDateTime completedOn) {
+    public NoteEntity setCompletedOn(LocalDateTime completedOn) {
         this.completedOn = completedOn;
         return this;
     }
@@ -80,37 +82,27 @@ public class Checklist extends BaseEntity{
         return trackProgress;
     }
 
-    public Checklist setTrackProgress(String trackProgress) {
+    public NoteEntity setTrackProgress(String trackProgress) {
         this.trackProgress = trackProgress;
         return this;
     }
 
     @OneToMany
-    public Set<ChecklistElement> getElements() {
-        return elements;
-    }
-
-    public Checklist setElements(Set<ChecklistElement> elements) {
-        this.elements = elements;
-        return this;
-    }
-
-    @ManyToMany
-    public Set<User> getPeers() {
+    public Set<UserEntity> getPeers() {
         return peers;
     }
 
-    public Checklist setPeers(Set<User> peers) {
+    public NoteEntity setPeers(Set<UserEntity> peers) {
         this.peers = peers;
         return this;
     }
 
     @ManyToOne
-    public User getOwner() {
+    public UserEntity getOwner() {
         return owner;
     }
 
-    public Checklist setOwner(User owner) {
+    public NoteEntity setOwner(UserEntity owner) {
         this.owner = owner;
         return this;
     }

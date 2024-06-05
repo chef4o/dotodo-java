@@ -1,9 +1,8 @@
 package com.pago.dotodo.service;
 
 import com.pago.dotodo.model.dto.ChecklistDto;
-import com.pago.dotodo.model.dto.binding.UserTokenDto;
-import com.pago.dotodo.model.entity.Checklist;
-import com.pago.dotodo.model.entity.User;
+import com.pago.dotodo.model.entity.ChecklistEntity;
+import com.pago.dotodo.model.entity.UserEntity;
 import com.pago.dotodo.repository.ChecklistRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -18,16 +17,13 @@ import java.util.stream.Collectors;
 public class ChecklistService {
     private final ChecklistRepository checklistRepository;
     private final UserService userService;
-    private final UserTokenDto loggedUser;
     private final ModelMapper modelMapper;
 
     public ChecklistService(ChecklistRepository checklistRepository,
                             UserService userService,
-                            UserTokenDto loggedUser,
                             ModelMapper modelMapper) {
         this.checklistRepository = checklistRepository;
         this.userService = userService;
-        this.loggedUser = loggedUser;
         this.modelMapper = modelMapper;
     }
 
@@ -49,14 +45,14 @@ public class ChecklistService {
     }
 
     public long addChecklist(ChecklistDto checklistDto) {
-        Checklist newChecklist = new Checklist()
+        ChecklistEntity newChecklist = new ChecklistEntity()
                 .setTitle(checklistDto.getTitle())
                 .setContent(checklistDto.getContent())
                 .setArchived(false)
                 .setStartDate(LocalDateTime.now())
                 .setTrackProgress("New")
                 .setOwner(modelMapper
-                        .map(userService.getUserById(loggedUser.getId()), User.class))
+                        .map(userService.getUserById(1L), UserEntity.class)) //TODO: change ID
                 .setElements(new HashSet<>());
 
         return checklistRepository.save(newChecklist).getId();
