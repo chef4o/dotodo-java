@@ -1,14 +1,14 @@
-<th:block th:fragment="e403">
+<th:block th:fragment="e403" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <h1 class="error">403 - Access denied</h1>
     <div class="error">
 
         <p>Sorry, but the access to this page is restricted.</p>
 
-        <p th:if="${@loggedUser.getId() != null}">If you're a really good friend to the site administrators,
+        <p sec:authorize="isAuthenticated()">If you're a really good friend to the site administrators,
             you may ask them for additional rights by contacting them directly.</p>
 
-        <p th:unless="${@loggedUser.getId() != null}">If you already have an account and access to this page,
-            please <a th:href="@{auth/login}">log in.</a></p>
+        <p sec:authorize="!isAuthenticated()">If you already have an account and access to this page,
+            please <a th:href="@{/auth/login}">log in.</a></p>
     </div>
 </th:block>
 
