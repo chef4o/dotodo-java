@@ -1,8 +1,8 @@
 package com.pago.dotodo.web;
 
 import com.pago.dotodo.model.dto.NoteDto;
-import com.pago.dotodo.model.dto.binding.UserTokenDto;
 import com.pago.dotodo.service.NoteService;
+import com.pago.dotodo.util.ModelAndViewParser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,16 +15,16 @@ import java.util.Optional;
 public class NoteController extends BaseController {
 
     private final NoteService noteService;
-    private final UserTokenDto loggedUser;
+    private final ModelAndViewParser attributeBuilder;
 
-    public NoteController(NoteService noteService, UserTokenDto loggedUser) {
+    public NoteController(NoteService noteService, ModelAndViewParser attributeBuilder) {
         this.noteService = noteService;
-        this.loggedUser = loggedUser;
+        this.attributeBuilder = attributeBuilder;
     }
 
     @GetMapping
     public ResponseEntity<List<NoteDto>> getAll() {
-        return ResponseEntity.ok(noteService.getAll(this.loggedUser.getId()));
+        return ResponseEntity.ok(noteService.getAll(1L)); //TODO: change ID
     }
 
     @GetMapping("/{id}")

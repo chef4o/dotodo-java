@@ -1,8 +1,7 @@
 package com.pago.dotodo.model.dto;
 
-import com.pago.dotodo.model.entity.ChecklistElement;
+import com.pago.dotodo.model.entity.ChecklistElementEntity;
 
-import java.time.LocalDateTime;
 import java.util.Set;
 
 public class ChecklistDto {
@@ -13,7 +12,7 @@ public class ChecklistDto {
     private String dueDate;
     private String completedOn;
     private String trackProgress;
-    private Set<ChecklistElement> elements;
+    private Set<ChecklistElementEntity> elements;
 
     public ChecklistDto() {
     }
@@ -81,11 +80,11 @@ public class ChecklistDto {
         return this;
     }
 
-    public Set<ChecklistElement> getElements() {
+    public Set<ChecklistElementEntity> getElements() {
         return elements;
     }
 
-    public ChecklistDto setElements(Set<ChecklistElement> elements) {
+    public ChecklistDto setElements(Set<ChecklistElementEntity> elements) {
         this.elements = elements;
         return this;
     }
