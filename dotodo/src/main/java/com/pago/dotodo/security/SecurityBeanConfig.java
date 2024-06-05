@@ -1,8 +1,6 @@
-package com.pago.dotodo.configuration;
+package com.pago.dotodo.security;
 
-import com.pago.dotodo.model.enums.Role;
 import com.pago.dotodo.repository.UserRepository;
-import com.pago.dotodo.service.AppUserDetailsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -12,33 +10,34 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-public class SecurityBeanConfiguration {
+public class SecurityBeanConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers("/", "/home", "/contacts", "/news", "/about-us", "auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/admin-panel").hasRole(Role.ADMIN.name())
-                        .requestMatchers("/notes", "/checklists", "/profile").authenticated()
+                        .requestMatchers(CustomSecurityConfig.getAllowedPages()).permitAll()
+                        .requestMatchers("/admin-panel").hasAnyRole(CustomSecurityConfig.getAdministrationRoles())
                         .anyRequest().authenticated())
-//                .formLogin(login -> login
-//                        .loginPage("/auth/login")
-//                        .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
-//                        .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
-//                        .defaultSuccessUrl("/")
-//                        .failureForwardUrl("/auth/login-error"))
-//                .logout(logout -> logout
-//                        .logoutUrl("/auth/logout")
-//                        .invalidateHttpSession(true)
-//                        .logoutSuccessUrl("/"))
-//                .exceptionHandling(error -> error.accessDeniedPage("/unauthorized"))
+                .formLogin(login -> login
+                        .loginPage("/auth/login")
+                        .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
+                        .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
+                        .defaultSuccessUrl("/")
+                        .failureForwardUrl("/auth/login-error"))
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessUrl("/"))
+                .exceptionHandling(error -> error.accessDeniedPage("/auth/login-error"))
                 .build();
     }
 
@@ -49,7 +48,7 @@ public class SecurityBeanConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService(ModelMapper modelMapper, UserRepository userRepository) {
-        return new AppUserDetailsService(modelMapper, userRepository);
+        return new AppUserDetailsService(userRepository);
     }
 
     @Bean
