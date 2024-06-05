@@ -1,5 +1,7 @@
 package com.pago.dotodo.model.dto;
 
+import java.util.List;
+
 public class UserDto {
     private Long id;
     private String firstName;
@@ -10,7 +12,7 @@ public class UserDto {
     private String password;
     private String avatarUrl;
     private String address;
-    private String role;
+    private List<String> roles;
 
     public Long getId() {
         return id;
@@ -106,12 +108,12 @@ public class UserDto {
         return this;
     }
 
-    public String getRole() {
-        return role;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public UserDto setRole(String role) {
-        this.role = role;
+    public UserDto setRoles(List<String> roles) {
+        this.roles = roles;
         return this;
     }
 }

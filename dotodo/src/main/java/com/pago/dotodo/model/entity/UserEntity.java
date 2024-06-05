@@ -3,11 +3,13 @@ package com.pago.dotodo.model.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity {
+public class UserEntity extends BaseEntity {
 
     private String firstName;
     private String lastName;
@@ -19,17 +21,18 @@ public class User extends BaseEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String imageUrl;
-    private Integer role;
-    private Address address;
+    private List<RoleEntity> roles;
+    private AddressEntity address;
 
-    public User() {
+    public UserEntity() {
+        this.roles = new ArrayList<>();
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public User setFirstName(String firstName) {
+    public UserEntity setFirstName(String firstName) {
         this.firstName = firstName;
         return this;
     }
@@ -38,7 +41,7 @@ public class User extends BaseEntity {
         return lastName;
     }
 
-    public User setLastName(String lastName) {
+    public UserEntity setLastName(String lastName) {
         this.lastName = lastName;
         return this;
     }
@@ -47,7 +50,7 @@ public class User extends BaseEntity {
         return email;
     }
 
-    public User setEmail(String email) {
+    public UserEntity setEmail(String email) {
         this.email = email;
         return this;
     }
@@ -56,7 +59,7 @@ public class User extends BaseEntity {
         return username;
     }
 
-    public User setUsername(String username) {
+    public UserEntity setUsername(String username) {
         this.username = username;
         return this;
     }
@@ -65,7 +68,7 @@ public class User extends BaseEntity {
         return password;
     }
 
-    public User setPassword(String password) {
+    public UserEntity setPassword(String password) {
         this.password = password;
         return this;
     }
@@ -74,7 +77,7 @@ public class User extends BaseEntity {
         return dateOfBirth;
     }
 
-    public User setDateOfBirth(Date dateOfBirth) {
+    public UserEntity setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
         return this;
     }
@@ -83,7 +86,7 @@ public class User extends BaseEntity {
         return phoneNumber;
     }
 
-    public User setPhoneNumber(String phoneNumber) {
+    public UserEntity setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
         return this;
     }
@@ -92,7 +95,7 @@ public class User extends BaseEntity {
         return createdAt;
     }
 
-    public User setCreatedAt(LocalDateTime createdAt) {
+    public UserEntity setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
         return this;
     }
@@ -101,7 +104,7 @@ public class User extends BaseEntity {
         return updatedAt;
     }
 
-    public User setUpdatedAt(LocalDateTime updatedAt) {
+    public UserEntity setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
         return this;
     }
@@ -110,26 +113,32 @@ public class User extends BaseEntity {
         return imageUrl;
     }
 
-    public User setImageUrl(String imageUrl) {
+    public UserEntity setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;
     }
 
-    public Integer getRole() {
-        return role;
+    @ManyToMany(fetch = FetchType.EAGER) //TODO remove eager later on
+    public List<RoleEntity> getRoles() {
+        return roles;
     }
 
-    public User setRole(Integer role) {
-        this.role = role;
+    public UserEntity setRoles(List<RoleEntity> roles) {
+        this.roles = roles;
+        return this;
+    }
+
+    public UserEntity addRole(RoleEntity role) {
+        this.roles.add(role);
         return this;
     }
 
     @ManyToOne
-    public Address getAddress() {
+    public AddressEntity getAddress() {
         return address;
     }
 
-    public User setAddress(Address address) {
+    public UserEntity setAddress(AddressEntity address) {
         this.address = address;
         return this;
     }
