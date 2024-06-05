@@ -1,21 +1,36 @@
-<div class="nav">
+<div class="nav" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <div th:if="${showAuthModal != null}"
          class="backdrop">
     </div>
 
     <div class="top-bar">
         <p class="greeting"
-           th:if="${loggedUser != null}"
-           th:text="Hello, ${loggedUser.firstName ?: user.username}">
+           sec:authorize="isAuthenticated()"
+           th:text="${'Hello, ' + #authentication.principal.username}">
         </p>
 
         <ul class="top-bar-controls">
             <th:block th:each="item : ${topbarNavItems}">
-                <li th:if="${loggedUser == null && item.get('name') != 'logout'}">
+                <li sec:authorize="!isAuthenticated()"
+                    th:if="${item.get('name') == 'login' || item.get('name') == 'register'}">
                     <a th:href="${item.get('href')}" th:text="${item.get('name')}"></a>
+                </li>
+
+                <li sec:authorize="isAuthenticated() && hasAnyRole('SUPER_ADMIN','ADMIN','MODERATOR')"
+                    th:if="${item.get('name') == 'administration'}">
+                    <a th:href="${item.get('href')}" th:text="${item.get('name')}"></a>
+                </li>
+
+                <li sec:authorize="isAuthenticated()"
+                    th:if="${item.get('name') == 'logout'}">
+                    <form th:method="post" th:action="${item.get('href')}">
+                        <input type="submit" th:value="${item.get('name')}"/>
+                    </form>
                 </li>
             </th:block>
         </ul>
+
+
     </div>
 
     <div class="sidebar">

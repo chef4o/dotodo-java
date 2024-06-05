@@ -8,12 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SkeletonService {
+public class LayoutService {
 
     private final List<MenuItem> topbarNavItems = new ArrayList<>();
     private final List<MenuItem> sidebarNavItems = new ArrayList<>();
     private final List<MenuItem> bottombarNavItems = new ArrayList<>();
     private final List<MenuItem> connectNavItems = new ArrayList<>();
+
     private final List<MenuItem> homeItems = new ArrayList<>();
 
     @PostConstruct
@@ -68,7 +69,7 @@ public class SkeletonService {
     private void initializeTopbarNavItems() {
         addItems(topbarNavItems,
                 new MenuItem()
-                        .add("name", "admininstration")
+                        .add("name", "administration")
                         .add("href", "/admin-panel"),
                 new MenuItem()
                         .add("name", "login")
@@ -147,5 +148,9 @@ public class SkeletonService {
 
     private void addItem(List<MenuItem> list, MenuItem item) {
         list.add(item);
+    }
+
+    private List<String> getItemsByType(List<MenuItem> items, String type) {
+        return items.stream().map(e -> e.get(type)).toList();
     }
 }
