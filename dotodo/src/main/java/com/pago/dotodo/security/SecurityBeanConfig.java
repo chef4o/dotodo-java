@@ -1,7 +1,6 @@
 package com.pago.dotodo.security;
 
 import com.pago.dotodo.repository.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,7 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityBeanConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationFailureHandler customAuthenticationFailureHandler) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
@@ -31,13 +30,12 @@ public class SecurityBeanConfig {
                         .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
                         .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
                         .defaultSuccessUrl("/")
-                        .failureForwardUrl("/auth/login-error"))
+                        .failureHandler(customAuthenticationFailureHandler))
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .logoutSuccessUrl("/"))
-                .exceptionHandling(error -> error.accessDeniedPage("/auth/login-error"))
                 .build();
     }
 
@@ -47,7 +45,7 @@ public class SecurityBeanConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(ModelMapper modelMapper, UserRepository userRepository) {
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
         return new AppUserDetailsService(userRepository);
     }
 

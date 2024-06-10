@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <!-- {validationErrors.login && <div class="error auth login">{validationErrors.login}</div>} -->
+    <div th:if="${bad_credentials}" class="error auth login">The username or password provided is incorrect</div>
 
     <button class="login">Login</button>
 </form>

@@ -1,6 +1,7 @@
 package com.pago.dotodo.web;
 
 import com.pago.dotodo.util.ModelAndViewParser;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,9 +21,13 @@ public class AuthController extends BaseController {
     }
 
     @GetMapping("/login")
-    public ModelAndView getLogin() {
+    public ModelAndView getLogin(HttpServletRequest request) {
+        boolean badCredentials = Boolean.TRUE.equals(request.getSession().getAttribute("bad_credentials"));
+        request.getSession().removeAttribute("bad_credentials");
+
         return this.view("index", attributeBuilder.build(
-                "pageName", LOGIN_PAGE_NAME)
+                "pageName", LOGIN_PAGE_NAME,
+                "bad_credentials", badCredentials)
         );
     }
 
@@ -30,14 +35,6 @@ public class AuthController extends BaseController {
     public ModelAndView getRegister() {
         return this.view("index", attributeBuilder.build(
                 "pageName", REGISTER_PAGE_NAME)
-        );
-    }
-
-    @GetMapping("/login-error")
-    public ModelAndView getLoginError() {
-        return this.view("index", attributeBuilder.build(
-                "pageName", "errors-list",
-                "errorCode", "e403")
         );
     }
 
