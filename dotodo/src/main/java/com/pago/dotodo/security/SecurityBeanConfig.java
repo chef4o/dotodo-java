@@ -18,7 +18,7 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityBeanConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationFailureHandler customAuthenticationFailureHandler) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthFailureHandler customAuthFailureHandler) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
@@ -30,7 +30,7 @@ public class SecurityBeanConfig {
                         .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
                         .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
                         .defaultSuccessUrl("/")
-                        .failureHandler(customAuthenticationFailureHandler))
+                        .failureHandler(customAuthFailureHandler))
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
                         .invalidateHttpSession(true)

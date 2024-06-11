@@ -8,14 +8,14 @@
             <label for="username">Username</label>
             <div class="form-input">
                 <i class="fa-solid fa-user"></i>
-                <input id="username" name="username" type="text" autocomplete="off"/>
+                <input id="username" name="username" type="text" autocomplete="off" th:value="${username}"/>
             </div>
 
-<!--            <ng-container *ngIf="emailInput.touched">-->
-<!--                <div *ngIf="emailInput.errors?.['required']" class="error auth login email">-->
-<!--                    Email is required-->
-<!--                </div>-->
-<!--            </ng-container>-->
+            <!--            <ng-container *ngIf="emailInput.touched">-->
+            <!--                <div *ngIf="emailInput.errors?.['required']" class="error auth login email">-->
+            <!--                    Email is required-->
+            <!--                </div>-->
+            <!--            </ng-container>-->
         </div>
 
         <div class="password">
@@ -25,10 +25,10 @@
                 <input id="password" name="password" type="password" autocomplete="off"/>
             </div>
 
-<!--            <ng-container *ngIf="passwordInput.touched">-->
-<!--                <div *ngIf="passwordInput.errors?.['required']" class="error auth login password">Password is required-->
-<!--                </div>-->
-<!--            </ng-container>-->
+            <!--            <ng-container *ngIf="passwordInput.touched">-->
+            <!--                <div *ngIf="passwordInput.errors?.['required']" class="error auth login password">Password is required-->
+            <!--                </div>-->
+            <!--            </ng-container>-->
         </div>
     </div>
 
