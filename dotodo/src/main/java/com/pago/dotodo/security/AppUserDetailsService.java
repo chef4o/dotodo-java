@@ -6,14 +6,15 @@ import com.pago.dotodo.repository.UserRepository;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class AppUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -30,7 +31,8 @@ public class AppUserDetailsService implements UserDetailsService {
     }
 
     private UserDetails map(UserEntity user) {
-        return new User(
+        return new CustomAuthUserDetails(
+                user.getFirstName(),
                 user.getUsername(),
                 user.getPassword(),
                 getAuthorities(user)

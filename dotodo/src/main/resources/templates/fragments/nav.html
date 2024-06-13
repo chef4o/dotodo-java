@@ -4,10 +4,16 @@
     </div>
 
     <div class="top-bar">
-        <p class="greeting"
-           sec:authorize="isAuthenticated()"
-           th:text="${'Hello, ' + #authentication.principal.username}">
-        </p>
+        <th:block sec:authorize="isAuthenticated()">
+            <p class="greeting"
+               th:if="${#authentication.principal.firstName != null && #authentication.principal.firstName != '' }"
+               th:text="${'Hello, ' + #authentication.principal.firstName}">
+            </p>
+            <p class="greeting"
+               th:unless="${#authentication.principal.firstName != null && #authentication.principal.firstName != '' }"
+               th:text="${'Hello, ' + #authentication.principal.username}">
+            </p>
+        </th:block>
 
         <ul class="top-bar-controls">
             <th:block th:each="item : ${topbarNavItems}">
