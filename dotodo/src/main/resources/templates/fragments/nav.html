@@ -40,8 +40,8 @@
             </a>
             <ul class="menu">
                 <th:block th:each="item: ${sidebarNavItems}">
-                    <th:block th:if="${item.get('name') != 'profile' ||
-                                    (item.get('name') == 'profile' && user != null && user._id != null)}">
+                    <th:block th:if="${item.get('name') != 'profile'} or
+                                    (${item.get('name') == 'profile' and #authorization.expression('isAuthenticated()')})">
                         <li th:class="${pageName == item.get('name') ? item.get('name') + ' active' : item.get('name')}">
                             <a th:href="${item.get('href')}">
                                 <i th:class="${item.get('icon')}"></i>
