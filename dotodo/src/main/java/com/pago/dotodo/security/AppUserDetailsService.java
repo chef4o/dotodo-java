@@ -32,6 +32,7 @@ public class AppUserDetailsService implements UserDetailsService {
 
     private UserDetails map(UserEntity user) {
         return new CustomAuthUserDetails(
+                user.getId(),
                 user.getFirstName(),
                 user.getUsername(),
                 user.getPassword(),
