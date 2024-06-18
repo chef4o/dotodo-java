@@ -1,6 +1,5 @@
-package com.pago.dotodo.web;
+package com.pago.dotodo.web.mvc;
 
-import com.pago.dotodo.service.LayoutService;
 import com.pago.dotodo.util.ModelAndViewParser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,6 +1,5 @@
-package com.pago.dotodo.web;
+package com.pago.dotodo.web.mvc;
 
-import com.pago.dotodo.service.LayoutService;
 import com.pago.dotodo.util.ModelAndViewParser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,16 +10,14 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/news")
 public class NewsController extends BaseController {
     private static final String PAGE_NAME = "news";
-    private final LayoutService layoutService;
     private final ModelAndViewParser attributeBuilder;
 
-    public NewsController(LayoutService layoutService, ModelAndViewParser attributeBuilder) {
-        this.layoutService = layoutService;
+    public NewsController(ModelAndViewParser attributeBuilder) {
         this.attributeBuilder = attributeBuilder;
     }
 
     @GetMapping
-    public ModelAndView getHome() {
+    public ModelAndView getNews() {
         return this.view("index", attributeBuilder.build(
                 "pageName", PAGE_NAME
         ));

@@ -1,8 +1,8 @@
-package com.pago.dotodo.web;
+package com.pago.dotodo.web.api;
 
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.service.NoteService;
-import com.pago.dotodo.util.ModelAndViewParser;
+import com.pago.dotodo.web.mvc.BaseController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -12,19 +12,17 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/notes")
-public class NoteController extends BaseController {
+public class NoteApiController extends BaseController {
 
     private final NoteService noteService;
-    private final ModelAndViewParser attributeBuilder;
 
-    public NoteController(NoteService noteService, ModelAndViewParser attributeBuilder) {
+    public NoteApiController(NoteService noteService) {
         this.noteService = noteService;
-        this.attributeBuilder = attributeBuilder;
     }
 
     @GetMapping
-    public ResponseEntity<List<NoteDto>> getAll() {
-        return ResponseEntity.ok(noteService.getAll(1L)); //TODO: change ID
+    public ResponseEntity<List<NoteDto>> getAll(Long userId) {
+        return ResponseEntity.ok(noteService.getAll(userId));
     }
 
     @GetMapping("/{id}")

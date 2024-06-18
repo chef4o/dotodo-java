@@ -1,4 +1,4 @@
-package com.pago.dotodo.web;
+package com.pago.dotodo.web.mvc;
 
 import org.springframework.web.servlet.ModelAndView;
 

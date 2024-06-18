@@ -1,8 +1,8 @@
-package com.pago.dotodo.web;
+package com.pago.dotodo.web.api;
 
 import com.pago.dotodo.model.dto.ChecklistDto;
 import com.pago.dotodo.service.ChecklistService;
-import com.pago.dotodo.util.ModelAndViewParser;
+import com.pago.dotodo.web.mvc.BaseController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -12,19 +12,17 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/checklists")
-public class ChecklistController extends BaseController {
+public class ChecklistApiController extends BaseController {
 
     private final ChecklistService checklistService;
-    private final ModelAndViewParser attributeBuilder;
 
-    public ChecklistController(ChecklistService checklistService, ModelAndViewParser attributeBuilder) {
+    public ChecklistApiController(ChecklistService checklistService) {
         this.checklistService = checklistService;
-        this.attributeBuilder = attributeBuilder;
     }
 
     @GetMapping
-    public ResponseEntity<List<ChecklistDto>> getAll() {
-        return ResponseEntity.ok(checklistService.getAll(1L)); //TODO: change ID
+    public ResponseEntity<List<ChecklistDto>> getAll(Long userId) {
+        return ResponseEntity.ok(checklistService.getAll(userId));
     }
 
     @GetMapping("/{id}")
