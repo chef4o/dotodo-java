@@ -1,0 +1,34 @@
+<div class="content notes" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <th:block sec:authorize="!isAuthenticated()">
+        <th:block th:insert="~{fragments/error/error-403}"></th:block>
+    </th:block>
+
+    <th:block sec:authorize="isAuthenticated()">
+        <th:block th:if="${notes.size() > 0}">
+            <ul class="notes-list" th:each="note: ${notes}">
+                <th:block th:insert="~{fragments/note/note-item}"></th:block>
+
+                <th:block th:insert="~{fragments/note/empty-note}"></th:block>
+            </ul>
+        </th:block>
+
+        <th:block th:unless="${notes.size() > 0}">
+            <ul class="notes-list empty">
+                <div class="new-note">
+                    <th:block th:insert="~{fragments/error/no-content}"></th:block>
+
+                    <th:block th:if="${makeNewNote == true}">
+                        <button class="add-note">Add</button>
+                    </th:block>
+
+                    <th:block th:unless="${makeNewNote == true}">
+                        <div class="new-note">
+                            <input placeholder="Note title"/>
+                            <button class="add-note">Add</button>
+                        </div>
+                    </th:block>
+                </div>
+            </ul>
+        </th:block>
+    </th:block>
+</div>

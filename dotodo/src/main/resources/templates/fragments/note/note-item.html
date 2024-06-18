@@ -1,0 +1,9 @@
+<div th:class="${activeNoteId == note.id ? 'note active' : 'note'}">
+    <button th:if="${activeNoteId == note.id}" class="xmark">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <h3 th:text="${note.title}"></h3>
+    <p th:text="${note.content}"></p>
+    <button class="delete-btn">Delete</button>
+</div>

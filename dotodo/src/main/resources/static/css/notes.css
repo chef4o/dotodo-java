@@ -6,6 +6,10 @@
     gap: 1.4vw;
 }
 
+.content.notes .notes-list.empty {
+    justify-content: center;
+}
+
 .content.notes .note {
     position: relative;
     width: 17.8%;
