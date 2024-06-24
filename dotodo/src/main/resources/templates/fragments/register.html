@@ -1,5 +1,9 @@
-<form class="auth-form register">
-    <button class="xmark" ><i class="fa-solid fa-xmark"></i></button>
+<form class="auth-form register"
+      th:method="post"
+      th:action="@{'/auth/register'}"
+      th:object="${userRegisterDto}">
+
+    <button class="xmark"><i class="fa-solid fa-xmark"></i></button>
 
     <div class="auth-fields">
         <div class="user-container">
@@ -7,7 +11,7 @@
                 <label for="email">Email</label>
                 <div class="form-input">
                     <i class="fa-solid fa-envelope"></i>
-                    <input id="email" name="email" type="text" />
+                    <input id="email" name="email" type="text"/>
 
                     <!-- more value props:
                              onChange={changeHandler}
@@ -15,10 +19,10 @@
                     class={validationErrors.email && "error-field"}-->
                 </div>
 
-<!--                <ng-container *ngIf="emailInput.touched">-->
-<!--                    <div *ngIf="emailInput.errors?.['required']" class="error auth register">Email is required</div>-->
-<!--                    <div *ngIf="emailInput.errors?.['email']" class="error auth register">Email is invalid</div>-->
-<!--                </ng-container>-->
+                <!--                <ng-container *ngIf="emailInput.touched">-->
+                <!--                    <div *ngIf="emailInput.errors?.['required']" class="error auth register">Email is required</div>-->
+                <!--                    <div *ngIf="emailInput.errors?.['email']" class="error auth register">Email is invalid</div>-->
+                <!--                </ng-container>-->
             </div>
 
             <div class="username">
@@ -32,13 +36,13 @@
                     class={validationErrors.username && "error-field"} /> -->
                 </div>
 
-<!--                <ng-container *ngIf="usernameInput.touched">-->
-<!--                    <div *ngIf="usernameInput.errors?.['required']" class="error auth register">Username is required-->
-<!--                    </div>-->
-<!--                    <div *ngIf="usernameInput.errors?.['minlength']" class="error auth register">Username must be at-->
-<!--                        leats 5-->
-<!--                        characters long</div>-->
-<!--                </ng-container>-->
+                <!--                <ng-container *ngIf="usernameInput.touched">-->
+                <!--                    <div *ngIf="usernameInput.errors?.['required']" class="error auth register">Username is required-->
+                <!--                    </div>-->
+                <!--                    <div *ngIf="usernameInput.errors?.['minlength']" class="error auth register">Username must be at-->
+                <!--                        leats 5-->
+                <!--                        characters long</div>-->
+                <!--                </ng-container>-->
             </div>
         </div>
 
@@ -47,26 +51,26 @@
                 <label for="password">Password</label>
                 <div class="form-input">
                     <i class="fa-solid fa-key"></i>
-                    <input id="password" name="password" type="password" />
+                    <input id="password" name="password" type="password"/>
                     <!-- more value props:
                              onChange={changeHandler}
                         onBlur="focusHandler(FORM_FIELDS.password)
                     class={validationErrors.password && "error-field"} -->
                 </div>
 
-<!--                <ng-container *ngIf="passwordInput.touched">-->
-<!--                    <div *ngIf="passwordInput.errors?.['required']" class="error auth register">Password is required-->
-<!--                    </div>-->
-<!--                    <div *ngIf="passwordInput.errors?.['minlength']" class="error auth register">Password must be at-->
-<!--                        leats 6 characters long</div>-->
-<!--                </ng-container>-->
+                <!--                <ng-container *ngIf="passwordInput.touched">-->
+                <!--                    <div *ngIf="passwordInput.errors?.['required']" class="error auth register">Password is required-->
+                <!--                    </div>-->
+                <!--                    <div *ngIf="passwordInput.errors?.['minlength']" class="error auth register">Password must be at-->
+                <!--                        leats 6 characters long</div>-->
+                <!--                </ng-container>-->
             </div>
 
             <div class="rePassword">
                 <label for="rePassword">Repeat password</label>
                 <div class="form-input">
                     <i class="fa-solid fa-key"></i>
-                    <input id="rePassword" name="rePassword" type="password" />
+                    <input id="rePassword" name="rePassword" type="password"/>
                     <!-- more value props:
                              onChange={changeHandler}
                         onBlur={()=>
@@ -74,12 +78,12 @@
                     class={validationErrors.rePassword && "error-field"} /> -->
                 </div>
 
-<!--                <ng-container *ngIf="rePasswordInput.touched">-->
-<!--                    <div *ngIf="rePasswordInput.errors?.['required']" class="error auth">Field is required</div>-->
-<!--                    <div *ngIf="!rePasswordInput.errors?.['required']-->
-<!--                        && rePasswordInput.value.length >= 6 && rePasswordInput.value != passwordInput.value"-->
-<!--                         class="error auth">Passwords must match</div>-->
-<!--                </ng-container>-->
+                <!--                <ng-container *ngIf="rePasswordInput.touched">-->
+                <!--                    <div *ngIf="rePasswordInput.errors?.['required']" class="error auth">Field is required</div>-->
+                <!--                    <div *ngIf="!rePasswordInput.errors?.['required']-->
+                <!--                        && rePasswordInput.value.length >= 6 && rePasswordInput.value != passwordInput.value"-->
+                <!--                         class="error auth">Passwords must match</div>-->
+                <!--                </ng-container>-->
             </div>
         </div>
     </div>

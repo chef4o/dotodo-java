@@ -1,10 +1,18 @@
 package com.pago.dotodo.model.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserRegisterDto {
     private String email;
     private String username;
     private String password;
     private String rePassword;
+    private List<String> roles;
+
+    public UserRegisterDto() {
+        this.roles = new ArrayList<>();
+    }
 
     public String getEmail() {
         return email;
@@ -39,6 +47,15 @@ public class UserRegisterDto {
 
     public UserRegisterDto setRePassword(String rePassword) {
         this.rePassword = rePassword;
+        return this;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public UserRegisterDto setRoles(List<String> roles) {
+        this.roles = roles;
         return this;
     }
 }

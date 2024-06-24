@@ -1,14 +1,22 @@
 package com.pago.dotodo.web.mvc;
 
+import com.pago.dotodo.model.dto.UserDto;
+import com.pago.dotodo.model.dto.UserRegisterDto;
+import com.pago.dotodo.service.AuthService;
 import com.pago.dotodo.util.ModelAndViewParser;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttributes;
-
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
 @RequestMapping("/auth")
@@ -19,9 +27,19 @@ public class AuthController extends BaseController {
     private static final String REGISTER_PAGE_NAME = "register";
 
     private final ModelAndViewParser attributeBuilder;
+    private final AuthService authService;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthController(ModelAndViewParser attributeParser) {
+    @Autowired
+    public AuthController(ModelAndViewParser attributeParser, AuthService authService, AuthenticationManager authenticationManager) {
         this.attributeBuilder = attributeParser;
+        this.authService = authService;
+        this.authenticationManager = authenticationManager;
+    }
+
+    @ModelAttribute("userRegisterInfo")
+    public UserRegisterDto userRegisterInfo() {
+        return new UserRegisterDto();
     }
 
     @ModelAttribute("bad_credentials")
@@ -31,6 +49,11 @@ public class AuthController extends BaseController {
 
     @ModelAttribute("username")
     public String username() {
+        return "";
+    }
+
+    @ModelAttribute("email")
+    public String email() {
         return "";
     }
 
@@ -51,14 +74,56 @@ public class AuthController extends BaseController {
     }
 
     @GetMapping("/register")
-    public ModelAndView getRegister() {
+    public ModelAndView getRegister(@ModelAttribute("userRegisterInfo")
+                                    UserRegisterDto userRegisterInfo) {
+
         return this.view("index", attributeBuilder.build(
-                "pageName", REGISTER_PAGE_NAME)
+                "pageName", REGISTER_PAGE_NAME,
+                "userRegisterInfo", userRegisterInfo)
+        );
+    }
+
+    @PostMapping("/register")
+    public ModelAndView postRegister(HttpSession session,
+                                     @Valid @ModelAttribute UserRegisterDto userRegisterInfo,
+                                     BindingResult bindingResult,
+                                     RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes
+                    .addFlashAttribute("userRegisterInfo", userRegisterInfo)
+                    .addFlashAttribute("org.springframework.validation.BindingResult." + "userRegisterInfo",
+                            bindingResult);
+
+            return super.redirect("/auth/register");
+        }
+
+        UserDto registeredUser = this.authService.registerUser(userRegisterInfo);
+        authenticateUserAndSetSession(registeredUser, userRegisterInfo.getPassword());
+
+
+        return this.view("index", attributeBuilder.build(
+                "pageName", "home",
+                "userRegisterInfo", userRegisterInfo)
         );
     }
 
     @GetMapping("/logout")
     public ModelAndView getLogout() {
         return this.redirect("/");
+    }
+
+    private void authenticateUserAndSetSession(UserDto registeredUser, String rawPassword) {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                registeredUser.getUsername(), rawPassword);
+
+        try {
+            Authentication authentication = authenticationManager.authenticate(authToken);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (AuthenticationException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 }
