@@ -1,5 +1,6 @@
 package com.pago.dotodo.model.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDto {
@@ -13,6 +14,10 @@ public class UserDto {
     private String avatarUrl;
     private String address;
     private List<String> roles;
+
+    public UserDto() {
+        this.roles = new ArrayList<>();
+    }
 
     public Long getId() {
         return id;
