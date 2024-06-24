@@ -32,7 +32,7 @@ public class ModelAndViewParser {
                         (map, i) -> map.put((String) attributes[i * 2], attributes[i * 2 + 1]),
                         HashMap::putAll);
 
-        // Merge specific attributes with common attributes
+        // Merge custom attributes with common attributes
         Map<String, Object> combinedAttributes = new HashMap<>(addNavAttributes());
         combinedAttributes.putAll(specificAttributes);
 
