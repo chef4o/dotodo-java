@@ -1,20 +1,24 @@
-<div class="content admin-panel">
-    <th:block th:if="${@loggedUser.getId() != null}">
+<div class="content admin-panel" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <th:block sec:authorize="!isAuthenticated()" th:if="!hasAccessPermission">
+        <th:block th:insert="~{fragments/error/error-403}"></th:block>
+    </th:block>
+
+    <th:block sec:authorize="isAuthenticated()" th:if="hasAdminPanelAccess">
+
         <h1>Admin panel</h1>
 
         <div class="admin-panel-container">
-            <table class="admin-panel-users">
-                <tr class="fields">
-                    <th id="header-nickname">Username</th>
-                    <th id="header-email">Email</th>
-                    </th>
-                    <th id="header-role">Role</th>
-                </tr>
-                <tr class="fill-space"></tr>
-            </table>
-
             <th:block th:if="${lowerLevelUsers != null}">
-                <th:block class="user-data" th:each="user: ${lowerLevelUsers}">
+                <table class="admin-panel-users">
+                    <tr class="fields">
+                        <th id="header-nickname">Username</th>
+                        <th id="header-email">Email</th>
+                        <th id="header-role">Role</th>
+                    </tr>
+                    <tr class="fill-space"></tr>
+                </table>
+
+                <th:block th:each="user: ${lowerLevelUsers}">
                     <th:block th:if="${userToEdit != null && userToEdit.id == user.id}">
                         <th:block th:insert="~{fragments/admin-user-form-edit}"></th:block>
                     </th:block>
@@ -24,14 +28,14 @@
                     </th:block>
                 </th:block>
             </th:block>
-
-            <th th:unless="${lowerLevelUsers != null}">
-                <p>No users available for administration.</p>
-            </th>
         </div>
-    </th:block>
 
-    <th:block th:unless="${@loggedUser.getId() != null}">
-        <th:block th:insert="~{error}"></th:block>
+        <th th:unless="${lowerLevelUsers != null}">
+            <div class="no-users">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+                <p>No users available for administration.</p>
+            </div>
+
+        </th>
     </th:block>
 </div>
