@@ -6,8 +6,9 @@ import java.util.List;
 public class UserRegisterDto {
     private String email;
     private String username;
-    private String password;
+    private String rawPassword;
     private String rePassword;
+    private String password;
     private List<String> roles;
 
     public UserRegisterDto() {
@@ -47,6 +48,15 @@ public class UserRegisterDto {
 
     public UserRegisterDto setRePassword(String rePassword) {
         this.rePassword = rePassword;
+        return this;
+    }
+
+    public String getRawPassword() {
+        return rawPassword;
+    }
+
+    public UserRegisterDto setRawPassword(String rawPassword) {
+        this.rawPassword = rawPassword;
         return this;
     }
 

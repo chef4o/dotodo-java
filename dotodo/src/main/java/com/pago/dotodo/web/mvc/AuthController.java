@@ -1,22 +1,23 @@
 package com.pago.dotodo.web.mvc;
 
-import com.pago.dotodo.model.dto.UserDto;
+import com.pago.dotodo.model.dto.UserAuthDto;
 import com.pago.dotodo.model.dto.UserRegisterDto;
 import com.pago.dotodo.service.AuthService;
 import com.pago.dotodo.util.ModelAndViewParser;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/auth")
@@ -26,35 +27,19 @@ public class AuthController extends BaseController {
     private static final String LOGIN_PAGE_NAME = "login";
     private static final String REGISTER_PAGE_NAME = "register";
 
+    private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$";
+
     private final ModelAndViewParser attributeBuilder;
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    public AuthController(ModelAndViewParser attributeParser, AuthService authService, AuthenticationManager authenticationManager) {
+    public AuthController(ModelAndViewParser attributeParser, AuthService authService,
+                          AuthenticationManager authenticationManager) {
         this.attributeBuilder = attributeParser;
         this.authService = authService;
         this.authenticationManager = authenticationManager;
-    }
-
-    @ModelAttribute("userRegisterInfo")
-    public UserRegisterDto userRegisterInfo() {
-        return new UserRegisterDto();
-    }
-
-    @ModelAttribute("bad_credentials")
-    public Boolean badCredentials() {
-        return false;
-    }
-
-    @ModelAttribute("username")
-    public String username() {
-        return "";
-    }
-
-    @ModelAttribute("email")
-    public String email() {
-        return "";
     }
 
     @GetMapping("/login")
@@ -84,23 +69,57 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/register")
-    public ModelAndView postRegister(HttpSession session,
-                                     @Valid @ModelAttribute UserRegisterDto userRegisterInfo,
-                                     BindingResult bindingResult,
-                                     RedirectAttributes redirectAttributes) {
+    public ModelAndView postRegister(@Valid @ModelAttribute UserRegisterDto userRegisterInfo) {
 
-        if (bindingResult.hasErrors()) {
-            redirectAttributes
-                    .addFlashAttribute("userRegisterInfo", userRegisterInfo)
-                    .addFlashAttribute("org.springframework.validation.BindingResult." + "userRegisterInfo",
-                            bindingResult);
+        ArrayList<String> errors = new ArrayList<>();
 
-            return super.redirect("/auth/register");
+        if (userRegisterInfo.getRawPassword().isEmpty() ||
+                userRegisterInfo.getRePassword().isEmpty() ||
+                userRegisterInfo.getUsername().isEmpty() ||
+                userRegisterInfo.getEmail().isEmpty()) {
+            errors.add("All fields are required");
         }
 
-        UserDto registeredUser = this.authService.registerUser(userRegisterInfo);
-        authenticateUserAndSetSession(registeredUser, userRegisterInfo.getPassword());
+        if (!EmailValidator.getInstance().isValid(userRegisterInfo.getEmail())) {
+            errors.add("Email address is invalid");
+        }
 
+        if (userRegisterInfo.getUsername().length() < 5) {
+            errors.add("Username must be at least 5 characters long");
+        }
+
+        if (!userRegisterInfo.getRawPassword().matches(PASSWORD_PATTERN)) {
+            errors.add("Password must be at least 6 characters long and should contain at least one number, uppercase and lowercase letter.");
+        }
+
+        if (!userRegisterInfo.getRawPassword().equals(userRegisterInfo.getRePassword())) {
+            errors.add("Passwords do not match");
+        }
+
+        if (!errors.isEmpty()) {
+            return this.view("index", attributeBuilder.build(
+                    "pageName", REGISTER_PAGE_NAME,
+                    "errors", String.join("\n", errors),
+                    "username", userRegisterInfo.getUsername(),
+                    "email", userRegisterInfo.getEmail())
+            );
+        }
+
+        try {
+            UserAuthDto registeredUser = this.authService.registerUser(userRegisterInfo);
+            authenticateUserAndSetSession(registeredUser, userRegisterInfo.getRawPassword());
+        } catch (RuntimeException e) {
+            logger.error(e.getMessage());
+            errors.add(e.getMessage());
+            return this.view("index", attributeBuilder.build(
+                    "pageName", REGISTER_PAGE_NAME,
+                    "errors", String.join("\n", errors),
+                    "username", userRegisterInfo.getUsername(),
+                    "email", userRegisterInfo.getEmail())
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         return this.view("index", attributeBuilder.build(
                 "pageName", "home",
@@ -113,17 +132,31 @@ public class AuthController extends BaseController {
         return this.redirect("/");
     }
 
-    private void authenticateUserAndSetSession(UserDto registeredUser, String rawPassword) {
+    private void authenticateUserAndSetSession(UserAuthDto registeredUser, String rawPassword) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 registeredUser.getUsername(), rawPassword);
 
-        try {
-            Authentication authentication = authenticationManager.authenticate(authToken);
+        Authentication authentication = authenticationManager.authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (AuthenticationException e) {
-            System.out.println(e.getMessage());
-        }
+    @ModelAttribute("userRegisterInfo")
+    public UserRegisterDto userRegisterInfo() {
+        return new UserRegisterDto();
+    }
 
+    @ModelAttribute("bad_credentials")
+    public Boolean badCredentials() {
+        return false;
+    }
+
+    @ModelAttribute("username")
+    public String username() {
+        return "";
+    }
+
+    @ModelAttribute("email")
+    public String email() {
+        return "";
     }
 }

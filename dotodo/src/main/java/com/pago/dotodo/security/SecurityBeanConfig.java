@@ -33,8 +33,9 @@ public class SecurityBeanConfig {
                         .failureHandler(customAuthFailureHandler))
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
-                        .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
                         .logoutSuccessUrl("/"))
                 .build();
     }

@@ -1,9 +1,7 @@
 package com.pago.dotodo.security;
 
-import com.pago.dotodo.model.entity.RoleEntity;
 import com.pago.dotodo.model.entity.UserEntity;
-import com.pago.dotodo.repository.UserRepository;
-import org.apache.commons.validator.routines.EmailValidator;
+import com.pago.dotodo.service.AuthService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,25 +10,25 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AppUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final AuthService authService;
 
-    public AppUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public AppUserDetailsService(AuthService authService) {
+        this.authService = authService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return findUserByUsernameOrEmail(username)
-                .map(this::map)
+        return authService.findUserByUsernameOrEmail(username)
+                .map(this::mapToUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
     }
 
-    private UserDetails map(UserEntity user) {
+    private UserDetails mapToUserDetails(UserEntity user) {
         return new CustomAuthUserDetails(
                 user.getId(),
                 user.getFirstName(),
@@ -41,18 +39,9 @@ public class AppUserDetailsService implements UserDetailsService {
     }
 
     private List<GrantedAuthority> getAuthorities(UserEntity user) {
-        return user.getRoles().stream().map(this::mapRole).toList();
-    }
-
-    private GrantedAuthority mapRole(RoleEntity roleEntity) {
-        return new SimpleGrantedAuthority("ROLE_" + roleEntity.getRole());
-    }
-
-    private Optional<UserEntity> findUserByUsernameOrEmail(String username) {
-        if (EmailValidator.getInstance().isValid(username)) {
-            return userRepository.findByEmail(username);
-        } else {
-            return userRepository.findByUsername(username);
-        }
+        return user.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole().name()))
+                .collect(Collectors.toList());
     }
 }
