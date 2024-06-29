@@ -1,30 +1,30 @@
 import * as request from "../lib/request";
-const baseUrl = "http://localhost:3030/jsonstore/users";
+const baseUrl = "http://localhost:8000/api/notes";
 
-export const getAllNotes = async (userID) => {
-  const response = await request.get(`${baseUrl}/${userID}/notes`);
+export const getAllNotes = async () => {
+  const response = await request.get(baseUrl);
 
   return Object.values(response);
 };
 
-export const getSomeNotesByDueDateDesc = async (userId, numberOfResults) => {
-  const response = await getAllNotes(userId);
+export const getSomeNotesByDueDateDesc = async (numberOfResults) => {
+  const response = await getAllNotes();
 
   const sortedNotes = Object.values(response).sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate));
 
   return sortedNotes.slice(-numberOfResults);
 }
 
-export const deleteNote = async (userID, id) => {
+export const deleteNote = async (id) => {
   const response = await request.remove(
-    `${baseUrl}/${userID}/notes/${id}`
+    `${baseUrl}/${id}`
   );
 
   return response;
 };
 
-export const addNote = async (userID, body) => {
-  const response = request.post(`${baseUrl}/${userID}/notes/`, body);
+export const addNote = async (body) => {
+  const response = request.post(`${baseUrl}/notes/`, body);
 
   return response;
 };
