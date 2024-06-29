@@ -1,6 +1,10 @@
 package com.pago.dotodo.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +32,7 @@ public class UserEntity extends BaseEntity {
         this.roles = new ArrayList<>();
     }
 
+    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -37,6 +42,7 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
+    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
@@ -46,6 +52,8 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
+    @Column(nullable = false, unique = true)
+    @Email
     public String getEmail() {
         return email;
     }
@@ -55,6 +63,8 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
+    @Column(name = "username", nullable = false, unique = true)
+    @Length(min = 4)
     public String getUsername() {
         return username;
     }
@@ -64,6 +74,7 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
+    @Column(nullable = false)
     public String getPassword() {
         return password;
     }
@@ -73,6 +84,8 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
+    @Column(name = "dob")
+    @DateTimeFormat
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
@@ -82,6 +95,7 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
+    @Column(name = "phone_num")
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -91,6 +105,8 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
+    @Column(name = "created")
+    @DateTimeFormat
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -100,6 +116,8 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
+    @Column(name = "updated")
+    @DateTimeFormat
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
@@ -109,6 +127,8 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
+    @Column(name = "img_url")
+    @URL
     public String getImageUrl() {
         return imageUrl;
     }
@@ -118,7 +138,7 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER) //TODO remove eager later on
+    @ManyToMany(fetch = FetchType.EAGER)
     public List<RoleEntity> getRoles() {
         return roles;
     }
