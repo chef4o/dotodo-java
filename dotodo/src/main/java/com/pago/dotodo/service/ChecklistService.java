@@ -2,9 +2,9 @@ package com.pago.dotodo.service;
 
 import com.pago.dotodo.model.dto.ChecklistDto;
 import com.pago.dotodo.model.entity.ChecklistEntity;
-import com.pago.dotodo.model.entity.UserEntity;
 import com.pago.dotodo.repository.ChecklistRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +19,7 @@ public class ChecklistService {
     private final UserService userService;
     private final ModelMapper modelMapper;
 
+    @Autowired
     public ChecklistService(ChecklistRepository checklistRepository,
                             UserService userService,
                             ModelMapper modelMapper) {
@@ -44,15 +45,14 @@ public class ChecklistService {
         checklistRepository.deleteById(checklistId);
     }
 
-    public long addChecklist(ChecklistDto checklistDto) {
+    public long addChecklist(ChecklistDto checklistDto, Long userId) {
         ChecklistEntity newChecklist = new ChecklistEntity()
                 .setTitle(checklistDto.getTitle())
                 .setContent(checklistDto.getContent())
                 .setArchived(false)
                 .setStartDate(LocalDateTime.now())
                 .setTrackProgress("New")
-                .setOwner(modelMapper
-                        .map(userService.getUserById(1L), UserEntity.class)) //TODO: change ID
+                .setOwner(userService.getUserById(userId))
                 .setElements(new HashSet<>());
 
         return checklistRepository.save(newChecklist).getId();

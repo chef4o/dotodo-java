@@ -1,9 +1,11 @@
 package com.pago.dotodo.web.api;
 
 import com.pago.dotodo.model.dto.ChecklistDto;
+import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.ChecklistService;
 import com.pago.dotodo.web.mvc.BaseController;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -42,8 +44,9 @@ public class ChecklistApiController extends BaseController {
 
     @PostMapping()
     public ResponseEntity<ChecklistDto> createChecklist(@RequestBody ChecklistDto checklistDto,
+                                                        @AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                                         UriComponentsBuilder uriComponentsBuilder) {
-        long checklistId = checklistService.addChecklist(checklistDto);
+        long checklistId = checklistService.addChecklist(checklistDto, userDetails.getId());
 
         return ResponseEntity.created(uriComponentsBuilder
                         .path("/api/books/{id}").build(checklistId))
