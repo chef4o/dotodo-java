@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping("/about-us")
-public class AboutUsController extends BaseController {
-    private static final String PAGE_NAME = "about-us";
+@RequestMapping("/about")
+public class AboutController extends BaseController {
+    private static final String PAGE_NAME = "about";
     private final ModelAndViewParser attributeBuilder;
 
-    public AboutUsController(ModelAndViewParser attributeBuilder) {
+    public AboutController(ModelAndViewParser attributeBuilder) {
         this.attributeBuilder = attributeBuilder;
     }
 
