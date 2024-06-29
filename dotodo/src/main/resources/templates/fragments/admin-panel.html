@@ -20,11 +20,11 @@
 
                 <th:block th:each="user: ${lowerLevelUsers}">
                     <th:block th:if="${userToEdit != null && userToEdit.id == user.id}">
-                        <th:block th:insert="~{fragments/admin-user-form-edit}"></th:block>
+                        <th:block th:insert="~{fragments/admin/admin-user-form-edit}"></th:block>
                     </th:block>
 
                     <th:block th:unless="${userToEdit != null && userToEdit.id == user.id}">
-                        <th:block th:insert="~{fragments/admin-user-form}"></th:block>
+                        <th:block th:insert="~{fragments/admin/admin-user-form}"></th:block>
                     </th:block>
                 </th:block>
             </th:block>
