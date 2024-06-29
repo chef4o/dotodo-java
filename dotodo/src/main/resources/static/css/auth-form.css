@@ -6,6 +6,8 @@
     left: 44.4%;
     transform: translate(-50%, 0);
     backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.2);
+    background: var(--semi-transparent-filter);
     z-index: 20;
 }
 
@@ -25,13 +27,13 @@
 }
 
 .auth-form.login {
-    height: 10vw;   
-    min-height: 120px;
+    height: 8vw;
+    min-height: 46px;
 }
 
 .auth-form.register {
-    height: 16vw;
-    min-height: 160px;
+    height: 12vw;
+    min-height: 74px;
 }
 
 .auth-form button {

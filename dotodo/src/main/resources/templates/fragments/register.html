@@ -1,7 +1,6 @@
 <form class="auth-form register"
       th:method="post"
-      th:action="@{'/auth/register'}"
-      th:object="${userRegisterDto}">
+      th:action="@{'/auth/register'}">
 
     <button class="xmark"><i class="fa-solid fa-xmark"></i></button>
 
@@ -11,38 +10,31 @@
                 <label for="email">Email</label>
                 <div class="form-input">
                     <i class="fa-solid fa-envelope"></i>
-                    <input id="email" name="email" type="text"/>
+                    <input th:class="${errors != null && errors['email'] != null ? 'error-field' : ''}"
+                           id="email" name="email" type="text" th:value="${email}"/>
 
                     <!-- more value props:
                              onChange={changeHandler}
-                        onBlur={()=> focusHandler(FORM_FIELDS.email)}
-                    class={validationErrors.email && "error-field"}-->
+                        onBlur={()=> focusHandler(FORM_FIELDS.email)} -->
                 </div>
 
-                <!--                <ng-container *ngIf="emailInput.touched">-->
-                <!--                    <div *ngIf="emailInput.errors?.['required']" class="error auth register">Email is required</div>-->
-                <!--                    <div *ngIf="emailInput.errors?.['email']" class="error auth register">Email is invalid</div>-->
-                <!--                </ng-container>-->
+                <div class="error auth register"
+                     th:text="${errors != null && errors['email'] != null ? errors['email'] : ''}"></div>
             </div>
 
             <div class="username">
                 <label for="username">Username</label>
                 <div class="form-input">
                     <i class="fa-solid fa-user"></i>
-                    <input id="username" name="username" type="text"/>
+                    <input th:class="${errors != null && errors['username'] != null ? 'error-field' : ''}"
+                           id="username" name="username" type="text" th:value="${username}"/>
                     <!-- more value props:
                              onChange={changeHandler}
-                        onBlur={()=> focusHandler(FORM_FIELDS.username)}
-                    class={validationErrors.username && "error-field"} /> -->
+                        onBlur={()=> focusHandler(FORM_FIELDS.username)} /> -->
                 </div>
 
-                <!--                <ng-container *ngIf="usernameInput.touched">-->
-                <!--                    <div *ngIf="usernameInput.errors?.['required']" class="error auth register">Username is required-->
-                <!--                    </div>-->
-                <!--                    <div *ngIf="usernameInput.errors?.['minlength']" class="error auth register">Username must be at-->
-                <!--                        leats 5-->
-                <!--                        characters long</div>-->
-                <!--                </ng-container>-->
+                <div class="error auth register"
+                     th:text="${errors != null && errors['username'] != null ? errors['username'] : ''}"></div>
             </div>
         </div>
 
@@ -51,42 +43,37 @@
                 <label for="password">Password</label>
                 <div class="form-input">
                     <i class="fa-solid fa-key"></i>
-                    <input id="password" name="password" type="password"/>
+                    <input th:class="${errors != null && errors['password'] != null ? 'error-field' : ''}"
+                           id="password" name="rawPassword" type="password"/>
                     <!-- more value props:
                              onChange={changeHandler}
-                        onBlur="focusHandler(FORM_FIELDS.password)
-                    class={validationErrors.password && "error-field"} -->
+                        onBlur="focusHandler(FORM_FIELDS.password) -->
                 </div>
 
-                <!--                <ng-container *ngIf="passwordInput.touched">-->
-                <!--                    <div *ngIf="passwordInput.errors?.['required']" class="error auth register">Password is required-->
-                <!--                    </div>-->
-                <!--                    <div *ngIf="passwordInput.errors?.['minlength']" class="error auth register">Password must be at-->
-                <!--                        leats 6 characters long</div>-->
-                <!--                </ng-container>-->
+                <div class="error auth register"
+                     th:text="${errors != null && errors['password'] != null ? errors['password'] : ''}"></div>
             </div>
 
             <div class="rePassword">
                 <label for="rePassword">Repeat password</label>
                 <div class="form-input">
                     <i class="fa-solid fa-key"></i>
-                    <input id="rePassword" name="rePassword" type="password"/>
+                    <input th:class="${errors != null && errors['rePassword'] != null ? 'error-field' : ''}"
+                           id="rePassword" name="rePassword" type="password"/>
                     <!-- more value props:
                              onChange={changeHandler}
                         onBlur={()=>
-                    focusHandler(FORM_FIELDS.rePassword)}
-                    class={validationErrors.rePassword && "error-field"} /> -->
+                    focusHandler(FORM_FIELDS.rePassword)} -->
                 </div>
 
-                <!--                <ng-container *ngIf="rePasswordInput.touched">-->
-                <!--                    <div *ngIf="rePasswordInput.errors?.['required']" class="error auth">Field is required</div>-->
-                <!--                    <div *ngIf="!rePasswordInput.errors?.['required']-->
-                <!--                        && rePasswordInput.value.length >= 6 && rePasswordInput.value != passwordInput.value"-->
-                <!--                         class="error auth">Passwords must match</div>-->
-                <!--                </ng-container>-->
+                <div class="error auth register"
+                     th:text="${errors != null && errors['rePassword'] != null ? errors['rePassword'] : ''}"></div>
             </div>
         </div>
     </div>
+
+    <div th:if="${errors != null && errors['register'] != null}" class="error auth register"
+         th:text="${errors['register']}"></div>
 
     <button class="register">Register</button>
 </form>

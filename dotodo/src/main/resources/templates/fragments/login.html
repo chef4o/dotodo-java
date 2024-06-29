@@ -1,11 +1,13 @@
-<form class="auth-form login" th:method="post" th:action="@{'/auth/login'}">
+<form class="auth-form login"
+      th:method="post"
+      th:action="@{'/auth/login'}">
     <button class="xmark">
         <i class="fa-solid fa-xmark"></i>
     </button>
 
     <div class="auth-fields">
         <div class="username">
-            <label for="username">Username</label>
+            <label for="username">User</label>
             <div class="form-input">
                 <i class="fa-solid fa-user"></i>
                 <input id="username" name="username" type="text" autocomplete="off" th:value="${username}"/>

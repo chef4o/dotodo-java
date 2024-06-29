@@ -15,7 +15,7 @@ public class CustomSecurityConfig {
             "/home",
             "/contacts",
             "/news",
-            "/about-us",
+            "/about",
             "/auth/login",
             "/auth/register",
             "/auth/logout"

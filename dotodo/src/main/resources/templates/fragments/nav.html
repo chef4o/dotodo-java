@@ -1,16 +1,18 @@
 <div class="nav" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <div th:if="${showAuthModal != null}"
+    <div th:if="${loadModal != null}"
          class="backdrop">
     </div>
 
     <div class="top-bar">
         <th:block sec:authorize="isAuthenticated()">
             <p class="greeting"
-               th:if="${#authentication.principal.firstName != null && #authentication.principal.firstName != '' }"
+               th:if="${#authentication.principal.firstName != null &&
+                        #authentication.principal.firstName != '' }"
                th:text="${'Hello, ' + #authentication.principal.firstName}">
             </p>
             <p class="greeting"
-               th:unless="${#authentication.principal.firstName != null && #authentication.principal.firstName != '' }"
+               th:unless="${#authentication.principal.firstName != null &&
+                            #authentication.principal.firstName != '' }"
                th:text="${'Hello, ' + #authentication.principal.username}">
             </p>
         </th:block>
@@ -18,12 +20,13 @@
         <ul class="top-bar-controls">
             <th:block th:each="item : ${topbarNavItems}">
                 <li sec:authorize="!isAuthenticated()"
-                    th:if="${item.get('name') == 'login' || item.get('name') == 'register'}">
+                    th:if="${item.get('name') == 'login' ||
+                             item.get('name') == 'register'}">
                     <a th:href="${item.get('href')}" th:text="${item.get('name')}"></a>
                 </li>
 
-                <li sec:authorize="isAuthenticated() && hasAnyRole('SUPER_ADMIN','ADMIN','MODERATOR')"
-                    th:if="${item.get('name') == 'administration'}">
+                <li th:if="${item.get('name') == 'administration'}"
+                    sec:authorize="isAuthenticated() && hasAnyRole('SUPER_ADMIN', 'ADMIN', 'MODERATOR')">
                     <a th:href="${item.get('href')}" th:text="${item.get('name')}"></a>
                 </li>
 
@@ -35,8 +38,6 @@
                 </li>
             </th:block>
         </ul>
-
-
     </div>
 
     <div class="sidebar">
@@ -46,9 +47,13 @@
             </a>
             <ul class="menu">
                 <th:block th:each="item: ${sidebarNavItems}">
-                    <th:block th:if="${item.get('name') != 'profile'} or
-                                    (${item.get('name') == 'profile' and #authorization.expression('isAuthenticated()')})">
-                        <li th:class="${pageName == item.get('name') ? item.get('name') + ' active' : item.get('name')}">
+                    <th:block th:if="${item.get('name') != 'profile'}
+                                     or
+                                    (${item.get('name') == 'profile' and
+                                        #authorization.expression('isAuthenticated()')})">
+                        <li th:class="${pageName == item.get('name')
+                                        ? item.get('name') + ' active'
+                                        : item.get('name')}">
                             <a th:href="${item.get('href')}">
                                 <i th:class="${item.get('icon')}"></i>
                                 <p th:text="${item.get('name')}"></p>
@@ -61,7 +66,8 @@
 
         <div class="connect">
             <th:block th:each="item: ${connectNavItems}">
-                <a th:href="${item.get('href')}" th:id="${item.get('name')}" target="_blank" rel="noreferrer">
+                <a th:href="${item.get('href')}"
+                   th:id="${item.get('name')}" target="_blank" rel="noreferrer">
                     <i th:class="${item.get('icon')}"></i>
                 </a>
             </th:block>

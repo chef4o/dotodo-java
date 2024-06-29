@@ -1,7 +1,7 @@
 package com.pago.dotodo.util;
 
-import com.pago.dotodo.security.CustomSecurityConfig;
 import com.pago.dotodo.service.LayoutService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -12,11 +12,10 @@ import java.util.stream.IntStream;
 public class ModelAndViewParser {
 
     private final LayoutService layoutService;
-    private final String[] administrationRoles;
 
+    @Autowired
     public ModelAndViewParser(LayoutService layoutService) {
         this.layoutService = layoutService;
-        this.administrationRoles = CustomSecurityConfig.getAdministrationRoles();
     }
 
     public Map<String, Object> build(Object... attributes) {
@@ -45,7 +44,6 @@ public class ModelAndViewParser {
         navAttributes.put("sidebarNavItems", layoutService.getSidebarNavItems());
         navAttributes.put("bottombarNavItems", layoutService.getBottombarNavItems());
         navAttributes.put("connectNavItems", layoutService.getConnectNavItems());
-        navAttributes.put("administrationRoles", administrationRoles);
         return navAttributes;
     }
 }
