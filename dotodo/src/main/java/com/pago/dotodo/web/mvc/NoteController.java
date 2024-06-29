@@ -24,9 +24,7 @@ public class NoteController extends BaseController {
 
     @GetMapping
     public ModelAndView getNotesPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
-        System.out.println(userDetails);
-        System.out.println(userDetails.getId());
-        System.out.println(noteService.getAll(userDetails.getId()));
+
         return this.view("index", attributeBuilder.build(
                 "pageName", PAGE_NAME,
                 "notes", noteService.getAll(userDetails.getId()))

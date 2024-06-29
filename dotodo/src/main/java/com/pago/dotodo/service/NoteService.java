@@ -2,9 +2,9 @@ package com.pago.dotodo.service;
 
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.entity.NoteEntity;
-import com.pago.dotodo.model.entity.UserEntity;
 import com.pago.dotodo.repository.NoteRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,6 +19,7 @@ public class NoteService {
     private final UserService userService;
     private final ModelMapper modelMapper;
 
+    @Autowired
     public NoteService(NoteRepository noteRepository,
                        UserService userService,
                        ModelMapper modelMapper) {
@@ -44,15 +45,14 @@ public class NoteService {
         noteRepository.deleteById(noteId);
     }
 
-    public long addNote(NoteDto noteDto) {
+    public long addNote(NoteDto noteDto, Long userId) {
         NoteEntity newNote = new NoteEntity()
                 .setTitle(noteDto.getTitle())
                 .setContent(noteDto.getContent())
                 .setArchived(false)
                 .setStartDate(LocalDateTime.now())
                 .setTrackProgress("New")
-                .setOwner(modelMapper
-                        .map(userService.getUserById(1L), UserEntity.class)) //TODO: change ID
+                .setOwner(userService.getUserById(userId))
                 .setPeers(new HashSet<>());
 
         return noteRepository.save(newNote).getId();

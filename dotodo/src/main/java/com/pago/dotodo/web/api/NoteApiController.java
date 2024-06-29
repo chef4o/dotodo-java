@@ -1,9 +1,11 @@
 package com.pago.dotodo.web.api;
 
 import com.pago.dotodo.model.dto.NoteDto;
+import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.NoteService;
 import com.pago.dotodo.web.mvc.BaseController;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,8 +23,8 @@ public class NoteApiController extends BaseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<NoteDto>> getAll(Long userId) {
-        return ResponseEntity.ok(noteService.getAll(userId));
+    public ResponseEntity<List<NoteDto>> getAll(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
+        return ResponseEntity.ok(noteService.getAll(userDetails.getId()));
     }
 
     @GetMapping("/{id}")
@@ -42,8 +44,9 @@ public class NoteApiController extends BaseController {
 
     @PostMapping()
     public ResponseEntity<NoteDto> createNote(@RequestBody NoteDto noteDto,
+                                              @AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                               UriComponentsBuilder uriComponentsBuilder) {
-        long noteId = noteService.addNote(noteDto);
+        long noteId = noteService.addNote(noteDto, userDetails.getId());
 
         return ResponseEntity.created(uriComponentsBuilder
                         .path("/api/notes/{id}").build(noteId))
