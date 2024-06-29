@@ -1,0 +1,11 @@
+<div class="content profile" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <th:block sec:authorize="!isAuthenticated()">
+        <th:block th:insert="~{fragments/error/error-403}"></th:block>
+    </th:block>
+
+    <th:block sec:authorize="isAuthenticated()">
+        <th:block th:insert="~{fragments/profile/profile-details}"></th:block>
+        <th:block th:insert="~{fragments/profile/profile-notes}"></th:block>
+        <th:block th:insert="~{fragments/profile/profile-checklists}"></th:block>
+    </th:block>
+</div>

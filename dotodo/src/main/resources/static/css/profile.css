@@ -1,6 +1,6 @@
 .content.profile .user-details {
     display: flex;
-    height: 24vw;
+    height: 17vw;
 }
 
 .content.profile .user-details .profile-image,
@@ -23,6 +23,10 @@
 .content.profile .user-details .profile-image img {
     height: 12vw;
     border-radius: 50%;
+}
+
+.content.profile .user-details .profile-image i {
+    font-size: 8vw;
 }
 
 .content.profile .user-details .profile-details .personal,
@@ -78,9 +82,9 @@
     justify-content: space-between;
     align-items: center;
     width: 92%;
-} 
+}
 
-.content.profile .expiring-notes .notes-list .note-details.active .heading-row p, 
+.content.profile .expiring-notes .notes-list .note-details.active .heading-row p,
 .content.profile .expiring-notes .notes-list .note-details.active .dates-row * {
     font-size: 1.6vw;
 }

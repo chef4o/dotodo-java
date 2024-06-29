@@ -1,6 +1,7 @@
 package com.pago.dotodo.service;
 
-import com.pago.dotodo.model.dto.UserDto;
+import com.pago.dotodo.model.entity.UserEntity;
+import com.pago.dotodo.model.view.UserProfileView;
 import com.pago.dotodo.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +18,13 @@ public class UserService {
         this.modelMapper = modelMapper;
     }
 
-    public UserDto getUserById(Long id) {
-        return this.modelMapper.map(userRepository.findById(id), UserDto.class);
+    public UserProfileView getProfileDetails(Long id) {
+        return this.modelMapper
+                .map(userRepository.findById(id), UserProfileView.class)
+                .setFullName();
     }
 
-    public boolean exists(UserDto userDto) {
-        return this.userRepository.existsById(userDto.getId());
+    public UserEntity getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow();
     }
 }

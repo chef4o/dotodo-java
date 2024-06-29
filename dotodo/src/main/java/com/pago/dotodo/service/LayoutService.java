@@ -6,14 +6,22 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LayoutService {
 
-    private final List<MenuItem> topbarNavItems = new ArrayList<>();
-    private final List<MenuItem> sidebarNavItems = new ArrayList<>();
-    private final List<MenuItem> bottombarNavItems = new ArrayList<>();
-    private final List<MenuItem> connectNavItems = new ArrayList<>();
+    private final List<MenuItem> topbarNavItems;
+    private final List<MenuItem> sidebarNavItems;
+    private final List<MenuItem> bottombarNavItems;
+    private final List<MenuItem> connectNavItems;
+
+    public LayoutService() {
+        this.topbarNavItems = new ArrayList<>();
+        this.sidebarNavItems = new ArrayList<>();
+        this.bottombarNavItems = new ArrayList<>();
+        this.connectNavItems = new ArrayList<>();
+    }
 
     private final List<MenuItem> homeItems = new ArrayList<>();
 
@@ -44,6 +52,12 @@ public class LayoutService {
 
     public List<MenuItem> getHomeItems() {
         return homeItems;
+    }
+
+    public ArrayList<String> getMenuNames(List<MenuItem> menuItems) {
+        return menuItems.stream()
+                .map(MenuItem::getName)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private void initializeHomeItems() {
@@ -111,7 +125,7 @@ public class LayoutService {
         addItems(bottombarNavItems,
                 new MenuItem()
                         .add("name", "about")
-                        .add("href", "/about-us"),
+                        .add("href", "/about"),
                 new MenuItem()
                         .add("name", "contacts")
                         .add("href", "/contacts"),

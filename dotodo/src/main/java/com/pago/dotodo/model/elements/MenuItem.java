@@ -28,6 +28,10 @@ public class MenuItem {
         return this;
     }
 
+    public String getName() {
+        return properties.get("name");
+    }
+
     @Override
     public String toString() {
         return "MenuItem{" +
