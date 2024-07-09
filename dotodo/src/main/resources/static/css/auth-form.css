@@ -20,7 +20,7 @@
     z-index: 30;
 }
 
-.auth-form .auth-fields  {
+.auth-form .auth-fields {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -29,6 +29,19 @@
 .auth-form.login {
     height: 8vw;
     min-height: 46px;
+}
+
+.auth-form.login .rememberMe {
+    display: flex;
+    gap: 0.6vw;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 2.6vw;
+    font-size: 1.2vw;
+}
+
+.auth-form.login .rememberMe input {
+    width: 1.4vw;
 }
 
 .auth-form.register {

@@ -1,5 +1,6 @@
 package com.pago.dotodo.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +11,26 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import javax.sql.DataSource;
+
 @Configuration
 public class SecurityBeanConfig {
+
+    private final DataSource dataSource;
+    private final AppUserDetailsService appUserDetailsService;
+
+
+    @Autowired
+    public SecurityBeanConfig(DataSource dataSource, AppUserDetailsService appUserDetailsService) {
+        this.dataSource = dataSource;
+        this.appUserDetailsService = appUserDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthFailureHandler customAuthFailureHandler) throws Exception {
@@ -31,6 +46,11 @@ public class SecurityBeanConfig {
                         .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
                         .defaultSuccessUrl("/")
                         .failureHandler(customAuthFailureHandler))
+                .rememberMe(rm -> rm
+                        .tokenRepository(persistentTokenRepository())
+                        .tokenValiditySeconds(86400) // 24h
+                        .userDetailsService(appUserDetailsService)
+                        .key("yourSecretKey"))
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
                         .deleteCookies("JSESSIONID")
@@ -48,6 +68,13 @@ public class SecurityBeanConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+        return tokenRepository;
     }
 
     @Bean

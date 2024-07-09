@@ -10,31 +10,27 @@
             <label for="username">User</label>
             <div class="form-input">
                 <i class="fa-solid fa-user"></i>
-                <input id="username" name="username" type="text" autocomplete="off" th:value="${username}"/>
+                <input th:class="${errors != null && errors['username'] != null ? 'error-field' : ''}"
+                        id="username" name="username" type="text" autocomplete="off" th:value="${username}"/>
             </div>
-
-            <!--            <ng-container *ngIf="emailInput.touched">-->
-            <!--                <div *ngIf="emailInput.errors?.['required']" class="error auth login email">-->
-            <!--                    Email is required-->
-            <!--                </div>-->
-            <!--            </ng-container>-->
         </div>
 
         <div class="password">
             <label for="password">Password</label>
             <div class="form-input">
                 <i class="fa-solid fa-key"></i>
-                <input id="password" name="password" type="password" autocomplete="off"/>
+                <input th:class="${errors != null && errors['username'] != null ? 'error-field' : ''}"
+                        id="password" name="password" type="password" autocomplete="off"/>
             </div>
-
-            <!--            <ng-container *ngIf="passwordInput.touched">-->
-            <!--                <div *ngIf="passwordInput.errors?.['required']" class="error auth login password">Password is required-->
-            <!--                </div>-->
-            <!--            </ng-container>-->
         </div>
     </div>
 
     <div th:if="${bad_credentials}" class="error auth login">The username or password provided is incorrect</div>
+
+    <div class="rememberMe">
+        <input type="checkbox" name="remember-me" id="remember-me"/>
+        <label for="remember-me">Remember me</label>
+    </div>
 
     <button class="login">Login</button>
 </form>

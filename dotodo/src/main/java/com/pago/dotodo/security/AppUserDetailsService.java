@@ -1,7 +1,8 @@
 package com.pago.dotodo.security;
 
 import com.pago.dotodo.model.entity.UserEntity;
-import com.pago.dotodo.service.AuthService;
+import com.pago.dotodo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,15 +16,16 @@ import java.util.stream.Collectors;
 @Service
 public class AppUserDetailsService implements UserDetailsService {
 
-    private final AuthService authService;
+    private final UserService userService;
 
-    public AppUserDetailsService(AuthService authService) {
-        this.authService = authService;
+    @Autowired
+    public AppUserDetailsService(UserService userService) {
+        this.userService = userService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return authService.findUserByUsernameOrEmail(username)
+        return userService.findUserByUsernameOrEmail(username)
                 .map(this::mapToUserDetails)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
     }

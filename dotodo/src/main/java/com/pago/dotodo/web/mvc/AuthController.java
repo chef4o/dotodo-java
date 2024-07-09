@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+import java.util.UUID;
 
 import java.util.HashMap;
 
@@ -50,12 +51,15 @@ public class AuthController extends BaseController {
                                  HttpServletRequest request,
                                  SessionStatus sessionStatus) {
 
-        authService.setBackgroundPage(request);
+        UUID uuid = UUID.randomUUID();
+        System.out.println(uuid);
+
+        layoutService.setBackgroundPage(request);
 
         ModelAndView modelAndView = this.view("index", attributeBuilder.build(
-                "pageName", authService.getBackgroundPage(),
+                "pageName", layoutService.getBackgroundPage(),
                 LOAD_MODAL, "login",
-                "tasks", authService.getBackgroundPage()
+                "tasks", layoutService.getBackgroundPage()
                         .equals("home")
                         ? layoutService.getHomeItems()
                         : null,
@@ -72,11 +76,11 @@ public class AuthController extends BaseController {
     public ModelAndView getRegister(@ModelAttribute("userRegisterInfo") UserRegisterDto userRegisterInfo,
                                     HttpServletRequest request) {
 
-        authService.setBackgroundPage(request);
+        layoutService.setBackgroundPage(request);
 
         return this.view("index", attributeBuilder.build(
-                "pageName", authService.getBackgroundPage(),
-                "tasks", authService.getBackgroundPage()
+                "pageName", layoutService.getBackgroundPage(),
+                "tasks", layoutService.getBackgroundPage()
                         .equals("home")
                         ? layoutService.getHomeItems()
                         : null,
@@ -92,8 +96,8 @@ public class AuthController extends BaseController {
 
         if (!errors.isEmpty()) {
             return this.view("index", attributeBuilder.build(
-                    "pageName", authService.getBackgroundPage(),
-                    "tasks", authService.getBackgroundPage()
+                    "pageName", layoutService.getBackgroundPage(),
+                    "tasks", layoutService.getBackgroundPage()
                             .equals("home")
                             ? layoutService.getHomeItems()
                             : null,
@@ -112,8 +116,8 @@ public class AuthController extends BaseController {
             errors.put("register", e.getMessage());
 
             return this.view("index", attributeBuilder.build(
-                    "pageName", authService.getBackgroundPage(),
-                    "tasks", authService.getBackgroundPage()
+                    "pageName", layoutService.getBackgroundPage(),
+                    "tasks", layoutService.getBackgroundPage()
                             .equals("home")
                             ? layoutService.getHomeItems()
                             : null,
