@@ -26,4 +26,13 @@ public abstract class BaseController {
         return this.view(REDIRECT + url);
     }
 
+    public ModelAndView redirect(String url, Map<String, Object> attributes) {
+        ModelAndView modelAndView = new ModelAndView(REDIRECT + url);
+
+        for (Map.Entry<String, Object> entry : attributes.entrySet()) {
+            modelAndView.addObject(entry.getKey(), entry.getValue());
+        }
+
+        return modelAndView;
+    }
 }
