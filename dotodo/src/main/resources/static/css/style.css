@@ -22,6 +22,7 @@
   --color-body-background: #4a5759;
   --color-menu-pale-silver: #c5c6c7;
   --color-menu-soft-sky-blue: #8295a3;
+  --color-menu-soft-sky-blue-transparent: rgba(130, 149, 163, 0.4);
   --color-menu-icon-soft-sky-blue: #4d5d6a;
   --color-menu-creamy-peach: #c1b09f;
   --color-menu-icon-creamy-peach: #847a70;
@@ -38,11 +39,8 @@
   --color-menu-dark-soft-gray-transparent-04: rgba(76, 91, 91, 0.4);
   --color-ivory: #f2f0e6;
   --color-error-red: #5c0707;
-  --color-notes-bckgd: #f7e971;
-  --color-note-new-bckgd: #fff5a3;
   --color-checklists-bckgd: #c7b97e;
   --color-checklist-new-bckgd: #dfd8a4;
-  --color-notes-border: #9d954b;
 
   --shadow-base: 1px 4px 4px 1px rgba(0, 0, 0, 0.2);
   --left-box-shadow: -10px 0 10px rgba(0, 0, 0, 0.2);

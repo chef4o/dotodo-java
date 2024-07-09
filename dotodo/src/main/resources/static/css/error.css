@@ -1,19 +1,5 @@
-.error.auth {
+.error {
     color: var(--color-error-red);
-    font-size: 1vw;
-    height: 1vw;
-}
-
-.error.contact {
-    color: var(--color-error-red);
-    font-size: 1.6vw;
-    padding-top: 0.1vw;
-}
-
-.error.auth.login {
-    font-size: 1vw;
-    width: 31vw;
-    text-align: right;
 }
 
 .error-field {
@@ -47,5 +33,28 @@
 
 .error-page p {
     font-size: 2vw;
-    width: 30vw;
+    width: 32vw;
+}
+
+.error.auth {
+    font-size: 1vw;
+    height: 1vw;
+}
+
+.error.contact {
+    font-size: 1.6vw;
+    padding-top: 0.1vw;
+}
+
+.error.auth.login {
+    font-size: 1vw;
+    width: 31vw;
+    text-align: right;
+}
+
+.error.new-note {
+    position: absolute;
+    width: 48vw;
+    bottom: 1vw;
+    text-align: left;
 }

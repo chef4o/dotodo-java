@@ -2,11 +2,13 @@ package com.pago.dotodo.service;
 
 import com.pago.dotodo.model.elements.MenuItem;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class LayoutService {
@@ -15,12 +17,14 @@ public class LayoutService {
     private final List<MenuItem> sidebarNavItems;
     private final List<MenuItem> bottombarNavItems;
     private final List<MenuItem> connectNavItems;
+    String backgroundPage;
 
     public LayoutService() {
         this.topbarNavItems = new ArrayList<>();
         this.sidebarNavItems = new ArrayList<>();
         this.bottombarNavItems = new ArrayList<>();
         this.connectNavItems = new ArrayList<>();
+        this.backgroundPage = "home";
     }
 
     private final List<MenuItem> homeItems = new ArrayList<>();
@@ -63,17 +67,17 @@ public class LayoutService {
     private void initializeHomeItems() {
         addItems(homeItems,
                 new MenuItem()
-                        .add("name", "notes")
+                        .add("name", "Notes")
                         .add("href", "/notes")
                         .add("headerText", "Basic text notes")
                         .add("description", "Create quick notes/memos by typing-in what's on your mind."),
                 new MenuItem()
-                        .add("name", "checklists")
+                        .add("name", "Checklists")
                         .add("href", "/checklists")
                         .add("headerText", "List of to-do items")
                         .add("description", "Create a checklist of items or tasks you would like to track."),
                 new MenuItem()
-                        .add("name", "events")
+                        .add("name", "Events")
                         .add("href", "/events")
                         .add("headerText", "Calendar reminders")
                         .add("description", "Create event reminders such as birthdate alerts, social engagements, etc.")
@@ -166,5 +170,32 @@ public class LayoutService {
 
     private List<String> getItemsByType(List<MenuItem> items, String type) {
         return items.stream().map(e -> e.get(type)).toList();
+    }
+
+    public List<String> getBackgroundMenuPages() {
+        return Stream
+                .concat(getMenuNames(getSidebarNavItems()).stream(),
+                        getMenuNames(getBottombarNavItems()).stream())
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public String getBackgroundPage() {
+        return backgroundPage;
+    }
+
+    public void setBackgroundPage(HttpServletRequest request) {
+        String lastPage = request.getHeader("Referer") != null
+                ? request.getHeader("Referer")
+                .substring(request.getHeader("Referer").lastIndexOf("/") + 1)
+                : "";
+
+        if (lastPage.isEmpty()) {
+            this.backgroundPage = "home";
+            return;
+        }
+
+        if (getBackgroundMenuPages().contains(lastPage)) {
+            this.backgroundPage = lastPage;
+        }
     }
 }
