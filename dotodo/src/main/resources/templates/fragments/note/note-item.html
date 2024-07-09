@@ -1,48 +1,15 @@
-<div th:class="${activeNoteId == note.id ? 'note active' : 'note'}">
-    <button th:if="${activeNoteId == note.id}" class="xmark">
-        <i class="fa-solid fa-xmark"></i>
-    </button>
+<a th:href="@{'/notes/view/' + ${note.id}}">
+    <div class="note">
+        <h3 th:text="${note.title}"></h3>
+        <p th:text="${note.content}"></p>
 
-    <h3 th:text="${note.title}"></h3>
-    <p th:text="${note.content}"></p>
-    <button class="delete-btn">Delete</button>
-</div>
+        <form th:action="@{'/notes/edit/' + ${note.id}}" th:method="get">
+            <button type="submit" class="edit-btn">Edit</button>
+        </form>
 
-<form th:class="${activeNoteId == note.id ? 'note active' : 'note'}" th:method="post" th:action="@{'/auth/login'}">
-    <button class="xmark">
-        <i class="fa-solid fa-xmark"></i>
-    </button>
-
-    <div class="auth-fields">
-        <div class="username">
-            <label for="username">Username</label>
-            <div class="form-input">
-                <i class="fa-solid fa-user"></i>
-                <input id="username" name="username" type="text" autocomplete="off" th:value="${username}"/>
-            </div>
-
-            <!--            <ng-container *ngIf="emailInput.touched">-->
-            <!--                <div *ngIf="emailInput.errors?.['required']" class="error auth login email">-->
-            <!--                    Email is required-->
-            <!--                </div>-->
-            <!--            </ng-container>-->
-        </div>
-
-        <div class="password">
-            <label for="password">Password</label>
-            <div class="form-input">
-                <i class="fa-solid fa-key"></i>
-                <input id="password" name="password" type="password" autocomplete="off"/>
-            </div>
-
-            <!--            <ng-container *ngIf="passwordInput.touched">-->
-            <!--                <div *ngIf="passwordInput.errors?.['required']" class="error auth login password">Password is required-->
-            <!--                </div>-->
-            <!--            </ng-container>-->
-        </div>
+        <form th:action="@{'/notes/delete/' + ${note.id}}" th:method="delete">
+            <button type="submit" class="delete-btn">Delete</button>
+        </form>
     </div>
+</a>
 
-    <div th:if="${bad_credentials}" class="error auth login">The username or password provided is incorrect</div>
-
-    <button class="login">Login</button>
-</form>

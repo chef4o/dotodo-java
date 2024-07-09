@@ -1,15 +1,27 @@
 package com.pago.dotodo.model.dto;
 
-import java.time.LocalDateTime;
+import com.pago.dotodo.model.entity.UserEntity;
+
 
 public class NoteDto {
+    private Long id;
     private String title;
     private String content;
-    private Boolean isArchived;
-    private String startDate;
     private String dueDate;
-    private String completedOn;
-    private String trackProgress;
+    private String startDate;
+    private Long ownerId;
+
+    public NoteDto() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public NoteDto setId(Long id) {
+        this.id = id;
+        return this;
+    }
 
     public String getTitle() {
         return title;
@@ -29,12 +41,12 @@ public class NoteDto {
         return this;
     }
 
-    public Boolean getArchived() {
-        return isArchived;
+    public String getDueDate() {
+        return dueDate;
     }
 
-    public NoteDto setArchived(Boolean archived) {
-        isArchived = archived;
+    public NoteDto setDueDate(String dueDate) {
+        this.dueDate = dueDate;
         return this;
     }
 
@@ -47,30 +59,12 @@ public class NoteDto {
         return this;
     }
 
-    public String getDueDate() {
-        return dueDate;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public NoteDto setDueDate(String dueDate) {
-        this.dueDate = dueDate;
-        return this;
-    }
-
-    public String getCompletedOn() {
-        return completedOn;
-    }
-
-    public NoteDto setCompletedOn(String completedOn) {
-        this.completedOn = completedOn;
-        return this;
-    }
-
-    public String getTrackProgress() {
-        return trackProgress;
-    }
-
-    public NoteDto setTrackProgress(String trackProgress) {
-        this.trackProgress = trackProgress;
+    public NoteDto setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
         return this;
     }
 }

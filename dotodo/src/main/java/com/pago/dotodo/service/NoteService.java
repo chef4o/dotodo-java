@@ -41,6 +41,14 @@ public class NoteService {
                 .findById(noteId), NoteDto.class));
     }
 
+    public List<NoteDto> getByUserIdOrderByInsTimeDesc(Long userId) {
+        return this.noteRepository
+                .findByOwnerIdOrderByStartDateDesc(userId)
+                .stream()
+                .map(note -> modelMapper.map(note, NoteDto.class))
+                .collect(Collectors.toList());
+    }
+
     public void deleteById(Long noteId) {
         noteRepository.deleteById(noteId);
     }

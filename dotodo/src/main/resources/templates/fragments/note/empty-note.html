@@ -1,7 +1,12 @@
-<div class="note new">
-    <input class="title" placeholder="Add title"/>
+<form class="note new" th:action="@{'/notes/new'}" th:method="post">
+    <a href="/notes" class="xmark"><i class="fa-solid fa-xmark"></i></a>
 
-    <input class="note-text" placeholder="Add text"/>
+    <input class="title" name="title" placeholder="Add title"
+           th:value="${noteData.title}"/>
+
+    <textarea class="note-text" name="content" placeholder="Add text"
+              th:text="${noteData.content}"></textarea>
+    <p class="error new-note" th:if="${emptyValueError != null}" th:text="${emptyValueError}"></p>
 
     <button class="create">Create</button>
-</div>
+</form>
