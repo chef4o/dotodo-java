@@ -2,17 +2,20 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 1vw 2vw 0 2vw;
+    margin: 2vw;
+}
+
+.content.notes .header-menu h2,
+.content.notes .header-menu i {
+    color: var(--color-menu-icon-soft-sky-blue);
 }
 
 .content.notes .header-menu h2 {
     font-size: 2vw;
-    color: var(--color-menu-icon-soft-sky-blue);
 }
 
 .content.notes .header-menu i {
     padding-right: 1vw;
-    color: var(--color-menu-icon-soft-sky-blue);
 }
 
 .content.notes .header-menu button {
@@ -49,12 +52,56 @@
     overflow: hidden;
 }
 
+.content.notes .note h3 {
+    font-size: 1.8vw;
+    height: 2.4vw;
+    border-bottom: 1px solid var(--color-menu-icon-soft-sky-blue);
+}
+
+.content.notes .note p {
+    width: 16vw;
+    padding-top: 0.6vw;
+    word-wrap: break-word;
+    line-height: normal;
+    overflow: scroll;
+}
+
+.content.notes .note p.with-due,
+.content.notes .note .due {
+    position: absolute;
+}
+
+.content.notes .note p.with-due,
+.content.notes .note .due {
+    top: 4.3vw;
+}
+
+.content.notes .note .due {
+    top: 3.2vw;
+    font-style: italic;
+}
+
+.content.notes .note.new,
+.content.notes .note.active {
+    width: 100%;
+    background-color: var(--color-menu-soft-sky-blue-transparent);
+}
+
+.content.notes .note.active.details {
+    background-color: var(--color-menu-soft-sky-blue);
+}
+
 .content.notes .note .delete-btn,
 .content.notes .note .create,
-.content.notes .note .edit-btn {
+.content.notes .note .edit-btn,
+.content.notes .note .cancel-btn {
     position: absolute;
     top: 13vw;
     height: 2vw;
+}
+
+.content.notes .note .cancel-btn {
+    margin-left: 4vw;
 }
 
 .content.notes .note .delete-btn {
@@ -65,8 +112,7 @@
     left: 1vw;
 }
 
-.content.notes .note .create:hover,
-.content.notes .new-note button:hover {
+.content.notes .note .create:hover {
     background-color: var(--color-menu-soft-sky-blue);
 }
 
@@ -75,54 +121,23 @@
     background-color: var(--color-gray-light);
 }
 
-.content.notes .note h3 {
-    font-size: 1.8vw;
-    height: 2.4vw;
-    border-bottom: 1px solid var(--color-menu-icon-soft-sky-blue);
-}
-
-.content.notes .note p {
-    width: 16vw;
-    word-wrap: break-word;
-    line-height: normal;
-    overflow: scroll;
-}
-
-.content.notes .note.new,
-.content.notes .note.active {
-    position: relative;
-    width: 100%;
-    background-color: var(--color-menu-soft-sky-blue-transparent);
-}
-
-.content.notes .note.active.details {
-    background-color: var(--color-menu-soft-sky-blue);
-}
-
-.new-note {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 50vw;
-}
-
 .content.notes .note.new .title,
-.content.notes .new-note .title,
-.content.notes .note.new .note-text,
-.content.notes .new-note .note-text,
 .content.notes .note.active .title,
+.content.notes .note.new .note-text,
 .content.notes .note.active .note-text,
-.content.notes .note.new p {
+.content.notes .note.new p,
+.content.notes .note.active .note-text,
+.content.notes .note.new .title,
+.content.notes .note.active .title {
     background: none;
     border: none;
     width: 100%;
 }
 
 .content.notes .note.new .title,
-.content.notes .new-note .title,
 .content.notes .note.active .title {
     font-size: 1.8vw;
-    padding: 0.6vw 0 0.4vw 0.4vw;
+    padding: 0;
     border-bottom: 1px solid var(--color-menu-icon-soft-sky-blue);
 }
 
@@ -131,12 +146,11 @@
 }
 
 .content.notes .note.new .note-text,
-.content.notes .new-note .note-text,
 .content.notes .note.active .note-text {
     height: 9vw;
     resize: none;
-    padding: 0.4vw;
-    margin-top: 1vw;
+    padding: 0.4vw 9vw 0.4vw 0.4vw;
+    margin-top: 0.6vw;
 }
 
 .content.notes .note.active .xmark,
@@ -145,26 +159,75 @@
     right: 1vw;
 }
 
-.content.notes .new-note .content {
-    width: 50vw;
-    height: 12vw;
-    resize: none;
-    padding: 0.4vw 0 0.4vw 0.4vw;
-    margin-top: 1vw;
-}
-
 .content.notes .note.new button {
     position: absolute;
     bottom: -11vw;
     right: 0.6vw;
 }
 
-.new-note button {
-    font-size: 2vw;
-    padding: 0.2vw 2vw;
-    height: 4vw;
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
 }
 
-input:focus, textarea:focus, select:focus {
-    outline: none;
+.content.notes .due-date,
+.content.notes .due-time {
+    position: absolute;
+    text-align: end;
+    font-size: 1vw;
+}
+
+.content.notes .due-date {
+    right: 1vw;
+    margin-top: 1vw;
+}
+
+.content.notes .due-date div {
+    display: flex;
+    align-items: center;
+    padding-top: 0.2vw;
+    gap: 0.2vw;
+}
+
+.content.notes .due-date p {
+    padding-right: 0.5vw;
+}
+
+.content.notes .due-time {
+    top: 6.8vw;
+    right: 1.5vw;
+    display: flex;
+    gap: 0.1vw;
+    align-items: center;
+    justify-content: end;
+}
+
+.content.notes .note.active .due-date,
+.content.notes .note.new .due-date {
+    top: 3vw;
+}
+
+.content.notes .note.new .due-date p {
+    padding-top: 0;
+}
+
+
+.content.notes .note.active.details .due-date {
+    padding-right: 0.6vw;
+}
+
+.content.notes .form-edit .due-date {
+    top: 4vw;
+}
+
+.content.notes .due-date input,
+.content.notes .due-time input {
+    font-size: 1vw;
+    background: none;
+    border: none;
+}
+
+.content.notes .due-time input {
+    display: flex;
 }

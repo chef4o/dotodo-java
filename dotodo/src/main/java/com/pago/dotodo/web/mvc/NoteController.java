@@ -3,6 +3,7 @@ package com.pago.dotodo.web.mvc;
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.NoteService;
+import com.pago.dotodo.util.DateTimeUtil;
 import com.pago.dotodo.util.ModelAndViewParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +20,12 @@ public class NoteController extends BaseController {
     private final NoteService noteService;
     private final ModelAndViewParser attributeBuilder;
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private final DateTimeUtil dateTimeUtil;
 
-    public NoteController(NoteService noteService, ModelAndViewParser attributeBuilder) {
+    public NoteController(NoteService noteService, ModelAndViewParser attributeBuilder, DateTimeUtil dateTimeUtil) {
         this.noteService = noteService;
         this.attributeBuilder = attributeBuilder;
+        this.dateTimeUtil = dateTimeUtil;
     }
 
     @GetMapping
@@ -56,10 +59,24 @@ public class NoteController extends BaseController {
     public ModelAndView addNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                 @ModelAttribute NoteDto noteDto) {
 
+        final String valueError;
+
         if (noteDto.getTitle().isBlank() || noteDto.getContent().isBlank()) {
+            valueError = "Title and content are both mandatory";
+        } else if (noteDto.getDueDate() == null || noteDto.getDueDate().isBlank()
+                && (noteDto.getDueTime() != null & !noteDto.getDueTime().isBlank())) {
+            valueError = "Due time cannot be added without a date";
+        } else if (noteDto.getDueDate() != null && !noteDto.getDueDate().isBlank()
+                && !dateTimeUtil.isInFuture(noteDto.getDueDate(), noteDto.getDueTime())) {
+            valueError = "Due date must be in the future";
+        } else {
+            valueError = "";
+        }
+
+        if (!valueError.isBlank()) {
             return this.view("index", attributeBuilder.build(
                     "pageName", PAGE_NAME,
-                    "emptyValueError", "Title and content are both mandatory",
+                    "valueError", valueError,
                     "noteData", noteDto,
                     "createNewNote", true,
                     "notes", noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
@@ -105,12 +122,14 @@ public class NoteController extends BaseController {
 
     @GetMapping("/view/{id}")
     public ModelAndView getViewNoteDetailPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                        @PathVariable Long id) {
+                                              @PathVariable Long id) {
 
-        if (noteService.getById(id).get().getOwnerId().equals(userDetails.getId())) {
+        NoteDto detailedNote = noteService.getById(id).get();
+
+        if (detailedNote.getOwnerId().equals(userDetails.getId())) {
             return super.redirect("/notes", attributeBuilder.build(
                     "viewNoteId", id,
-                    "detailedNote", noteService.getById(id)));
+                    "detailedNote", detailedNote));
         }
         return super.redirect("/notes");
     }

@@ -6,7 +6,19 @@
 
     <textarea class="note-text" name="content" placeholder="Add text"
               th:text="${noteData.content}"></textarea>
-    <p class="error new-note" th:if="${emptyValueError != null}" th:text="${emptyValueError}"></p>
+
+    <label class="due-date" for="dueDate">
+        <p>Due date / time</p>
+        <input id="dueDate" type="date" name="dueDate"
+               th:value="${noteData.dueDate}">
+    </label>
+
+    <label class="due-time" for="dueTime">
+        <input id="dueTime" type="time" name="dueTime" th:value="${noteData.dueTime}">
+        <i class="fa-regular fa-clock"></i>
+    </label>
+
+    <p class="error new-note" th:if="${valueError != null}" th:text="${valueError}"></p>
 
     <button class="create">Create</button>
 </form>

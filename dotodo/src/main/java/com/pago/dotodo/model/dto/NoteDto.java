@@ -1,17 +1,20 @@
 package com.pago.dotodo.model.dto;
 
-import com.pago.dotodo.model.entity.UserEntity;
-
+import java.util.HashMap;
+import java.util.Map;
 
 public class NoteDto {
     private Long id;
     private String title;
     private String content;
     private String dueDate;
-    private String startDate;
+    private String dueTime;
+    private Boolean dueDateOnly;
+    private Map<String, Integer> dueDaysHours;
     private Long ownerId;
 
     public NoteDto() {
+        this.dueDaysHours = new HashMap<>();
     }
 
     public Long getId() {
@@ -50,12 +53,48 @@ public class NoteDto {
         return this;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public String getDueTime() {
+        return dueTime;
     }
 
-    public NoteDto setStartDate(String startDate) {
-        this.startDate = startDate;
+    public NoteDto setDueTime(String dueTime) {
+        this.dueTime = dueTime;
+        return this;
+    }
+
+    public Boolean getDueDateOnly() {
+        return dueDateOnly;
+    }
+
+    public NoteDto setDueDateOnly(Boolean dueDateOnly) {
+        this.dueDateOnly = dueDateOnly;
+        return this;
+    }
+
+    public int getDueDays() {
+        return this.dueDaysHours.get("days") != null ? this.dueDaysHours.get("days") : 0;
+    }
+
+    public NoteDto setDueDays(int days) {
+        this.dueDaysHours.put("days", days);
+        return this;
+    }
+
+    public int getDueHours() {
+        return this.dueDaysHours.get("hours") != null ? this.dueDaysHours.get("hours") : 0;
+    }
+
+    public NoteDto setDueHours(int hours) {
+        this.dueDaysHours.put("hours", hours);
+        return this;
+    }
+
+    public Map<String, Integer> getDueDaysHours() {
+        return dueDaysHours;
+    }
+
+    public NoteDto setDueDaysHours(Map<String, Integer> dueDaysHours) {
+        this.dueDaysHours = dueDaysHours;
         return this;
     }
 

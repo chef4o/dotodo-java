@@ -11,7 +11,7 @@
             </form>
         </div>
 
-        <th:block th:if="${notes.size() > 0}">
+        <th:block>
             <ul class="notes-list">
                 <th:block th:if="${createNewNote != null}" th:insert="~{fragments/note/empty-note}"></th:block>
 
@@ -21,7 +21,7 @@
                 <th:block th:if="${viewNoteId != null}"
                           th:insert="~{fragments/note/note-details}"></th:block>
 
-                <th:block th:each="note: ${notes}">
+                <th:block th:if="${notes.size() > 0}" th:each="note: ${notes}">
                     <th:block th:unless="${(editNoteId != null && editNoteId == note.id) ||
                                            (viewNoteId != null && viewNoteId == note.id)}"
                               th:insert="~{fragments/note/note-item}"></th:block>
@@ -29,17 +29,10 @@
             </ul>
         </th:block>
 
-        <th:block th:unless="${notes.size() > 0}">
+        <th:block th:if="${notes.size() == 0 && createNewNote == null}">
             <ul class="notes-list empty">
                 <div class="new-note">
                     <th:block th:insert="~{fragments/error/no-content}"></th:block>
-
-                    <form class="new-note" th:action="@{'/notes/new'}" th:method="post">
-                        <input class="title" placeholder="Note title" name="title" th:text="${noteData?.title ?: ''}"/>
-                        <textarea class="note-text" placeholder="Content" name="content"
-                                  th:text="${noteData?.content ?: ''}"></textarea>
-                        <p class="error new-note" th:if="${emptyValueError != null}" th:text="${emptyValueError}"></p>
-                        <button class="add-note" type="submit">Add</button>
                     </form>
                 </div>
             </ul>

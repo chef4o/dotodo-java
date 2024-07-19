@@ -16,6 +16,7 @@ public class NoteEntity extends BaseEntity {
     private Boolean isArchived;
     private LocalDateTime startDate;
     private LocalDateTime dueDate;
+    private Boolean dueDateOnly;
     private LocalDateTime completedOn;
     private String trackProgress;
     private Set<UserEntity> peers;
@@ -66,6 +67,15 @@ public class NoteEntity extends BaseEntity {
 
     public NoteEntity setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
+        return this;
+    }
+
+    public Boolean getDueDateOnly() {
+        return dueDateOnly;
+    }
+
+    public NoteEntity setDueDateOnly(Boolean dueDateOnly) {
+        this.dueDateOnly = dueDateOnly;
         return this;
     }
 

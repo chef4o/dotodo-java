@@ -1,11 +1,33 @@
-<div class="note active details">
+<div class="note active details" xmlns="http://www.w3.org/1999/html">
     <a href="/notes" class="xmark"><i class="fa-solid fa-xmark"></i></a>
 
     <h3 class="title" name="title" placeholder="Add title" th:text="${detailedNote.title}"></h3>
 
     <p class="note-text" name="content" placeholder="Add text" th:text="${detailedNote.content}"></p>
+    <th:block th:if="${detailedNote.dueDate != null}">
+        <div class="due-date" th:if="${detailedNote.dueDateOnly == true}">Due date
+            <div>
+                <p th:text="${detailedNote.dueDate}"></p>
+                <i class="fa-regular fa-calendar"></i>
+            </div>
+        </div>
 
-    <a th:href="@{'/notes/edit/' + ${detailedNote.id} }"><button class="edit-btn">Edit</button></a>
+        <div class="due-date" th:if="${detailedNote.dueDateOnly == false}">Due date / time
+            <div>
+                <p th:text="${detailedNote.dueDate}"></p>
+                <i class="fa-regular fa-calendar"></i>
+            </div>
+
+            <div>
+                <p th:text="${detailedNote.dueTime}"></p>
+                <i class="fa-regular fa-clock"></i>
+            </div>
+        </div>
+    </th:block>
+
+    <a th:href="@{'/notes/edit/' + ${detailedNote.id}}">
+        <button class="edit-btn">Edit</button>
+    </a>
 
     <form th:action="@{'/notes/delete/' + ${detailedNote.id}}" th:method="delete">
         <button type="submit" class="delete-btn">Delete</button>

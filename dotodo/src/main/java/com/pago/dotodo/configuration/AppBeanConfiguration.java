@@ -2,6 +2,8 @@ package com.pago.dotodo.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pago.dotodo.model.dto.NoteDto;
+import com.pago.dotodo.model.entity.NoteEntity;
 import com.pago.dotodo.model.entity.RoleEntity;
 import com.pago.dotodo.model.enums.RoleEnum;
 import com.pago.dotodo.repository.RoleRepository;
@@ -15,11 +17,13 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 @Configuration
 public class AppBeanConfiguration {
 
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final RoleRepository roleRepository;
 
     @Autowired
@@ -51,9 +55,18 @@ public class AppBeanConfiguration {
         modelMapper.addConverter(new Converter<String, LocalDateTime>() {
             @Override
             public LocalDateTime convert(MappingContext<String, LocalDateTime> mappingContext) {
-                return LocalDateTime
-                        .parse(mappingContext.getSource(),
-                                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+                String source = mappingContext.getSource();
+                try {
+                    return LocalDateTime.parse(source, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                } catch (DateTimeParseException e) {
+                    try {
+                        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        LocalDate localDate = LocalDate.parse(source, dateFormatter);
+                        return localDate.atStartOfDay();
+                    } catch (DateTimeParseException ex) {
+                        throw new IllegalArgumentException("Invalid date format: " + source, ex);
+                    }
+                }
             }
         });
 
@@ -99,6 +112,27 @@ public class AppBeanConfiguration {
                     return null;
                 }
                 return mappingContext.getSource().getRole().toString();
+            }
+        });
+
+        modelMapper.addConverter(new Converter<NoteEntity, NoteDto>() {
+            @Override
+            public NoteDto convert(MappingContext<NoteEntity, NoteDto> context) {
+                NoteEntity source = context.getSource();
+                NoteDto destination = new NoteDto();
+                destination.setId(source.getId());
+                destination.setTitle(source.getTitle());
+                destination.setContent(source.getContent());
+
+                if (source.getDueDate() != null) {
+                    destination.setDueDate(source.getDueDate().toLocalDate().format(dateFormatter));
+                    destination.setDueTime(source.getDueDate().toLocalTime().toString());
+                }
+
+                destination.setDueDateOnly(source.getDueDateOnly());
+                destination.setOwnerId(source.getOwner().getId());
+
+                return destination;
             }
         });
 

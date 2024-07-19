@@ -1,7 +1,15 @@
 <a th:href="@{'/notes/view/' + ${note.id}}">
     <div class="note">
         <h3 th:text="${note.title}"></h3>
-        <p th:text="${note.content}"></p>
+        <p th:class="${note.dueDaysHours != null and #maps.size(note.dueDaysHours) > 0} ? 'with-due' : ''" th:text="${note.content}"></p>
+
+        <th:block th:if="${note.dueDaysHours != null and #maps.size(note.dueDaysHours) > 0}">
+            <div class="due" th:if="${note.dueDaysHours['days'] != null && note.dueDaysHours['days'] != 0}"
+               th:text="${'Due in ' + note.dueDaysHours['days'] + ' days'}"></div>
+
+            <div class="due" th:if="${note.dueDaysHours['hours'] != null && note.dueDaysHours['hours'] != 0}"
+               th:text="${'Due in ' + note.dueDaysHours['hours'] + ' hours'}"></div>
+        </th:block>
 
         <form th:action="@{'/notes/edit/' + ${note.id}}" th:method="get">
             <button type="submit" class="edit-btn">Edit</button>
