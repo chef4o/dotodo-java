@@ -39,6 +39,7 @@
 .error.auth {
     font-size: 1vw;
     height: 1vw;
+    width: 14.4vw;
 }
 
 .error.contact {
@@ -50,6 +51,40 @@
     font-size: 1vw;
     width: 31vw;
     text-align: right;
+}
+
+.auth-form.register .password-error-container {
+    position: relative;
+    display: inline-block;
+}
+
+.auth-form.register .error.fa-triangle-exclamation {
+    position: absolute;
+    right: 5%;
+    top: 100%;
+    transform: translateY(-230%);
+}
+
+.auth-form.register .password-info {
+    visibility: hidden;
+    position: absolute;
+    z-index: 1;
+    right: 15.4vw;
+    top: -2vw;
+    height: 9vw;
+    width: 15.6vw;
+    background-color: #687474;
+    color: #fff;
+    text-align: center;
+    align-content: center;
+    padding: 0.7vw;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.auth-form.register .error.fa-triangle-exclamation:hover + .password-info {
+    visibility: visible;
+    opacity: 0.96;
 }
 
 .error.new-note {

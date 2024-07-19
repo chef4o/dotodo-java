@@ -11,7 +11,7 @@
                 <div class="form-input">
                     <i class="fa-solid fa-envelope"></i>
                     <input th:class="${errors != null && errors['email'] != null ? 'error-field' : ''}"
-                           id="email" name="email" type="text" th:value="${email}"/>
+                           id="email" name="email" type="text" th:value="${userRegisterInfo.email}"/>
 
                     <!-- more value props:
                              onChange={changeHandler}
@@ -27,7 +27,7 @@
                 <div class="form-input">
                     <i class="fa-solid fa-user"></i>
                     <input th:class="${errors != null && errors['username'] != null ? 'error-field' : ''}"
-                           id="username" name="username" type="text" th:value="${username}"/>
+                           id="username" name="username" type="text" th:value="${userRegisterInfo.username}"/>
                     <!-- more value props:
                              onChange={changeHandler}
                         onBlur={()=> focusHandler(FORM_FIELDS.username)} /> -->
@@ -50,8 +50,19 @@
                         onBlur="focusHandler(FORM_FIELDS.password) -->
                 </div>
 
-                <div class="error auth register"
-                     th:text="${errors != null && errors['password'] != null ? errors['password'] : ''}"></div>
+                <div class="password-error-container">
+                    <div class="error auth register"
+                         th:text="${errors != null && errors['password'] != null ? errors['password'] : ''}">
+                    </div>
+
+                    <i th:if="${errors != null && errors['passwordInfo'] != null}"
+                       class="error fa-solid fa-triangle-exclamation"></i>
+
+                    <div th:if="${errors != null && errors['passwordInfo'] != null}"
+                         class="password-info" th:text="${errors['passwordInfo']}"></div>
+                </div>
+
+
             </div>
 
             <div class="rePassword">
@@ -60,10 +71,6 @@
                     <i class="fa-solid fa-key"></i>
                     <input th:class="${errors != null && errors['rePassword'] != null ? 'error-field' : ''}"
                            id="rePassword" name="rePassword" type="password"/>
-                    <!-- more value props:
-                             onChange={changeHandler}
-                        onBlur={()=>
-                    focusHandler(FORM_FIELDS.rePassword)} -->
                 </div>
 
                 <div class="error auth register"

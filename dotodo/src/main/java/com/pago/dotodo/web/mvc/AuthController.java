@@ -18,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
-import java.util.UUID;
 
 import java.util.HashMap;
 
@@ -50,9 +49,6 @@ public class AuthController extends BaseController {
                                  @ModelAttribute("username") String username,
                                  HttpServletRequest request,
                                  SessionStatus sessionStatus) {
-
-        UUID uuid = UUID.randomUUID();
-        System.out.println(uuid);
 
         layoutService.setBackgroundPage(request);
 
@@ -103,8 +99,7 @@ public class AuthController extends BaseController {
                             : null,
                     LOAD_MODAL, "register",
                     "errors", errors,
-                    "username", userRegisterInfo.getUsername(),
-                    "email", userRegisterInfo.getEmail())
+                    "userRegisterInfo", userRegisterInfo)
             );
         }
 
@@ -123,8 +118,7 @@ public class AuthController extends BaseController {
                             : null,
                     LOAD_MODAL, "register",
                     "errors", errors,
-                    "username", userRegisterInfo.getUsername(),
-                    "email", userRegisterInfo.getEmail())
+                    "userRegisterInfo", userRegisterInfo)
             );
         }
 
@@ -165,7 +159,8 @@ public class AuthController extends BaseController {
         if (userRegisterInfo.getRawPassword().isEmpty()) {
             errors.put("password", "Password is required");
         } else if (!userRegisterInfo.getRawPassword().matches(PASSWORD_PATTERN)) {
-            errors.put("password", "Password must be at least 6 characters long " +
+            errors.put("password", "Password must be more secure");
+            errors.put("passwordInfo", "Password must be at least 6 characters long " +
                     "and should contain at least one number, uppercase and lowercase letter.");
         }
 
@@ -190,11 +185,6 @@ public class AuthController extends BaseController {
 
     @ModelAttribute("username")
     public String username() {
-        return "";
-    }
-
-    @ModelAttribute("email")
-    public String email() {
         return "";
     }
 }
