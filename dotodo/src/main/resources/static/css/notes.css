@@ -117,7 +117,8 @@
 }
 
 .content.notes .note .delete-btn:hover,
-.content.notes .note .edit-btn:hover {
+.content.notes .note .edit-btn:hover,
+.content.notes .note .cancel-btn:hover {
     background-color: var(--color-gray-light);
 }
 
@@ -195,7 +196,7 @@ select:focus {
 }
 
 .content.notes .due-time {
-    top: 6.8vw;
+    top: 7.1vw;
     right: 1.5vw;
     display: flex;
     gap: 0.1vw;
