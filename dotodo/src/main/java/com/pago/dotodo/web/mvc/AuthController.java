@@ -1,20 +1,20 @@
 package com.pago.dotodo.web.mvc;
 
-import com.pago.dotodo.model.dto.UserAuthDto;
 import com.pago.dotodo.model.dto.UserRegisterDto;
 import com.pago.dotodo.service.AuthService;
 import com.pago.dotodo.service.LayoutService;
 import com.pago.dotodo.util.ModelAndViewParser;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,16 +32,16 @@ public class AuthController extends BaseController {
     private final ModelAndViewParser attributeBuilder;
     private final AuthService authService;
     private final LayoutService layoutService;
-    private final AuthenticationManager authenticationManager;
+    private final SecurityContextRepository securityContextRepository;
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    public AuthController(ModelAndViewParser attributeParser, AuthService authService, LayoutService layoutService,
-                          AuthenticationManager authenticationManager) {
+    public AuthController(ModelAndViewParser attributeParser, AuthService authService,
+                          LayoutService layoutService, SecurityContextRepository securityContextRepository) {
         this.attributeBuilder = attributeParser;
         this.authService = authService;
         this.layoutService = layoutService;
-        this.authenticationManager = authenticationManager;
+        this.securityContextRepository = securityContextRepository;
     }
 
     @GetMapping("/login")
@@ -86,7 +86,9 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/register")
-    public ModelAndView postRegister(@Valid @ModelAttribute UserRegisterDto userRegisterInfo) {
+    public ModelAndView postRegister(@Valid @ModelAttribute UserRegisterDto userRegisterInfo,
+                                     HttpServletRequest request,
+                                     HttpServletResponse response) {
 
         HashMap<String, String> errors = loadErrors(userRegisterInfo);
 
@@ -104,8 +106,13 @@ public class AuthController extends BaseController {
         }
 
         try {
-            UserAuthDto registeredUser = this.authService.registerUser(userRegisterInfo);
-            authenticateUserAndSetSession(registeredUser, userRegisterInfo.getRawPassword());
+            this.authService.registerUser(userRegisterInfo, successfulAuth -> {
+                SecurityContextHolderStrategy strategy = SecurityContextHolder.getContextHolderStrategy();
+                SecurityContext context = strategy.createEmptyContext();
+                context.setAuthentication(successfulAuth);
+                strategy.setContext(context);
+                securityContextRepository.saveContext(context, request, response);
+            });
         } catch (RuntimeException e) {
             logger.error(e.getMessage());
             errors.put("register", e.getMessage());
@@ -131,14 +138,6 @@ public class AuthController extends BaseController {
     @GetMapping("/logout")
     public ModelAndView getLogout() {
         return this.redirect("/");
-    }
-
-    private void authenticateUserAndSetSession(UserAuthDto registeredUser, String rawPassword) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                registeredUser.getUsername(), rawPassword);
-
-        Authentication authentication = authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private HashMap<String, String> loadErrors(UserRegisterDto userRegisterInfo) {

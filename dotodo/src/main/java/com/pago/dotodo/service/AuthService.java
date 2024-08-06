@@ -1,17 +1,21 @@
 package com.pago.dotodo.service;
 
-import com.pago.dotodo.model.dto.UserAuthDto;
 import com.pago.dotodo.model.dto.UserRegisterDto;
 import com.pago.dotodo.model.entity.UserEntity;
 import com.pago.dotodo.model.enums.RoleEnum;
 import com.pago.dotodo.repository.UserRepository;
+import com.pago.dotodo.security.AppUserDetailsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Service
 public class AuthService {
@@ -19,21 +23,24 @@ public class AuthService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AppUserDetailsService appUserDetailsService;
 
     @Autowired
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       ModelMapper modelMapper) {
+                       ModelMapper modelMapper,
+                       AppUserDetailsService appUserDetailsService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
+        this.appUserDetailsService = appUserDetailsService;
     }
 
     @Transactional
-    public UserAuthDto registerUser(UserRegisterDto userRegisterDto) {
+    public void registerUser(UserRegisterDto userRegisterDto,
+                             Consumer<Authentication> successfulLoginProcessor) {
 
         checkIfExists(userRegisterDto);
-
         userRegisterDto.setPassword(passwordEncoder.encode(userRegisterDto.getRawPassword()));
 
         if (!this.dbExists()) {
@@ -42,10 +49,14 @@ public class AuthService {
             userRegisterDto.getRoles().add(String.valueOf(RoleEnum.LIGHT));
         }
 
-        final UserEntity userForInsert = this.modelMapper.map(userRegisterDto, UserEntity.class);
+        this.userRepository.saveAndFlush(this.modelMapper.map(userRegisterDto, UserEntity.class));
 
-        return this.modelMapper
-                .map(this.userRepository.saveAndFlush(userForInsert), UserAuthDto.class);
+        final UserDetails currentUser = appUserDetailsService.loadUserByUsername(userRegisterDto.getUsername());
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                currentUser, currentUser.getPassword(), currentUser.getAuthorities());
+
+        successfulLoginProcessor.accept(auth);
     }
 
     private void checkIfExists(UserRegisterDto userRegisterDto) throws RuntimeException {
