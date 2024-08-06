@@ -56,10 +56,10 @@
     cursor: pointer;
 }
 
-.auth-form button .fa-xmark {
+.auth-form .fa-xmark {
     position: absolute;
     top: -1.2vh;
-    right: 0;
+    right: 1vw;
     color: white;
 }
 

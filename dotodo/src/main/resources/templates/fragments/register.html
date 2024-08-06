@@ -2,7 +2,9 @@
       th:method="post"
       th:action="@{'/auth/register'}">
 
-    <button class="xmark"><i class="fa-solid fa-xmark"></i></button>
+    <a th:href="${pageName != 'home' ? '/' + pageName : '/'}" class="button xmark">
+        <i class="fa-solid fa-xmark"></i>
+    </a>
 
     <div class="auth-fields">
         <div class="user-container">

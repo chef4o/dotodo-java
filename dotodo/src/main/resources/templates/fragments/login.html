@@ -1,9 +1,10 @@
 <form class="auth-form login"
       th:method="post"
       th:action="@{'/auth/login'}">
-    <button class="xmark">
+
+    <a th:href="${pageName != 'home' ? '/' + pageName : '/'}" class="button xmark">
         <i class="fa-solid fa-xmark"></i>
-    </button>
+    </a>
 
     <div class="auth-fields">
         <div class="username">
@@ -11,7 +12,7 @@
             <div class="form-input">
                 <i class="fa-solid fa-user"></i>
                 <input th:class="${errors != null && errors['username'] != null ? 'error-field' : ''}"
-                        id="username" name="username" type="text" autocomplete="off" th:value="${username}"/>
+                       id="username" name="username" type="text" autocomplete="off" th:value="${username}"/>
             </div>
         </div>
 
@@ -20,7 +21,7 @@
             <div class="form-input">
                 <i class="fa-solid fa-key"></i>
                 <input th:class="${errors != null && errors['username'] != null ? 'error-field' : ''}"
-                        id="password" name="password" type="password" autocomplete="off"/>
+                       id="password" name="password" type="password" autocomplete="off"/>
             </div>
         </div>
     </div>
