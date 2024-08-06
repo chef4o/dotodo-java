@@ -69,17 +69,14 @@
     visibility: hidden;
     position: absolute;
     z-index: 1;
-    right: 15.4vw;
-    top: -2vw;
+    right: -12.4vw;
+    top: -1.8vw;
     height: 9vw;
-    width: 15.6vw;
-    background-color: #687474;
+    width: 11.8vw;
     color: #fff;
-    text-align: center;
-    align-content: center;
-    padding: 0.7vw;
+    text-align: left;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 1s;
 }
 
 .auth-form.register .error.fa-triangle-exclamation:hover + .password-info {
