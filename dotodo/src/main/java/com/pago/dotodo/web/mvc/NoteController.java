@@ -1,16 +1,24 @@
 package com.pago.dotodo.web.mvc;
 
 import com.pago.dotodo.model.dto.NoteDto;
+import com.pago.dotodo.model.dto.NoteEditDto;
+import com.pago.dotodo.model.error.ObjectNotFoundException;
 import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.NoteService;
 import com.pago.dotodo.util.DateTimeUtil;
 import com.pago.dotodo.util.ModelAndViewParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/notes")
@@ -19,7 +27,6 @@ public class NoteController extends BaseController {
     private static final String PAGE_NAME = "notes";
     private final NoteService noteService;
     private final ModelAndViewParser attributeBuilder;
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final DateTimeUtil dateTimeUtil;
 
     public NoteController(NoteService noteService, ModelAndViewParser attributeBuilder, DateTimeUtil dateTimeUtil) {
@@ -33,11 +40,13 @@ public class NoteController extends BaseController {
                                      @RequestParam(required = false) Long editNoteId,
                                      @RequestParam(required = false) Long viewNoteId) {
 
+        List<NoteDto> byUserIdOrderByInsTimeDesc = noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId());
+
         return this.view("index", attributeBuilder.build(
                 "pageName", PAGE_NAME,
                 "editNoteId", editNoteId,
                 "viewNoteId", viewNoteId,
-                "notes", noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
+                "notes", byUserIdOrderByInsTimeDesc)
         );
     }
 
@@ -83,27 +92,16 @@ public class NoteController extends BaseController {
             );
         }
 
-        try {
-            noteService.addNote(noteDto, userDetails.getId());
+        noteService.addNote(noteDto, userDetails.getId());
 
-            return super.redirect("/notes");
-        } catch (RuntimeException e) {
-            logger.error(e.getMessage());
-            return this.view("index", attributeBuilder.build(
-                    "pageName", PAGE_NAME,
-                    "error", e.getMessage(),
-                    "note", noteDto)
-            );
-        }
+        return super.redirect("/notes");
     }
 
     @DeleteMapping("/delete/{id}")
     public ModelAndView deleteNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                    @PathVariable Long id) {
+        noteService.deleteById(id, userDetails.getId());
 
-        if (noteService.getById(id).get().getOwnerId().equals(userDetails.getId())) {
-            noteService.deleteById(id);
-        }
         return super.redirect("/notes");
     }
 
@@ -111,27 +109,55 @@ public class NoteController extends BaseController {
     public ModelAndView getEditNotePage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                         @PathVariable Long id,
                                         @ModelAttribute NoteDto noteToEdit) {
+        return super.redirect("/notes", attributeBuilder.build(
+                "editNoteId", id,
+                "noteToEdit", noteToEdit));
+    }
 
-        if (noteService.getById(id).get().getOwnerId().equals(userDetails.getId())) {
-            return super.redirect("/notes", attributeBuilder.build(
-                    "editNoteId", id,
-                    "noteToEdit", noteService.getById(id)));
+    @PostMapping("/edit/{id}")
+    public ModelAndView editNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
+                                 @PathVariable Long id,
+                                 @Valid @ModelAttribute NoteEditDto noteEditDto,
+                                 BindingResult bindingResult) {
+
+        Map<String, String> valueErrors = new HashMap<>();
+
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> {
+                valueErrors.put(error.getField(), error.getField() + " " + error.getDefaultMessage());
+            });
         }
+
+        if (noteEditDto.getDueDate() != null && !noteEditDto.getDueDate().isBlank()
+                && !dateTimeUtil.isInFuture(noteEditDto.getDueDate(), noteEditDto.getDueTime())) {
+            valueErrors.put("date", "Due date must be in the future");
+        }
+
+        if (!valueErrors.isEmpty()) {
+            return this.view("index", attributeBuilder.build(
+                    "pageName", PAGE_NAME,
+                    "valueErrors", valueErrors,
+                    "noteToEdit", noteEditDto,
+                    "editNoteId", id,
+                    "notes", noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
+            );
+        }
+
+        noteService.editNote(id, noteEditDto, userDetails.getId());
+
         return super.redirect("/notes");
     }
+
 
     @GetMapping("/view/{id}")
     public ModelAndView getViewNoteDetailPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                               @PathVariable Long id) {
 
-        NoteDto detailedNote = noteService.getById(id).get();
+        NoteDto detailedNote = noteService.getById(id, userDetails.getId());
 
-        if (detailedNote.getOwnerId().equals(userDetails.getId())) {
-            return super.redirect("/notes", attributeBuilder.build(
-                    "viewNoteId", id,
-                    "detailedNote", detailedNote));
-        }
-        return super.redirect("/notes");
+        return super.redirect("/notes", attributeBuilder.build(
+                "viewNoteId", id,
+                "detailedNote", detailedNote));
     }
 
     @ModelAttribute("noteData")
@@ -139,13 +165,54 @@ public class NoteController extends BaseController {
         return new NoteDto();
     }
 
+    @ModelAttribute("noteEditDto")
+    public NoteEditDto noteEditDto() {
+        return new NoteEditDto();
+    }
+
+
     @ModelAttribute("noteToEdit")
-    public NoteDto noteToEdit(@RequestParam(required = false) Long editNoteId) {
-        return editNoteId != null ? noteService.getById(editNoteId).orElse(null) : null;
+    public NoteDto noteToEdit(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
+                              @RequestParam(required = false) Long editNoteId) {
+
+        if (editNoteId == null) {
+            return null;
+        }
+
+        NoteDto noteToEdit = noteService.getById(editNoteId, userDetails.getId());
+
+        if (noteToEdit.getDueDate() != null && !noteToEdit.getDueDate().isEmpty()) {
+            noteToEdit.setDueDate(
+                    dateTimeUtil.formatToISODate(noteToEdit.getDueDate(), "dd/MM/yyyy")
+            );
+        }
+
+        return noteToEdit;
     }
 
     @ModelAttribute("detailedNote")
-    public NoteDto detailedNote(@RequestParam(required = false) Long viewNoteId) {
-        return viewNoteId != null ? noteService.getById(viewNoteId).orElse(null) : null;
+    public NoteDto detailedNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
+                                @RequestParam(required = false) Long viewNoteId) {
+        return viewNoteId != null ? noteService.getById(viewNoteId, userDetails.getId()) : null;
+    }
+
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ModelAndView handleObjectNotFoundException(ObjectNotFoundException e) {
+        return new ModelAndView("index", attributeBuilder.build(
+                "pageName", PAGE_NAME,
+                "errorCode", "404",
+                "serverError", e.getMessage())
+        );
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ModelAndView handleAccessDeniedException(AccessDeniedException e) {
+        return new ModelAndView("index", attributeBuilder.build(
+                "pageName", PAGE_NAME,
+                "errorCode", "403",
+                "serverError", e.getMessage())
+        );
     }
 }

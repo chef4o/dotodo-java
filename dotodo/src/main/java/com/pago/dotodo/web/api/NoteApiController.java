@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/notes")
@@ -28,17 +27,17 @@ public class NoteApiController extends BaseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NoteDto> getById(@PathVariable("id") Long id) {
-        Optional<NoteDto> currentNote = noteService.getById(id);
+    public ResponseEntity<NoteDto> getById(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
+                                           @PathVariable("id") Long id) {
+        NoteDto currentNote = noteService.getById(id, userDetails.getId());
 
-        return currentNote.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(currentNote);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<NoteDto> deleteById(@PathVariable("id") Long id) {
-        noteService.deleteById(id);
-
+    public ResponseEntity<NoteDto> deleteById(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
+                                              @PathVariable("id") Long id) {
+        noteService.deleteById(id, userDetails.getId());
         return ResponseEntity.noContent().build();
     }
 

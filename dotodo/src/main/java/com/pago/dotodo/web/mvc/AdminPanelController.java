@@ -5,14 +5,14 @@ import com.pago.dotodo.util.ModelAndViewParser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
 
-@RestController
+@Controller
 @RequestMapping("/admin-panel")
 public class AdminPanelController extends BaseController {
     private static final String PAGE_NAME = "admin-panel";
