@@ -3,10 +3,12 @@ package com.pago.dotodo.configuration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pago.dotodo.model.dto.NoteDto;
+import com.pago.dotodo.model.dto.NoteEditDto;
 import com.pago.dotodo.model.entity.NoteEntity;
 import com.pago.dotodo.model.entity.RoleEntity;
 import com.pago.dotodo.model.enums.RoleEnum;
 import com.pago.dotodo.repository.RoleRepository;
+import com.pago.dotodo.util.DateTimeUtil;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.spi.MappingContext;
@@ -23,11 +25,12 @@ import java.util.Optional;
 @Configuration
 public class AppBeanConfiguration {
 
-    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final DateTimeUtil dateTimeUtil;
     private final RoleRepository roleRepository;
 
     @Autowired
-    public AppBeanConfiguration(RoleRepository roleRepository) {
+    public AppBeanConfiguration(DateTimeUtil dateTimeUtil, RoleRepository roleRepository) {
+        this.dateTimeUtil = dateTimeUtil;
         this.roleRepository = roleRepository;
     }
 
@@ -125,12 +128,31 @@ public class AppBeanConfiguration {
                 destination.setContent(source.getContent());
 
                 if (source.getDueDate() != null) {
-                    destination.setDueDate(source.getDueDate().toLocalDate().format(dateFormatter));
-                    destination.setDueTime(source.getDueDate().toLocalTime().toString());
+                    destination.setDueDate(dateTimeUtil.formatDateToString(source.getDueDate()));
+                    destination.setDueTime(dateTimeUtil.formatTimeToString(source.getDueDate()));
                 }
 
                 destination.setDueDateOnly(source.getDueDateOnly());
                 destination.setOwnerId(source.getOwner().getId());
+
+                return destination;
+            }
+        });
+
+        modelMapper.addConverter(new Converter<NoteEntity, NoteEditDto>() {
+            @Override
+            public NoteEditDto convert(MappingContext<NoteEntity, NoteEditDto> context) {
+                NoteEntity source = context.getSource();
+                NoteEditDto destination = new NoteEditDto();
+                destination.setTitle(source.getTitle());
+                destination.setContent(source.getContent());
+
+                if (source.getDueDate() != null) {
+                    destination.setDueDate(dateTimeUtil.formatDateToString(source.getDueDate()));
+                    destination.setDueTime(dateTimeUtil.formatTimeToString(source.getDueDate()));
+                }
+
+                destination.setDueDateOnly(source.getDueDateOnly());
 
                 return destination;
             }
