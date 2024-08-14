@@ -1,0 +1,241 @@
+.content.events .header-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2vw;
+}
+
+.content.events .header-menu h2,
+.content.events .header-menu i {
+    color: var(--color-menu-icon-green-light);
+}
+
+.content.events .header-menu h2 {
+    font-size: 2vw;
+}
+
+.content.events .header-menu i {
+    padding-right: 1vw;
+}
+
+.content.events .header-menu button {
+    font-size: 1.4vw;
+    padding: 0.2vw 0.8vw;
+    background-color: var(--color-menu-green-light-transparent);
+}
+
+.content.events .header-menu button:hover {
+    color: white;
+    background-color: var(--color-menu-icon-green-light);
+}
+
+.content.events .holidays-info {
+    padding: 0 2vw;
+}
+
+.content.events .holidays-info p {
+    font-size: 1.2vw;
+}
+
+.content.events .events-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 2vw;
+    gap: 1.4vw;
+}
+
+.content.events .events-list.empty {
+    justify-content: center;
+}
+
+.content.events .event {
+    position: relative;
+    width: 17.73vw;
+    height: 16vw;
+    background-color: var(--color-menu-soft-sky-blue);
+    box-shadow: var(--shadow-base);
+    padding: 1vw;
+    font-size: 1.2vw;
+    overflow: hidden;
+}
+
+.content.events .event h3 {
+    font-size: 1.8vw;
+    height: 2.4vw;
+    border-bottom: 1px solid var(--color-menu-icon-soft-sky-blue);
+}
+
+.content.events .event p {
+    width: 16vw;
+    padding-top: 0.6vw;
+    word-wrap: break-word;
+    line-height: normal;
+    overflow: scroll;
+}
+
+.content.events .event p.with-due,
+.content.events .event .due {
+    position: absolute;
+}
+
+.content.events .event p.with-due,
+.content.events .event .due {
+    top: 4.3vw;
+}
+
+.content.events .event .due {
+    top: 3.2vw;
+    font-style: italic;
+}
+
+.content.events .event.new,
+.content.events .event.active {
+    width: 100%;
+    background-color: var(--color-menu-soft-sky-blue-transparent);
+}
+
+.content.events .event.active.details {
+    background-color: var(--color-menu-soft-sky-blue);
+}
+
+.content.events .event .delete-btn,
+.content.events .event .create,
+.content.events .event .edit-btn,
+.content.events .event .cancel-btn {
+    position: absolute;
+    top: 13vw;
+    height: 2vw;
+}
+
+.content.events .event .cancel-btn {
+    margin-left: 4vw;
+}
+
+.content.events .event .delete-btn {
+    right: 1vw;
+}
+
+.content.events .event .edit-btn {
+    left: 1vw;
+}
+
+.content.events .event .create:hover {
+    background-color: var(--color-menu-soft-sky-blue);
+}
+
+.content.events .event .delete-btn:hover,
+.content.events .event .edit-btn:hover,
+.content.events .event .cancel-btn:hover {
+    background-color: var(--color-gray-light);
+}
+
+.content.events .event.new .title,
+.content.events .event.active .title,
+.content.events .event.new .event-text,
+.content.events .event.active .event-text,
+.content.events .event.new p,
+.content.events .event.active .event-text,
+.content.events .event.new .title,
+.content.events .event.active .title {
+    background: none;
+    border: none;
+    width: 100%;
+}
+
+.content.events .event.new .title,
+.content.events .event.active .title {
+    font-size: 1.8vw;
+    padding: 0;
+    border-bottom: 1px solid var(--color-menu-icon-soft-sky-blue);
+}
+
+.content.events .event.active.details .title {
+    padding: 0;
+}
+
+.content.events .event.new .event-text,
+.content.events .event.active .event-text {
+    height: 9vw;
+    resize: none;
+    padding: 0.4vw 9vw 0.4vw 0.4vw;
+    margin-top: 0.6vw;
+}
+
+.content.events .event.active .xmark,
+.content.events .event.new .xmark {
+    position: absolute;
+    right: 1vw;
+}
+
+.content.events .event.new button {
+    position: absolute;
+    bottom: -11vw;
+    right: 0.6vw;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+}
+
+.content.events .due-date,
+.content.events .due-time {
+    position: absolute;
+    text-align: end;
+    font-size: 1vw;
+}
+
+.content.events .due-date {
+    right: 1vw;
+    margin-top: 1vw;
+}
+
+.content.events .due-date div {
+    display: flex;
+    align-items: center;
+    padding-top: 0.2vw;
+    gap: 0.2vw;
+}
+
+.content.events .due-date p {
+    padding-right: 0.5vw;
+}
+
+.content.events .due-time {
+    top: 7.1vw;
+    right: 1.5vw;
+    display: flex;
+    gap: 0.1vw;
+    align-items: center;
+    justify-content: end;
+}
+
+.content.events .event.active .due-date,
+.content.events .event.new .due-date {
+    top: 3vw;
+}
+
+.content.events .event.new .due-date p {
+    padding-top: 0;
+}
+
+.content.events .event.active.details .due-date {
+    padding-right: 0.6vw;
+}
+
+.content.events .form-edit .due-date {
+    top: 4vw;
+}
+
+.content.events .due-date input,
+.content.events .due-time input {
+    font-size: 1vw;
+    background: none;
+    border: none;
+}
+
+.content.events .due-time input {
+    display: flex;
+}
