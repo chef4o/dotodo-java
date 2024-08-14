@@ -28,7 +28,7 @@
 
 .location h2 {
     font-size: 1.2vw;
-    padding: 0.8vw 0 1.6vw;
+    padding: 0.8vw 1vw 1.6vw;
     text-align: right;
 }
 
@@ -41,4 +41,9 @@
     z-index: 15;
     width: 25.4vw;
     height: 24.4vw;
+}
+
+.location #bing-map .NavBar_Container.Light {
+    transform: scale(0.6);
+    inset: -20% 0 0 85% !important;
 }
