@@ -27,6 +27,7 @@ public class UserEntity extends BaseEntity {
     private String imageUrl;
     private List<RoleEntity> roles;
     private AddressEntity address;
+    private List<EventEntity> events;
 
     public UserEntity() {
         this.roles = new ArrayList<>();
@@ -64,7 +65,7 @@ public class UserEntity extends BaseEntity {
     }
 
     @Column(name = "username", nullable = false, unique = true)
-    @Length(min = 4)
+    @Length(min = 5)
     public String getUsername() {
         return username;
     }
