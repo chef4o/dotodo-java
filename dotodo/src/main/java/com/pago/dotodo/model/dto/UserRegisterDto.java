@@ -1,9 +1,15 @@
 package com.pago.dotodo.model.dto;
 
+import com.pago.dotodo.util.validation.PasswordMatch;
+import jakarta.validation.constraints.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@PasswordMatch(rawPassword = "rawPassword", rePassword = "rePassword")
 public class UserRegisterDto {
+    private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$";
+
     private String email;
     private String username;
     private String rawPassword;
@@ -15,6 +21,8 @@ public class UserRegisterDto {
         this.roles = new ArrayList<>();
     }
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email address")
     public String getEmail() {
         return email;
     }
@@ -24,6 +32,8 @@ public class UserRegisterDto {
         return this;
     }
 
+    @NotBlank(message = "Username is required")
+    @Size(min = 5, message = "Username must be at least 5 characters long")
     public String getUsername() {
         return username;
     }
@@ -42,21 +52,26 @@ public class UserRegisterDto {
         return this;
     }
 
-    public String getRePassword() {
-        return rePassword;
-    }
-
-    public UserRegisterDto setRePassword(String rePassword) {
-        this.rePassword = rePassword;
-        return this;
-    }
-
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters long")
+    @Pattern(regexp = PASSWORD_PATTERN,
+            message = "Password must be more secure.")
     public String getRawPassword() {
         return rawPassword;
     }
 
     public UserRegisterDto setRawPassword(String rawPassword) {
         this.rawPassword = rawPassword;
+        return this;
+    }
+
+    @NotBlank(message = "Field is required")
+    public String getRePassword() {
+        return rePassword;
+    }
+
+    public UserRegisterDto setRePassword(String rePassword) {
+        this.rePassword = rePassword;
         return this;
     }
 

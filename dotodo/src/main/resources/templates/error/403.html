@@ -1,0 +1,11 @@
+<div class="error-page denied"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <i class="fa-solid fa-ban"></i>
+    <p>Sorry, but the access to this page is restricted.</p>
+
+    <p sec:authorize="isAuthenticated()">If you're a really good friend to the site administrators,
+        you may ask them for additional rights by contacting them directly.</p>
+
+    <p sec:authorize="!isAuthenticated()">If you already have an account and access to this page,
+        please <a th:href="@{/auth/login}">log in.</a></p>
+</div>

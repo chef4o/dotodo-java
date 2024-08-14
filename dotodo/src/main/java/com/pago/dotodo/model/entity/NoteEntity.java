@@ -1,9 +1,9 @@
 package com.pago.dotodo.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -25,6 +25,7 @@ public class NoteEntity extends BaseEntity {
     public NoteEntity() {
     }
 
+    @NotBlank
     public String getTitle() {
         return title;
     }
@@ -34,6 +35,7 @@ public class NoteEntity extends BaseEntity {
         return this;
     }
 
+    @NotBlank
     public String getContent() {
         return content;
     }
@@ -43,6 +45,7 @@ public class NoteEntity extends BaseEntity {
         return this;
     }
 
+    @Column(nullable = false)
     public Boolean getArchived() {
         return isArchived;
     }
@@ -52,6 +55,8 @@ public class NoteEntity extends BaseEntity {
         return this;
     }
 
+    @DateTimeFormat
+    @NotNull
     public LocalDateTime getStartDate() {
         return startDate;
     }
@@ -61,6 +66,7 @@ public class NoteEntity extends BaseEntity {
         return this;
     }
 
+    @DateTimeFormat
     public LocalDateTime getDueDate() {
         return dueDate;
     }
@@ -79,6 +85,7 @@ public class NoteEntity extends BaseEntity {
         return this;
     }
 
+    @DateTimeFormat
     public LocalDateTime getCompletedOn() {
         return completedOn;
     }
@@ -88,6 +95,7 @@ public class NoteEntity extends BaseEntity {
         return this;
     }
 
+    @NotNull
     public String getTrackProgress() {
         return trackProgress;
     }
@@ -97,10 +105,12 @@ public class NoteEntity extends BaseEntity {
         return this;
     }
 
-    @OneToMany
+    @OneToMany(targetEntity = UserEntity.class,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE})
     public Set<UserEntity> getPeers() {
         return peers;
     }
+
 
     public NoteEntity setPeers(Set<UserEntity> peers) {
         this.peers = peers;

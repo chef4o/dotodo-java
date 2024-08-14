@@ -1,9 +1,13 @@
 <div class="content notes" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <th:block sec:authorize="!isAuthenticated()">
-        <th:block th:insert="~{fragments/error/error-403}"></th:block>
+        <th:block th:insert="~{'error/403'}"></th:block>
     </th:block>
 
-    <th:block sec:authorize="isAuthenticated()">
+    <th:block sec:authorize="isAuthenticated()" th:if="${serverError != null}">
+        <th:block th:insert="~{'error/' + ${errorCode}}"></th:block>
+    </th:block>
+
+    <th:block sec:authorize="isAuthenticated()" th:if="${serverError == null}">
         <div class="header-menu">
             <h2><i class="fa-solid fa-note-sticky"></i>Notes</h2>
             <form th:if="${createNewNote == null}" th:action="@{'/notes/new'}" th:method="get">

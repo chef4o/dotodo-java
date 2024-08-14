@@ -5,6 +5,8 @@ logging:
     org.hibernate.SQL: DEBUG
 server:
   port: ${SERVER_PORT}
+  error:
+    include-exception: true
 app:
   default:
     password: test123
@@ -28,3 +30,7 @@ spring:
     hidden-method:
       filter:
         enabled: true
+#cloudinady:
+#  api-key:
+#  api-secret:
+#  cloud-name:

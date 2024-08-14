@@ -26,7 +26,9 @@
         </div>
     </div>
 
-    <div th:if="${bad_credentials}" class="error auth login">The username or password provided is incorrect</div>
+    <div class="error auth login"
+         th:text="${bad_credentials ? 'The username or password provided is incorrect': ''}">
+    </div>
 
     <div class="rememberMe">
         <input type="checkbox" name="remember-me" id="remember-me"/>

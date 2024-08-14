@@ -12,10 +12,20 @@
     align-items: center;
     text-align: center;
     margin-top: 5vw;
+    width: 60vw;
 }
 
 .error-page * {
     margin-bottom: 2vw;
+}
+
+.error-page.not-found,
+.error-page.server-error {
+    margin-top: 12vw;
+}
+
+.error-page.denied {
+    margin-top: 9vw;
 }
 
 .error-page h1 {
@@ -33,13 +43,18 @@
 
 .error-page p {
     font-size: 2vw;
-    width: 32vw;
+    width: 50vw;
+}
+
+.error-page.server-error p {
+    width: 42vw;
 }
 
 .error.auth {
     font-size: 1vw;
-    height: 1vw;
+    height: 2vw;
     width: 14.4vw;
+    line-height: 1.2vw;
 }
 
 .error.contact {
@@ -48,6 +63,7 @@
 }
 
 .error.auth.login {
+    padding-top: 0.1vw;
     font-size: 1vw;
     width: 31vw;
     text-align: right;
@@ -56,13 +72,14 @@
 .auth-form.register .password-error-container {
     position: relative;
     display: inline-block;
+    padding-top: 0.1vw;
 }
 
 .auth-form.register .error.fa-triangle-exclamation {
     position: absolute;
-    right: 5%;
-    top: 100%;
-    transform: translateY(-230%);
+    right: 1vw;
+    top: 50%;
+    transform: translateY(-235%);
 }
 
 .auth-form.register .password-info {
@@ -78,15 +95,26 @@
     opacity: 0;
     transition: opacity 1s;
 }
+.auth.register.user-exists {
+    position: absolute;
+    width: 27vw;
+    padding-top: 0.2vw;
+}
 
 .auth-form.register .error.fa-triangle-exclamation:hover + .password-info {
     visibility: visible;
     opacity: 0.96;
 }
 
-.error.new-note {
+.error.new-note.error-list {
     position: absolute;
-    width: 48vw;
-    bottom: 1vw;
-    text-align: left;
+    top: 8.6vw;
+    right: 1.4vw;
+    text-align: right;
+    line-height: 1.2vw;
+}
+
+.error.new-note.error-list p {
+    padding: 0;
+    width: auto;
 }

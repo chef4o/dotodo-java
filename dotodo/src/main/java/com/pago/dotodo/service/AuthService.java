@@ -7,6 +7,7 @@ import com.pago.dotodo.repository.UserRepository;
 import com.pago.dotodo.security.AppUserDetailsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -87,4 +88,11 @@ public class AuthService {
                 user2.isPresent() &&
                 user1.get().getId().equals(user2.get().getId());
     }
+
+    public void checkAccessControl(Long ownerId, Long currentUserId) {
+        if (!ownerId.equals(currentUserId)) {
+            throw new AccessDeniedException("Access denied");
+        }
+    }
+
 }

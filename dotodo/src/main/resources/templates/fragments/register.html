@@ -13,7 +13,7 @@
                 <div class="form-input">
                     <i class="fa-solid fa-envelope"></i>
                     <input th:class="${errors != null && errors['email'] != null ? 'error-field' : ''}"
-                           id="email" name="email" type="text" th:value="${userRegisterInfo.email}"/>
+                           required id="email" name="email" type="text" th:value="${userRegisterInfo.email}"/>
 
                     <!-- more value props:
                              onChange={changeHandler}
@@ -29,6 +29,9 @@
                 <div class="form-input">
                     <i class="fa-solid fa-user"></i>
                     <input th:class="${errors != null && errors['username'] != null ? 'error-field' : ''}"
+                           required
+                           minlength="5"
+                           maxlength="128"
                            id="username" name="username" type="text" th:value="${userRegisterInfo.username}"/>
                     <!-- more value props:
                              onChange={changeHandler}
@@ -42,11 +45,13 @@
 
         <div class="password-container">
             <div class="password">
-                <label for="password">Password</label>
+                <label for="rawPassword">Password</label>
                 <div class="form-input">
                     <i class="fa-solid fa-key"></i>
-                    <input th:class="${errors != null && errors['password'] != null ? 'error-field' : ''}"
-                           id="password" name="rawPassword" type="password"/>
+                    <input th:class="${errors != null && errors['rawPassword'] != null ? 'error-field' : ''}"
+                           required
+                           minlength="6"
+                           id="rawPassword" name="rawPassword" type="password"/>
                     <!-- more value props:
                              onChange={changeHandler}
                         onBlur="focusHandler(FORM_FIELDS.password) -->
@@ -54,14 +59,16 @@
 
                 <div class="password-error-container">
                     <div class="error auth register"
-                         th:text="${errors != null && errors['password'] != null ? errors['password'] : ''}">
+                         th:text="${errors != null && errors['rawPassword'] != null ? errors['rawPassword'] : ''}">
                     </div>
 
-                    <i th:if="${errors != null && errors['passwordInfo'] != null}"
+                    <i th:if="${errors != null && errors['rawPassword'] != null}"
                        class="error fa-solid fa-triangle-exclamation"></i>
 
-                    <div th:if="${errors != null && errors['passwordInfo'] != null}"
-                         class="password-info" th:text="${errors['passwordInfo']}"></div>
+                    <div th:if="${errors != null && errors['rawPassword'] != null}"
+                         class="password-info">Password must be at least 6 characters long
+                        and should contain at least one number, uppercase and lowercase letter.
+                    </div>
                 </div>
 
 
@@ -81,7 +88,7 @@
         </div>
     </div>
 
-    <div th:if="${errors != null && errors['register'] != null}" class="error auth register"
+    <div th:if="${errors != null && errors['register'] != null}" class="error auth register user-exists"
          th:text="${errors['register']}"></div>
 
     <button class="register">Register</button>

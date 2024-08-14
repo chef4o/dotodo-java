@@ -1,6 +1,7 @@
 package com.pago.dotodo.web.mvc;
 
 import com.pago.dotodo.model.dto.UserRegisterDto;
+import com.pago.dotodo.model.elements.MenuItem;
 import com.pago.dotodo.service.AuthService;
 import com.pago.dotodo.service.LayoutService;
 import com.pago.dotodo.util.ModelAndViewParser;
@@ -8,32 +9,31 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
+import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/auth")
 @SessionAttributes({"bad_credentials", "username"})
 public class AuthController extends BaseController {
 
     private static final String LOAD_MODAL = "loadModal";
-    private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}$";
 
     private final ModelAndViewParser attributeBuilder;
     private final AuthService authService;
     private final LayoutService layoutService;
     private final SecurityContextRepository securityContextRepository;
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     public AuthController(ModelAndViewParser attributeParser, AuthService authService,
@@ -54,13 +54,7 @@ public class AuthController extends BaseController {
 
         ModelAndView modelAndView = this.view("index", attributeBuilder.build(
                 "pageName", layoutService.getBackgroundPage(),
-                LOAD_MODAL, "login",
-                "tasks", layoutService.getBackgroundPage()
-                        .equals("home")
-                        ? layoutService.getHomeItems()
-                        : null,
-                "bad_credentials", badCredentials,
-                "username", username)
+                LOAD_MODAL, "login")
         );
 
         sessionStatus.setComplete();
@@ -76,10 +70,6 @@ public class AuthController extends BaseController {
 
         return this.view("index", attributeBuilder.build(
                 "pageName", layoutService.getBackgroundPage(),
-                "tasks", layoutService.getBackgroundPage()
-                        .equals("home")
-                        ? layoutService.getHomeItems()
-                        : null,
                 LOAD_MODAL, "register",
                 "userRegisterInfo", userRegisterInfo)
         );
@@ -87,18 +77,24 @@ public class AuthController extends BaseController {
 
     @PostMapping("/register")
     public ModelAndView postRegister(@Valid @ModelAttribute UserRegisterDto userRegisterInfo,
+                                     BindingResult bindingResult,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
 
-        HashMap<String, String> errors = loadErrors(userRegisterInfo);
+
+        HashMap<String, String> errors = new HashMap<>();
+
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> {
+                errors.put(error.getField(), error.getDefaultMessage());
+            });
+        } else {
+            loadCustomErrors(errors, userRegisterInfo);
+        }
 
         if (!errors.isEmpty()) {
             return this.view("index", attributeBuilder.build(
                     "pageName", layoutService.getBackgroundPage(),
-                    "tasks", layoutService.getBackgroundPage()
-                            .equals("home")
-                            ? layoutService.getHomeItems()
-                            : null,
                     LOAD_MODAL, "register",
                     "errors", errors,
                     "userRegisterInfo", userRegisterInfo)
@@ -114,15 +110,9 @@ public class AuthController extends BaseController {
                 securityContextRepository.saveContext(context, request, response);
             });
         } catch (RuntimeException e) {
-            logger.error(e.getMessage());
             errors.put("register", e.getMessage());
-
             return this.view("index", attributeBuilder.build(
                     "pageName", layoutService.getBackgroundPage(),
-                    "tasks", layoutService.getBackgroundPage()
-                            .equals("home")
-                            ? layoutService.getHomeItems()
-                            : null,
                     LOAD_MODAL, "register",
                     "errors", errors,
                     "userRegisterInfo", userRegisterInfo)
@@ -130,8 +120,7 @@ public class AuthController extends BaseController {
         }
 
         return this.view("index", attributeBuilder.build(
-                "pageName", "home",
-                "userRegisterInfo", userRegisterInfo)
+                "pageName", "home")
         );
     }
 
@@ -140,41 +129,17 @@ public class AuthController extends BaseController {
         return this.redirect("/");
     }
 
-    private HashMap<String, String> loadErrors(UserRegisterDto userRegisterInfo) {
-        HashMap<String, String> errors = new HashMap<>();
-
-        if (userRegisterInfo.getEmail().isEmpty()) {
-            errors.put("email", "Email is required");
-        } else if (!EmailValidator.getInstance().isValid(userRegisterInfo.getEmail())) {
-            errors.put("email", "Email address is invalid");
-        }
-
-        if (userRegisterInfo.getUsername().isEmpty()) {
-            errors.put("username", "Username is required");
-        } else if (userRegisterInfo.getUsername().length() < 5) {
-            errors.put("username", "Username must be at least 5 characters long");
-        }
-
-        if (userRegisterInfo.getRawPassword().isEmpty()) {
-            errors.put("password", "Password is required");
-        } else if (!userRegisterInfo.getRawPassword().matches(PASSWORD_PATTERN)) {
-            errors.put("password", "Password must be more secure");
-            errors.put("passwordInfo", "Password must be at least 6 characters long " +
-                    "and should contain at least one number, uppercase and lowercase letter.");
-        }
-
-        if (userRegisterInfo.getRePassword().isEmpty()) {
-            errors.put("rePassword", "Field is required");
-        } else if (!userRegisterInfo.getRawPassword().equals(userRegisterInfo.getRePassword())) {
-            errors.put("rePassword", "Passwords do not match");
-        }
-
-        return errors;
-    }
-
     @ModelAttribute("userRegisterInfo")
     public UserRegisterDto userRegisterInfo() {
         return new UserRegisterDto();
+    }
+
+    @ModelAttribute("tasks")
+    public List<MenuItem> tasks() {
+        return layoutService.getBackgroundPage()
+                .equals("home")
+                ? layoutService.getHomeItems()
+                : null;
     }
 
     @ModelAttribute("bad_credentials")
@@ -185,5 +150,13 @@ public class AuthController extends BaseController {
     @ModelAttribute("username")
     public String username() {
         return "";
+    }
+
+    private void loadCustomErrors(HashMap<String, String> errors, UserRegisterDto userRegisterInfo) {
+
+        if (!userRegisterInfo.getEmail().isBlank()
+                && !EmailValidator.getInstance().isValid(userRegisterInfo.getEmail())) {
+            errors.put("email", "Email should be valid");
+        }
     }
 }
