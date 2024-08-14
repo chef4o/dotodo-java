@@ -1,7 +1,9 @@
 package com.pago.dotodo.service;
 
 import com.pago.dotodo.model.dto.NoteDto;
+import com.pago.dotodo.model.dto.NoteEditDto;
 import com.pago.dotodo.model.entity.NoteEntity;
+import com.pago.dotodo.model.error.ObjectNotFoundException;
 import com.pago.dotodo.repository.NoteRepository;
 import com.pago.dotodo.util.DateTimeUtil;
 import org.modelmapper.ModelMapper;
@@ -12,7 +14,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,16 +22,18 @@ public class NoteService {
     private final UserService userService;
     private final ModelMapper modelMapper;
     private final DateTimeUtil dateTimeUtil;
+    private final AuthService authService;
 
     @Autowired
     public NoteService(NoteRepository noteRepository,
                        UserService userService,
                        ModelMapper modelMapper,
-                       DateTimeUtil dateTimeUtil) {
+                       DateTimeUtil dateTimeUtil, AuthService authService) {
         this.noteRepository = noteRepository;
         this.userService = userService;
         this.modelMapper = modelMapper;
         this.dateTimeUtil = dateTimeUtil;
+        this.authService = authService;
     }
 
     public List<NoteDto> getAll(Long userId) {
@@ -41,9 +44,13 @@ public class NoteService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<NoteDto> getById(Long noteId) {
-        return Optional.ofNullable(modelMapper.map(this.noteRepository
-                .findById(noteId), NoteDto.class));
+    public NoteDto getById(Long noteId, Long currentUserId) {
+        NoteEntity noteEntity = this.noteRepository.findById(noteId)
+                .orElseThrow(() -> new ObjectNotFoundException("note", noteId));
+
+        authService.checkAccessControl(noteEntity.getOwner().getId(), currentUserId);
+
+        return modelMapper.map(noteEntity, NoteDto.class);
     }
 
     public List<NoteDto> getByUserIdOrderByInsTimeDesc(Long userId) {
@@ -53,15 +60,15 @@ public class NoteService {
                 .map(note -> modelMapper.map(note, NoteDto.class))
                 .collect(Collectors.toList());
 
-        List<NoteDto> notesWithDueDaysHours = dateTimeUtil.addDueDaysHours(notes);
-
-        return notes.isEmpty()
-                ? notes
-                : notesWithDueDaysHours;
+        if (notes.isEmpty()) {
+            return notes;
+        }
+        return dateTimeUtil.addDueDaysHours(notes);
     }
 
-    public void deleteById(Long noteId) {
-        noteRepository.deleteById(noteId);
+    public void deleteById(Long noteId, Long currentUserId) {
+        NoteDto noteDto = this.getById(noteId, currentUserId);
+        noteRepository.deleteById(noteDto.getId());
     }
 
     public long addNote(NoteDto noteDto, Long userId) {
@@ -80,4 +87,38 @@ public class NoteService {
 
         return noteRepository.save(newNote).getId();
     }
+
+    public void editNote(Long noteId, NoteEditDto editedNote, Long userId) {
+        NoteEntity existingNote = noteRepository.findById(noteId)
+                .orElseThrow(() -> new ObjectNotFoundException("note", noteId));
+
+        authService.checkAccessControl(existingNote.getOwner().getId(), userId);
+
+        if (!existingNote.getTitle().equals(editedNote.getTitle())) {
+            existingNote.setTitle(editedNote.getTitle());
+        }
+
+        if (!existingNote.getContent().equals(editedNote.getContent())) {
+            existingNote.setContent(editedNote.getContent());
+        }
+
+        if (dateTimeUtil.datesDiffer(dateTimeUtil.formatDateToString(existingNote.getDueDate()), editedNote.getDueDate())) {
+            if (!editedNote.getDueDate().isBlank()) {
+                existingNote.setDueDate(
+                        dateTimeUtil.formatToDateTime(
+                                editedNote.getDueDate(),
+                                editedNote.getDueTime(),
+                                DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            } else {
+                existingNote.setDueDate(null);
+            }
+        }
+
+        if (existingNote.getDueDateOnly() && !editedNote.getDueTime().isBlank()) {
+            existingNote.setDueDateOnly(false);
+        }
+
+        noteRepository.save(existingNote);
+    }
+
 }

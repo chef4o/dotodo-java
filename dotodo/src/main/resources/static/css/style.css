@@ -7,6 +7,7 @@
 @import url("./home.css");
 @import url("./notes.css");
 @import url("./checklists.css");
+@import url("./events.css");
 @import url("./profile.css");
 @import url("./about.css");
 @import url("./contact.css");
@@ -30,6 +31,7 @@
   --color-menu-creamy-gray: #8a9a9a;
   --color-menu-icon-cool-gray: #4c5b5b;
   --color-menu-green-light: #9fa28f;
+  --color-menu-green-light-transparent: rgba(159, 162, 143, 0.4);
   --color-menu-green-dark: #5a5e55;
   --color-menu-icon-green-light: #676a5a;
   --color-menu-soft-gray: #909090;

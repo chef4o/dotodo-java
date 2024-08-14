@@ -16,7 +16,7 @@
     top: 5vh;
     left: 39vw;
     width: 33vw;
-    padding: 0vh 1vw 0;
+    padding: 0 1vw 0;
     z-index: 30;
 }
 
@@ -36,7 +36,7 @@
     gap: 0.6vw;
     justify-content: flex-start;
     align-items: center;
-    padding-top: 2.6vw;
+    padding-top: 0.5vw;
     font-size: 1.2vw;
 }
 
@@ -45,7 +45,7 @@
 }
 
 .auth-form.register {
-    height: 12vw;
+    height: 14vw;
     min-height: 74px;
 }
 
