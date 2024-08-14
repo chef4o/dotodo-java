@@ -1,9 +1,6 @@
 package com.pago.dotodo.util;
 
 import com.pago.dotodo.model.dto.NoteDto;
-import com.pago.dotodo.web.mvc.AuthController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -16,7 +13,8 @@ import java.util.List;
 
 @Component
 public class DateTimeUtil {
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public LocalDateTime formatToDateTime(String date, String time, DateTimeFormatter format) {
         if (date == null || date.isEmpty()) {
@@ -36,7 +34,7 @@ public class DateTimeUtil {
 
             if (time == null || time.isEmpty()) {
                 LocalDate today = LocalDate.now();
-                return !parsedDate.isBefore(today);
+                return parsedDate.isAfter(today);
             } else {
                 LocalTime parsedTime = LocalTime.parse(time, DateTimeFormatter.ISO_LOCAL_TIME);
                 LocalDateTime dateTime = LocalDateTime.of(parsedDate, parsedTime);
@@ -45,8 +43,7 @@ public class DateTimeUtil {
                 return dateTime.isAfter(now);
             }
         } catch (DateTimeParseException e) {
-            logger.error(e.getMessage());
-            return false;
+            return true;
         }
     }
 
@@ -68,11 +65,31 @@ public class DateTimeUtil {
 
             if (daysUntilDue >= 1) {
                 note.setDueDays((int) daysUntilDue);
-            } else if (hoursUntilDue > 1) {
+            } else if (hoursUntilDue >= 1) {
                 note.setDueHours((int) hoursUntilDue);
             }
         }
 
         return note;
+    }
+
+    public String formatToISODate(String date, String currentFormat) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(currentFormat);
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(date, inputFormatter).format(outputFormatter);
+    }
+
+    public String formatDateToString(LocalDateTime date) {
+        return date != null ? date.toLocalDate().format(dateFormatter) : "";
+    }
+
+    public String formatTimeToString(LocalDateTime date) {
+        return date.toLocalTime().toString();
+    }
+
+    public boolean datesDiffer(String date1, String date2) {
+        if (date1 == null && date2 == null) return false;
+        if (date1 == null || date2 == null) return true;
+        return !date1.equals(date2);
     }
 }
