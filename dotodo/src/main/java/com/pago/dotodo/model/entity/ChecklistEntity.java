@@ -85,7 +85,8 @@ public class ChecklistEntity extends BaseEntity{
         return this;
     }
 
-    @OneToMany
+    @OneToMany(targetEntity = ChecklistEntity.class,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE})
     public Set<ChecklistElementEntity> getElements() {
         return elements;
     }

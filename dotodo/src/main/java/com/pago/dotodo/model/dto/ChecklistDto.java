@@ -5,6 +5,7 @@ import com.pago.dotodo.model.entity.ChecklistElementEntity;
 import java.util.Set;
 
 public class ChecklistDto {
+    private Long id;
     private String title;
     private String content;
     private Boolean isArchived;
@@ -15,6 +16,15 @@ public class ChecklistDto {
     private Set<ChecklistElementEntity> elements;
 
     public ChecklistDto() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public ChecklistDto setId(Long id) {
+        this.id = id;
+        return this;
     }
 
     public String getTitle() {
