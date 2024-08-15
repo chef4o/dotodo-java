@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+
+<h3 th:text="${subject}"></h3>
+
+<p>Dear <th:block th:text="${username}"></th:block>,</p>
+
+<p>We wish you a happy birthday! May all your dreams come true!</p>
+
+<p>If you want to receive an email for someone else's birthday,
+    you can add a reminder from <a href="http://localhost:8000/events">here</a></p>
+
+<p>Have a great day,</p>
+<p>DoToDo Support Team</p>
+
+</body>
+</html>

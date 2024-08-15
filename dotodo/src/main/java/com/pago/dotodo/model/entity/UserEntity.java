@@ -6,9 +6,9 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,14 +20,13 @@ public class UserEntity extends BaseEntity {
     private String email;
     private String username;
     private String password;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private String phoneNumber;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String imageUrl;
     private List<RoleEntity> roles;
     private AddressEntity address;
-    private List<EventEntity> events;
 
     public UserEntity() {
         this.roles = new ArrayList<>();
@@ -86,12 +85,12 @@ public class UserEntity extends BaseEntity {
     }
 
     @Column(name = "dob")
-    @DateTimeFormat
-    public Date getDateOfBirth() {
+    @Temporal(TemporalType.DATE)
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public UserEntity setDateOfBirth(Date dateOfBirth) {
+    public UserEntity setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
         return this;
     }

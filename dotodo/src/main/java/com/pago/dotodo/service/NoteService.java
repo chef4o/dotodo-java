@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
@@ -55,7 +56,7 @@ public class NoteService {
 
     public List<NoteDto> getByUserIdOrderByInsTimeDesc(Long userId) {
         List<NoteDto> notes = this.noteRepository
-                .findByOwnerIdOrderByStartDateDesc(userId)
+                .findByOwnerIdOrderByDueDateDesc(userId)
                 .stream()
                 .map(note -> modelMapper.map(note, NoteDto.class))
                 .collect(Collectors.toList());
@@ -121,4 +122,19 @@ public class NoteService {
         noteRepository.save(existingNote);
     }
 
+    public List<String> getExpiringNotesEmails() {
+        return noteRepository.findAll()
+                .stream()
+                .filter(note -> isExpiring(note.getDueDate().toLocalDate()))
+                .map(note -> note.getOwner().getEmail())
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public boolean isExpiring(LocalDate dueDate) {
+        if (dueDate == null) {
+            return false;
+        }
+        return dueDate.isEqual(LocalDate.now());
+    }
 }

@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface NoteRepository extends JpaRepository<NoteEntity, Long> {
     List<NoteEntity> findNotesByOwnerId(Long ownerId);
-    List<NoteEntity> findByOwnerIdOrderByStartDateDesc(Long ownerId);
+    List<NoteEntity> findByOwnerIdOrderByDueDateDesc(Long ownerId);
 }

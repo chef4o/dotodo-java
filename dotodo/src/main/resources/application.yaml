@@ -7,6 +7,13 @@ server:
   port: ${SERVER_PORT}
   error:
     include-exception: true
+mail:
+  host: sandbox.smtp.mailtrap.io
+  port: 2525
+  ssl: no
+  tls: yes
+  username: ${SMTP_USERNAME}
+  password: ${SMTP_PASSWORD}
 app:
   default:
     password: test123

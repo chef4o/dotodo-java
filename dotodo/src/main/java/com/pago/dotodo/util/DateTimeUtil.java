@@ -65,7 +65,7 @@ public class DateTimeUtil {
 
             if (daysUntilDue >= 1) {
                 note.setDueDays((int) daysUntilDue);
-            } else if (hoursUntilDue >= 1) {
+            } else if (hoursUntilDue >= 0) {
                 note.setDueHours((int) hoursUntilDue);
             }
         }
@@ -77,6 +77,24 @@ public class DateTimeUtil {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(currentFormat);
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(date, inputFormatter).format(outputFormatter);
+    }
+
+    /**
+     * Converts a date string in the format "dd/MM/yyyy" to LocalDate.
+     *
+     * @param dateString The date string to convert.
+     * @return The corresponding LocalDate object, or null if parsing fails.
+     */
+    public LocalDate formatStringToDate(String dateString) {
+        if (dateString == null || dateString.isEmpty()) {
+            return null;
+        }
+
+        try {
+            return LocalDate.parse(dateString, dateFormatter);
+        } catch (DateTimeParseException e) {
+            throw new RuntimeException("Failed to parse date: " + dateString, e);
+        }
     }
 
     public String formatDateToString(LocalDateTime date) {

@@ -81,7 +81,7 @@ public class NoteDto {
     }
 
     public int getDueHours() {
-        return this.dueDaysHours.get("hours") != null ? this.dueDaysHours.get("hours") : 0;
+        return this.dueDaysHours.get("hours") != null ? this.dueDaysHours.get("hours") : -1;
     }
 
     public NoteDto setDueHours(int hours) {
