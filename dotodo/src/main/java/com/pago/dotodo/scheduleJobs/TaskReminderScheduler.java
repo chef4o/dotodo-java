@@ -18,7 +18,7 @@ public class TaskReminderScheduler {
         this.noteService = noteService;
     }
 
-    @Scheduled(cron = "0 1 * * * *")
+    @Scheduled(cron = "0 1 1 * * *")
 //    @Scheduled(cron = "0 * * * * *") //cron for every minute
     public void sendTaskReminderEmails() {
         LOGGER.info("Sending task reminder emails initiated");
