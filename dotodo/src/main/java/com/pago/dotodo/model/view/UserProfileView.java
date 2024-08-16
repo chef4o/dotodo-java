@@ -1,5 +1,10 @@
 package com.pago.dotodo.model.view;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
+
 import java.util.Objects;
 
 public class UserProfileView {
@@ -48,6 +53,8 @@ public class UserProfileView {
         return this;
     }
 
+    @NotBlank
+    @Length(min = 5, message = "Username must be at least 5 characters long")
     public String getUsername() {
         return username;
     }
@@ -57,6 +64,8 @@ public class UserProfileView {
         return this;
     }
 
+    @NotBlank
+    @Email(message = "Email must be valid")
     public String getEmail() {
         return email;
     }
@@ -75,6 +84,7 @@ public class UserProfileView {
         return this;
     }
 
+    @URL
     public String getImgUrl() {
         return imgUrl;
     }

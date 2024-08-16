@@ -4,7 +4,12 @@
     </th:block>
 
     <th:block sec:authorize="isAuthenticated()">
-        <th:block th:insert="~{fragments/profile/profile-details}"></th:block>
+        <th:block th:if="${detailedNote} == null">
+            <th:block th:if="${updateUser == null || updateUser == false}" th:insert="~{fragments/profile/profile-details}"></th:block>
+            <th:block th:if="${updateUser} == true" th:insert="~{fragments/profile/profile-edit-details}"></th:block>
+        </th:block>
+
+        <th:block th:if="${detailedNote} != null" th:insert="~{fragments/profile/profile-note-details}"></th:block>
         <th:block th:insert="~{fragments/profile/profile-notes}"></th:block>
         <th:block th:insert="~{fragments/profile/profile-checklists}"></th:block>
     </th:block>

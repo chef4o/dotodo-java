@@ -7,6 +7,7 @@ public class UserDto {
     private Long id;
     private String firstName;
     private String lastName;
+    private String fullName;
     private String email;
     private String dob;
     private String username;
@@ -119,6 +120,15 @@ public class UserDto {
 
     public UserDto setRoles(List<String> roles) {
         this.roles = roles;
+        return this;
+    }
+
+    public String getFullName() {
+        return this.fullName = String.format("%s %s", this.firstName, this.lastName);
+    }
+
+    public UserDto setFullName(String fullName) {
+        this.fullName = String.format("%s %s", this.firstName, this.lastName);
         return this;
     }
 }

@@ -1,4 +1,4 @@
-<a th:href="@{'/notes/view/' + ${note.id}}">
+<a th:href="@{'/profile/notes/' + ${note.id}}">
     <div class="note inactive">
         <h3 th:text="${note.title}"></h3>
         <p th:class="${note.dueDaysHours != null and #maps.size(note.dueDaysHours) > 0} ? 'with-due' : ''"
@@ -15,14 +15,6 @@
             <div class="due" th:if="${note.dueDaysHours['hours'] != null && note.dueDaysHours['hours'] < 0}">
                 Due has expired</div>
         </th:block>
-
-        <form th:action="@{'/notes/edit/' + ${note.id}}" th:method="get">
-            <button type="submit" class="edit-btn">Edit</button>
-        </form>
-
-        <form th:action="@{'/notes/delete/' + ${note.id}}" th:method="delete">
-            <button type="submit" class="delete-btn">Delete</button>
-        </form>
     </div>
 </a>
 

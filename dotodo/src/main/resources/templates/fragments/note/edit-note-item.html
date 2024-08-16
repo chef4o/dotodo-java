@@ -19,7 +19,8 @@
         <label class="due-time" for="dueTime">
             <input id="dueTime" type="time" name="dueTime"
                    th:value="${noteToEdit.dueTime}">
-            <i class="fa-regular fa-clock"></i>
+<!--            conflict between firefox and chrome-->
+<!--            <i class="fa-regular fa-clock"></i>-->
         </label>
 
         <th:block th:if="${valueErrors != null && !valueErrors.isEmpty()}">

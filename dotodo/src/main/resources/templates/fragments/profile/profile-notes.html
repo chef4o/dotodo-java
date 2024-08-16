@@ -1,9 +1,11 @@
-<div class="expiring-notes">
+<div class="expiring notes">
     <h1>Notes close to expiry</h1>
 
     <th:block th:if="${expiringNotes != null}">
-        <ul class="notes-list" th:each="note : ${expiringNotes}">
-            <th:block th:insert="~{fragments/profile/profile-note-details}"></th:block>
+        <ul class="notes-list">
+            <th:block th:each="note : ${expiringNotes}"
+                      th:insert="~{fragments/profile/profile-note-item}">
+            </th:block>
         </ul>
     </th:block>
 

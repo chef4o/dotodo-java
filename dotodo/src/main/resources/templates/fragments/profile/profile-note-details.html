@@ -1,20 +1,35 @@
-<div class={activeNoteId === note._id ? "note-details active" : "note"} onClick={() => setActiveNoteId(note._id)}>
-{activeNoteId === note._id &&
-<button class="xmark" onClick={handleXmarkClick}>
-    <i class="fa-solid fa-xmark" />
-</button>}
+<div class="note active details" xmlns="http://www.w3.org/1999/html">
+    <a href="/profile" class="xmark"><i class="fa-solid fa-xmark"></i></a>
 
-<div class="heading-row">
-    <h3>{note.title}</h3>
-    <p>{`Status: ${note.isArchived ? 'Archived' : 'Active'}`}</p>
-</div>
+    <h3 class="title" name="title" th:text="${detailedNote.title}"></h3>
 
-<div class="dates-row">
-    <p>{`Initiated on: ${note.startDate}`}</p>
-    {!note.completedOn
-    ? <p>{`Due date: ${note.dueDate}`}</p>
-    : <p>{`Completed on: ${note.completedOn}`}</p>}
-</div>
+    <p class="note-text" name="content" th:text="${detailedNote.content}"></p>
+    <th:block th:if="${detailedNote.dueDate != null}">
+        <div class="due-date" th:if="${detailedNote.dueDateOnly == true}">Due date
+            <div>
+                <p th:text="${detailedNote.dueDate}"></p>
+                <i class="fa-regular fa-calendar"></i>
+            </div>
+        </div>
 
-<p class="expiring-notes-content">{note.content}</p>
+        <div class="due-date" th:if="${detailedNote.dueDateOnly == false}">Due date / time
+            <div>
+                <p th:text="${detailedNote.dueDate}"></p>
+                <i class="fa-regular fa-calendar"></i>
+            </div>
+
+            <div>
+                <p th:text="${detailedNote.dueTime}"></p>
+                <i class="fa-regular fa-clock"></i>
+            </div>
+        </div>
+    </th:block>
+
+    <a th:href="@{'/notes/edit/' + ${detailedNote.id}}">
+        <button class="edit-btn">Edit</button>
+    </a>
+
+    <form th:action="@{'/profile/delete/' + ${detailedNote.id}}" th:method="delete">
+        <button type="submit" class="delete-btn">Delete</button>
+    </form>
 </div>

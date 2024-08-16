@@ -41,7 +41,7 @@ public class AuthService {
     public void registerUser(UserRegisterDto userRegisterDto,
                              Consumer<Authentication> successfulLoginProcessor) {
 
-        checkIfExists(userRegisterDto);
+        checkIfUserExists(userRegisterDto);
         userRegisterDto.setPassword(passwordEncoder.encode(userRegisterDto.getRawPassword()));
 
         if (!this.dbExists()) {
@@ -60,7 +60,7 @@ public class AuthService {
         successfulLoginProcessor.accept(auth);
     }
 
-    private void checkIfExists(UserRegisterDto userRegisterDto) throws RuntimeException {
+    private void checkIfUserExists(UserRegisterDto userRegisterDto) throws RuntimeException {
         Optional<UserEntity> userByUsername = userRepository.findByUsername(userRegisterDto.getUsername());
         Optional<UserEntity> userByEmail = userRepository.findByEmail(userRegisterDto.getEmail());
 

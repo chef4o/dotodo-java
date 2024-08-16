@@ -8,6 +8,7 @@ import com.pago.dotodo.repository.NoteRepository;
 import com.pago.dotodo.util.DateTimeUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -86,7 +87,7 @@ public class NoteService {
                 .setOwner(userService.getUserById(userId))
                 .setPeers(new HashSet<>());
 
-        return noteRepository.save(newNote).getId();
+        return noteRepository.saveAndFlush(newNote).getId();
     }
 
     public void editNote(Long noteId, NoteEditDto editedNote, Long userId) {
@@ -119,22 +120,31 @@ public class NoteService {
             existingNote.setDueDateOnly(false);
         }
 
-        noteRepository.save(existingNote);
+        noteRepository.saveAndFlush(existingNote);
     }
 
     public List<String> getExpiringNotesEmails() {
         return noteRepository.findAll()
                 .stream()
-                .filter(note -> isExpiring(note.getDueDate().toLocalDate()))
+                .filter(note -> isExpiring(note.getDueDate()))
                 .map(note -> note.getOwner().getEmail())
                 .distinct()
                 .collect(Collectors.toList());
     }
 
-    public boolean isExpiring(LocalDate dueDate) {
+    public boolean isExpiring(LocalDateTime dueDate) {
         if (dueDate == null) {
             return false;
         }
-        return dueDate.isEqual(LocalDate.now());
+        return dueDate.toLocalDate().isEqual(LocalDate.now());
+    }
+
+    public List<NoteDto> getExpiringNotes(Long userId, int numberOfResults) {
+        PageRequest pageRequest = PageRequest.of(0, numberOfResults);
+        return this.noteRepository
+                .findNotesByOwnerIdOrderByDueDate(userId, pageRequest)
+                .stream()
+                .map(event -> modelMapper.map(event, NoteDto.class))
+                .collect(Collectors.toList());
     }
 }

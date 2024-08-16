@@ -1,35 +1,35 @@
-.content.notes .header-menu {
+.notes .header-menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 2vw;
 }
 
-.content.notes .header-menu h2,
-.content.notes .header-menu i {
+.notes .header-menu h2,
+.notes .header-menu i {
     color: var(--color-menu-icon-soft-sky-blue);
 }
 
-.content.notes .header-menu h2 {
+.notes .header-menu h2 {
     font-size: 2vw;
 }
 
-.content.notes .header-menu i {
+.notes .header-menu i {
     padding-right: 1vw;
 }
 
-.content.notes .header-menu button {
+.notes .header-menu button {
     font-size: 1.4vw;
     padding: 0.2vw 0.8vw;
     background-color: var(--color-menu-soft-sky-blue-transparent);
 }
 
-.content.notes .header-menu button:hover {
+.notes .header-menu button:hover {
     color: white;
     background-color: var(--color-menu-icon-soft-sky-blue);
 }
 
-.content.notes .notes-list {
+.notes-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -37,11 +37,11 @@
     gap: 1.4vw;
 }
 
-.content.notes .notes-list.empty {
+.notes-list.empty {
     justify-content: center;
 }
 
-.content.notes .note {
+.note {
     position: relative;
     width: 17.73vw;
     height: 16vw;
@@ -52,147 +52,120 @@
     overflow: hidden;
 }
 
-.content.notes .note h3 {
+.note h3 {
     font-size: 1.8vw;
     height: 2.4vw;
     border-bottom: 1px solid var(--color-menu-icon-soft-sky-blue);
 }
 
-.content.notes .note p {
+.note p {
     width: 16vw;
     margin-top: 0.4vw;
     padding-top: 0.6vw;
     word-wrap: break-word;
     line-height: normal;
     overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-menu-icon-soft-sky-blue) transparent;
 }
 
-.content.notes .note p:hover {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-menu-icon-soft-sky-blue) transparent;
-}
-
-.content.notes .note p::-webkit-scrollbar {
-    width: 0.4vw;
-}
-
-.content.notes .note p::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.content.notes .note p::-webkit-scrollbar-thumb {
-    background-color: var(--color-menu-icon-soft-sky-blue);
-    border-radius: 0.4vw;
-    border: 0.1vw solid transparent;
-}
-
-.content.notes .note p:hover::-webkit-scrollbar-thumb {
-    background-color: var(--color-menu-icon-soft-sky-blue);
-    border-radius: 0.4vw;
-    border: 0.1vw solid transparent;
-}
-
-.content.notes .note p.with-due,
-.content.notes .note .due {
+.note p.with-due,
+.note .due {
     position: absolute;
 }
 
-.content.notes .note p.with-due,
-.content.notes .note .due {
+.note p.with-due,
+.note .due {
     top: 4.3vw;
 }
 
-.content.notes .note .due {
+.note .due {
     top: 3.2vw;
     font-style: italic;
 }
 
-.content.notes .note.new,
-.content.notes .note.active {
+.note.new,
+.note.active {
     width: 100%;
     background-color: var(--color-menu-soft-sky-blue-transparent);
 }
 
-.content.notes .note.active.details {
+.note.active.details {
     background-color: var(--color-menu-soft-sky-blue);
 }
 
-.content.notes .note .delete-btn,
-.content.notes .note .create,
-.content.notes .note .edit-btn,
-.content.notes .note .cancel-btn {
+.note .delete-btn,
+.note .create,
+.note .edit-btn,
+.note .cancel-btn {
     position: absolute;
     top: 13vw;
     height: 2vw;
 }
 
-.content.notes .note .cancel-btn {
+.note .cancel-btn {
     margin-left: 4vw;
 }
 
-.content.notes .note .delete-btn {
+.note .delete-btn {
     right: 1vw;
 }
 
-.content.notes .note .edit-btn {
+.note .edit-btn {
     left: 1vw;
 }
 
-.content.notes .note .create:hover {
+.note .create:hover {
     background-color: var(--color-menu-soft-sky-blue);
 }
 
-.content.notes .note .delete-btn:hover,
-.content.notes .note .edit-btn:hover,
-.content.notes .note .cancel-btn:hover {
+.note .delete-btn:hover,
+.note .edit-btn:hover,
+.note .cancel-btn:hover {
     background-color: var(--color-gray-light);
 }
 
-.content.notes .note.new .title,
-.content.notes .note.active .title,
-.content.notes .note.new .note-text,
-.content.notes .note.active .note-text,
-.content.notes .note.new p,
-.content.notes .note.active .note-text,
-.content.notes .note.new .title,
-.content.notes .note.active .title {
+.note.new .title,
+.note.active .title,
+.note.new .note-text,
+.note.active .note-text,
+.note.new p,
+.note.active .note-text,
+.note.new .title,
+.note.active .title {
     background: none;
     border: none;
     width: 100%;
 }
 
-.content.notes .note.new .title,
-.content.notes .note.active .title {
+.note.new .title,
+.note.active .title {
     font-size: 1.8vw;
     padding: 0;
     border-bottom: 1px solid var(--color-menu-icon-soft-sky-blue);
 }
 
-.content.notes .note.active.details .title {
+.note.active.details .title {
     padding: 0;
 }
 
-.content.notes .note.inactive p {
+.note.inactive p {
     height: 8vw;
 }
 
-.content.notes .note.new .note-text,
-.content.notes .note.active .note-text {
+.note.new .note-text,
+.note.active .note-text {
     height: 9vw;
     resize: none;
     padding: 0.4vw 9vw 0.4vw 0.4vw;
     margin-top: 0.6vw;
 }
 
-.content.notes .note.active .xmark,
-.content.notes .note.new .xmark {
+.note.active .xmark,
+.note.new .xmark {
     position: absolute;
     right: 1vw;
 }
 
-.content.notes .note.new button {
+.note.new button {
     position: absolute;
     bottom: -11vw;
     right: 0.6vw;
@@ -204,30 +177,30 @@ select:focus {
     outline: none;
 }
 
-.content.notes .due-date,
-.content.notes .due-time {
+.note .due-date,
+.note .due-time {
     position: absolute;
     text-align: end;
     font-size: 1vw;
 }
 
-.content.notes .due-date {
+.note .due-date {
     right: 1vw;
     margin-top: 1vw;
 }
 
-.content.notes .due-date div {
+.note .due-date div {
     display: flex;
     align-items: center;
     padding-top: 0.2vw;
     gap: 0.2vw;
 }
 
-.content.notes .due-date p {
+.note .due-date p {
     padding: 0 0.5vw 0 0;
 }
 
-.content.notes .due-time {
+.note .due-time {
     top: 7.1vw;
     right: 1.5vw;
     display: flex;
@@ -236,31 +209,26 @@ select:focus {
     justify-content: end;
 }
 
-.content.notes .note.active .due-date,
-.content.notes .note.new .due-date {
+.note.active .due-date,
+.note.new .due-date {
     top: 3vw;
 }
 
-.content.notes .note.new .due-date p {
+.note.new .due-date p {
     padding-top: 0;
 }
 
-
-.content.notes .note.active.details .due-date {
+.note.active.details .due-date {
     padding-right: 0.6vw;
 }
 
-.content.notes .form-edit .due-date {
-    top: 4vw;
-}
-
-.content.notes .due-date input,
-.content.notes .due-time input {
+.notes .due-date input,
+.notes .due-time input {
     font-size: 1vw;
     background: none;
     border: none;
 }
 
-.content.notes .due-time input {
+.notes .due-time input {
     display: flex;
 }

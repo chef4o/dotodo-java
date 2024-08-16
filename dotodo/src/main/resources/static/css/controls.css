@@ -1,0 +1,30 @@
+.notes p, .notes p:hover,
+.notes ul, .notes ul:hover {
+    overflow: auto;
+    scrollbar-color: var(--color-menu-icon-soft-sky-blue) transparent;
+    scrollbar-width: thin;
+}
+
+p::-webkit-scrollbar,
+ul::-webkit-scrollbar {
+    width: 0.4vw;
+}
+
+p::-webkit-scrollbar-track,
+ul::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+p::-webkit-scrollbar-thumb,
+ul::-webkit-scrollbar-thumb {
+    background-color: var(--color-menu-icon-soft-sky-blue);
+    border-radius: 0.4vw;
+    border: 0.1vw solid transparent;
+}
+
+p:hover::-webkit-scrollbar-thumb,
+ul:hover::-webkit-scrollbar-thumb {
+    background-color: var(--color-menu-icon-soft-sky-blue);
+    border-radius: 0.4vw;
+    border: 0.1vw solid transparent;
+}

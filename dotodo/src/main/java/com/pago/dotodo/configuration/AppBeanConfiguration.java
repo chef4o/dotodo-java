@@ -6,7 +6,9 @@ import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.dto.NoteEditDto;
 import com.pago.dotodo.model.entity.NoteEntity;
 import com.pago.dotodo.model.entity.RoleEntity;
+import com.pago.dotodo.model.entity.UserEntity;
 import com.pago.dotodo.model.enums.RoleEnum;
+import com.pago.dotodo.model.view.UserProfileView;
 import com.pago.dotodo.repository.RoleRepository;
 import com.pago.dotodo.util.DateTimeUtil;
 import org.modelmapper.Converter;
@@ -153,6 +155,33 @@ public class AppBeanConfiguration {
                 }
 
                 destination.setDueDateOnly(source.getDueDateOnly());
+
+                return destination;
+            }
+        });
+
+        modelMapper.addConverter(new Converter<UserEntity, UserProfileView>() {
+            @Override
+            public UserProfileView convert(MappingContext<UserEntity, UserProfileView> context) {
+                UserEntity source = context.getSource();
+                UserProfileView destination = new UserProfileView();
+                destination.setFirstName(source.getFirstName());
+                destination.setLastName(source.getLastName());
+                destination.setFullName();
+                destination.setUsername(source.getUsername());
+                destination.setEmail(source.getEmail());
+                destination.setImgUrl(source.getImageUrl());
+                destination.setPhoneNumber(source.getPhoneNumber());
+
+                if (source.getDateOfBirth() != null) {
+                    destination.setDob(source
+                            .getDateOfBirth()
+                            .format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
+                }
+
+                if (source.getAddress() != null) {
+                    destination.setAddress(source.getAddress().toString());
+                }
 
                 return destination;
             }

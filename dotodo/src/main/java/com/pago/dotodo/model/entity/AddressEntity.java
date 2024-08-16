@@ -1,6 +1,11 @@
 package com.pago.dotodo.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "addresses")
@@ -47,5 +52,13 @@ public class AddressEntity extends BaseEntity {
     public AddressEntity setCountry(String country) {
         this.country = country;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return Stream.of(street, zipCode, town, country)
+                .filter(Objects::nonNull)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.joining(", "));
     }
 }

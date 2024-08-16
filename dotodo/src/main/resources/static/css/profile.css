@@ -1,15 +1,21 @@
+.content.profile {
+    position: relative;
+}
+
 .content.profile .user-details {
     display: flex;
     height: 17vw;
 }
 
 .content.profile .user-details .profile-image,
-.content.profile .user-details .profile-details {
+.content.profile .user-details .profile-details,
+.content.profile .form-edit {
     padding: 2vw;
 }
 
 .content.profile .user-details .profile-details {
     display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -25,7 +31,8 @@
     border-radius: 50%;
 }
 
-.content.profile .user-details .profile-image i {
+.content.profile .user-details .profile-image i,
+.content.profile .form-edit .profile-image i {
     font-size: 8vw;
 }
 
@@ -42,16 +49,25 @@
     text-align: right;
 }
 
-.content.profile .expiring-notes .notes-list {
-    display: flex;
-    margin: 0.4vw 1.2vw;
+.content.profile .expiring.notes {
+    background: none;
 }
 
-.content.profile .expiring-notes .notes-list .note {
+.content.profile .expiring.notes h1 {
+    padding-left: 2vw;
+}
+
+.content.profile .expiring.notes .notes-list {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 1vw 0 0 2vw;
+    padding-bottom: 1vw;
+}
+
+.content.profile .expiring.notes .notes-list .note {
     padding: 1vw;
-    margin: 1vw;
     overflow: hidden;
-    width: 33%;
 }
 
 .content.profile .expiring-notes .notes-list .note-details.active {
@@ -116,4 +132,91 @@
 
 .content.profile .expiring-notes .notes-list .note p {
     font-size: 1.2vw;
+}
+
+.content.profile .note.active.details {
+    width: 93%;
+    margin: 2vw;
+}
+
+.content.profile .note.inactive p {
+    height: 10vw;
+}
+
+.profile-details .edit-btn {
+    position: absolute;
+    top: 0;
+    height: 2.2vw;
+    right: 0;
+    font-size: 1.4vw;
+    margin: 1vw;
+}
+
+.profile-details button {
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+    vertical-align: middle;
+}
+
+.profile-details .edit-btn:hover {
+    background-color: var(--color-menu-soft-gray);
+}
+
+.content.profile .profile-edit .form-edit {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    justify-content: space-between;
+    padding: 3vw 2vw 0;
+}
+
+.profile-edit .form-edit .personal,
+.profile-edit .form-edit .contact {
+    width: 36%;
+}
+
+.profile-edit .form-edit .profile-image {
+    width: 15%;
+}
+
+.profile-edit .form-edit label {
+    display: flex;
+    padding: 0.4vw 0;
+    justify-content: stretch;
+    width: max-content;
+    max-width: 25vw;
+    gap: 1vw;
+}
+
+.profile-edit .form-edit input {
+    all: unset;
+    max-width: 14vw;
+}
+
+.content.profile .form-edit * {
+    font-size: 1.6vw;
+}
+
+.profile-edit .xmark {
+    position: absolute;
+    right: 1vw;
+    top: 0.5vw;
+    z-index: 10;
+}
+
+.profile-edit .update-btn {
+    width: 100%;
+    position: absolute;
+    top: 13vw;
+    left: 27vw;
+}
+
+.form-edit .profile-image {
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    padding-top: 1vw;
 }

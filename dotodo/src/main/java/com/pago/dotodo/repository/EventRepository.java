@@ -1,6 +1,7 @@
 package com.pago.dotodo.repository;
 
 import com.pago.dotodo.model.entity.EventEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

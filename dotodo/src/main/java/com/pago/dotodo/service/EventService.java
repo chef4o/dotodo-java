@@ -6,6 +6,7 @@ import com.pago.dotodo.model.error.ObjectNotFoundException;
 import com.pago.dotodo.repository.EventRepository;
 import com.pago.dotodo.util.DateTimeUtil;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;

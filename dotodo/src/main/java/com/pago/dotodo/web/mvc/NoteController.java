@@ -128,10 +128,7 @@ public class NoteController extends BaseController {
             });
         }
 
-        if (noteEditDto.getDueDate() != null && !noteEditDto.getDueDate().isBlank()
-                && !dateTimeUtil.isInFuture(noteEditDto.getDueDate(), noteEditDto.getDueTime())) {
-            valueErrors.put("date", "Due date must be in the future");
-        }
+        loadCustomErrors(valueErrors, noteEditDto);
 
         if (!valueErrors.isEmpty()) {
             return this.view("index", attributeBuilder.build(
@@ -170,7 +167,6 @@ public class NoteController extends BaseController {
         return new NoteEditDto();
     }
 
-
     @ModelAttribute("noteToEdit")
     public NoteDto noteToEdit(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                               @RequestParam(required = false) Long editNoteId) {
@@ -194,6 +190,13 @@ public class NoteController extends BaseController {
     public NoteDto detailedNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                 @RequestParam(required = false) Long viewNoteId) {
         return viewNoteId != null ? noteService.getById(viewNoteId, userDetails.getId()) : null;
+    }
+
+    private void loadCustomErrors(Map<String, String> errors, NoteEditDto noteEditDto) {
+        if (noteEditDto.getDueDate() != null && !noteEditDto.getDueDate().isBlank()
+                && !dateTimeUtil.isInFuture(noteEditDto.getDueDate(), noteEditDto.getDueTime())) {
+            errors.put("date", "Due date must be in the future");
+        }
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)

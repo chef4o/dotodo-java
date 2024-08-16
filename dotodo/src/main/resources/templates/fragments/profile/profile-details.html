@@ -1,29 +1,32 @@
 <div class="user-details">
-    <div class="profile-details"
-         th:object="${profileDetails}">
-        <div th:if="*{fullName != null}" class="personal">
+    <div class="profile-details">
+        <div th:if="${profileDetails.fullName != null}" class="personal">
             <p class="name"
-               th:text="'Name: ' + *{fullName}"></p>
+               th:text="'Name: ' + ${profileDetails.fullName}"></p>
             <p class="username"
-               th:text="'Username: ' + *{username}"></p>
-            <p th:if="*{dob != null}" class="dateOfBirth"
-               th:text="'Birthday: ' + *{dob}"></p>
+               th:text="'Username: ' + ${profileDetails.username}"></p>
+            <p th:if="${profileDetails.dob != null}" class="dateOfBirth"
+               th:text="'Birthday: ' + ${profileDetails.dob}"></p>
         </div>
 
-        <div th:if="*{imgUrl != null}" class="profile-image">
-            <img th:src="*{imgUrl}" alt=""/>
+        <div th:if="${profileDetails.imgUrl != null}" class="profile-image">
+            <img th:src="${profileDetails.imgUrl}" alt=""/>
         </div>
-        <div th:unless="*{imgUrl != null}" class="profile-image">
+        <div th:unless="${profileDetails.imgUrl != null}" class="profile-image">
             <i class="fa-solid fa-user"></i>
         </div>
 
         <div class="contact">
-            <p th:if="*{email != null}" class="email"
-               th:text="'Email: ' + *{email}"></p>
-            <p th:if="*{phoneNumber != null}" class="phoneNumber"
-               th:text="'Phone: ' + *{phoneNumber}"></p>
-            <p th:if="*{address != null}" class="address"
-               th:text="'Address: ' + *{address}"></p>
+            <p th:if="${profileDetails.email != null}" class="email"
+               th:text="'Email: ' + *{profileDetails.email}"></p>
+            <p th:if="${profileDetails.phoneNumber != null}" class="phoneNumber"
+               th:text="'Phone: ' + *{profileDetails.phoneNumber}"></p>
+            <p th:if="${profileDetails.address != null}" class="address"
+               th:text="'Address: ' + ${profileDetails.address}"></p>
         </div>
+
+        <a class="edit-btn" href="/profile/edit">
+            <button>Edit details</button>
+        </a>
     </div>
 </div>

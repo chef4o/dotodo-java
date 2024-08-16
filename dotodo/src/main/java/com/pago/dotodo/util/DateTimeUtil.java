@@ -67,6 +67,8 @@ public class DateTimeUtil {
                 note.setDueDays((int) daysUntilDue);
             } else if (hoursUntilDue >= 0) {
                 note.setDueHours((int) hoursUntilDue);
+            } else {
+                note.setDueHours(-1);
             }
         }
 
