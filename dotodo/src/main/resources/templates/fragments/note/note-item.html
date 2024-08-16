@@ -1,5 +1,5 @@
 <a th:href="@{'/notes/view/' + ${note.id}}">
-    <div class="note">
+    <div class="note inactive">
         <h3 th:text="${note.title}"></h3>
         <p th:class="${note.dueDaysHours != null and #maps.size(note.dueDaysHours) > 0} ? 'with-due' : ''" th:text="${note.content}"></p>
 

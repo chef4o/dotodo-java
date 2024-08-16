@@ -60,10 +60,38 @@
 
 .content.notes .note p {
     width: 16vw;
+    margin-top: 0.4vw;
     padding-top: 0.6vw;
     word-wrap: break-word;
     line-height: normal;
-    overflow: scroll;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-menu-icon-soft-sky-blue) transparent;
+}
+
+.content.notes .note p:hover {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-menu-icon-soft-sky-blue) transparent;
+}
+
+.content.notes .note p::-webkit-scrollbar {
+    width: 0.4vw;
+}
+
+.content.notes .note p::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.content.notes .note p::-webkit-scrollbar-thumb {
+    background-color: var(--color-menu-icon-soft-sky-blue);
+    border-radius: 0.4vw;
+    border: 0.1vw solid transparent;
+}
+
+.content.notes .note p:hover::-webkit-scrollbar-thumb {
+    background-color: var(--color-menu-icon-soft-sky-blue);
+    border-radius: 0.4vw;
+    border: 0.1vw solid transparent;
 }
 
 .content.notes .note p.with-due,
@@ -144,6 +172,10 @@
 
 .content.notes .note.active.details .title {
     padding: 0;
+}
+
+.content.notes .note.inactive p {
+    height: 8vw;
 }
 
 .content.notes .note.new .note-text,
