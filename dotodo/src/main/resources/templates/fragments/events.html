@@ -1,4 +1,5 @@
-<div class="content events" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div class="content events" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     xmlns:th="http://www.w3.org/1999/html">
     <th:block sec:authorize="!isAuthenticated()">
         <th:block th:insert="~{'error/403'}"></th:block>
     </th:block>
@@ -23,31 +24,7 @@
 
         <script th:src="@{/js/holidays.js}"></script>
 
-        <th:block>
-            <ul class="events-list">
-                <th:block th:if="${createNewEvent != null}" th:insert="~{fragments/event/empty-event}"></th:block>
+        <th:block th:insert="~{fragments/event/calendar}"></th:block>
 
-                <th:block th:if="${editEventId != null}"
-                          th:insert="~{fragments/event/edit-event-item}"></th:block>
-
-                <th:block th:if="${viewEventId != null}"
-                          th:insert="~{fragments/event/event-details}"></th:block>
-
-                <th:block th:if="${events.size() > 0}" th:each="event: ${events}">
-                    <th:block th:unless="${(editNoteId != null && editEventId == event.id) ||
-                                           (viewNoteId != null && viewEventId == event.id)}"
-                              th:insert="~{fragments/event/event-item}"></th:block>
-                </th:block>
-            </ul>
-        </th:block>
-
-        <th:block th:if="${events.size() == 0 && createNewEvent == null}">
-            <ul class="events-list empty">
-                <div class="new-note">
-                    <th:block th:insert="~{fragments/error/no-content}"></th:block>
-                    </form>
-                </div>
-            </ul>
-        </th:block>
     </th:block>
 </div>

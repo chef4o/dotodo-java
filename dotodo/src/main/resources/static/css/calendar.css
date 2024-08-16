@@ -1,0 +1,194 @@
+.calendar.container {
+    width: 56vw;
+    height: 20vw;
+    position: relative;
+    padding: 2vw;
+}
+
+.calendar .card {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    transition: transform 0.4s ease;
+    cursor: pointer;
+}
+
+.calendar .back,
+.calendar .front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.calendar .contentfront {
+    width: 100%;
+    height: 100%;
+    float: left;
+    transform: translatez(60px);
+    -webkit-transform: translatez(60px);
+    background-color: var(--color-menu-green-light);
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+}
+
+.calendar .contentback {
+    width: 100%;
+    height: 100%;
+    float: left;
+    transform: translatez(60px);
+    -webkit-transform: translatez(60px);
+    background-color: var(--color-menu-green-light);
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+
+}
+
+.calendar .back {
+    transform: rotateY(180deg);
+    background-color: var(--color-menu-green-dark);
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.calendar .front {
+    text-transform: uppercase;
+    background-color: var(--color-menu-green-dark);
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.calendar .date {
+    height: 100%;
+    width: 16vw;
+    float: left;
+    background-color: var(--color-menu-icon-green-light);
+    text-align: right;
+    padding: 1.4vw 3vw;
+    box-sizing: border-box;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+}
+
+.calendar .datecont {
+    height: 100%;
+    transform: translatez(60px) scale(.9);
+    -webkit-transform: translatez(60px) scale(.9);
+}
+
+.calendar #date {
+    font-size: 1.6vw;
+    color: #ECECE7;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    float: right;
+}
+
+.calendar #day {
+    float: right;
+    font-size: 1.4vw;
+    color: #232227;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+}
+
+.calendar #month {
+    float: right;
+    font-size: 1.4vw;
+    color: #232227;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+}
+
+.calendar .date i {
+    color: #ECECE7;
+    position: absolute;
+    bottom: 1vw;
+    right: 0;
+}
+
+.calendar .date i:hover {
+    color: #232227;
+    transition: .3s ease;
+}
+
+.calendar .month {
+    height: 100%;
+    width: 40vw;
+    float: left;
+    padding: 2vw;
+    box-sizing: border-box;
+}
+
+.calendar .month table {
+    width: 100%;
+}
+
+.calendar .orangeTr * {
+    color:  var(--color-menu-icon-green-light);
+}
+
+.calendar .month .orangeTr th {
+    font-weight: 700;
+}
+
+.calendar .whiteTr {
+    color: #ECECE7;
+}
+
+.calendar .whiteTr th:hover {
+    color: #E76642;
+    transition: .3s ease;
+}
+
+.calendar .month tr {
+    height: 2.6vw;
+}
+
+.calendar .month th {
+    width: 14%;
+    font-size: 1.4vw;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+}
+
+.calendar .flipped {
+    transform: rotateY(-180deg);
+    /*height:400px;
+    width:200px;
+    left:calc(50% - 100px);
+    top:calc(50vh - 200px);*/
+}
+
+.calendar .backcontainer {
+    transform-style: preserve-3d;
+    width: calc(100% - 6vw);
+    height: calc(100% - 4vw);
+    float: left;
+    margin: 2vw 3vw;
+    /*transform:translatez(60px) scale();*/
+
+    background-color: var(--color-gray-light);
+    padding: 1vw 3vw;
+    box-sizing: border-box;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+}
