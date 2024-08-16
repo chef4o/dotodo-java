@@ -214,6 +214,10 @@
     left: 27vw;
 }
 
+#imgUrl {
+    font-size: 1.2vw;
+}
+
 .form-edit .profile-image {
     display: flex;
     flex-direction: column;
