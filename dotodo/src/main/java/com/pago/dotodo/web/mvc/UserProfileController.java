@@ -28,7 +28,6 @@ public class UserProfileController extends BaseController {
     @GetMapping
     public ModelAndView getUserProfile(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
         UserProfileView profileDetails = userService.getProfileDetails(userDetails.getId());
-        emailService.sendBirthdayEmail(profileDetails.getEmail());
 
         return this.view("index", attributeBuilder.build(
                 "pageName", PAGE_NAME,
