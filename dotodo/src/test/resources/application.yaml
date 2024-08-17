@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    driver-class-name: org.hsqldb.jdbcDriver
+    url: jdbc:hsqldb:mem:testdb
+    username: sa
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.HSQLDialect
+        format_sql: true
+    generate-ddl: true
+  mvc:
+    hidden-method:
+      filter:
+        enabled: true
+mail:
+  host: sandbox.smtp.mailtrap.io
+  port: 2525
+  ssl: no
+  tls: yes
+  username: "johnwick"
+  password: "Test123"
+cloudinady:
+  api-key: ${IMG_UPL_API_KEY}
+  api-secret: ${IMG_UPL_API_SECRET}
+  cloud-name: ${IMG_UPL_API_NAME}

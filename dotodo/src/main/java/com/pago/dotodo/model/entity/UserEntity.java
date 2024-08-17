@@ -2,6 +2,7 @@ package com.pago.dotodo.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -52,6 +53,7 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
+    @NotBlank
     @Column(nullable = false, unique = true)
     @Email
     public String getEmail() {

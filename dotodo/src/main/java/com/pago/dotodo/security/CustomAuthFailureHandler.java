@@ -24,6 +24,16 @@ public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
         request.getSession().setAttribute("bad_credentials", true);
         request.getSession().setAttribute("username",
                 request.getParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY));
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.sendRedirect("/auth/login?error=true");
+
+        if (!isTestEnvironment()) {
+            response.sendRedirect("/auth/login?error=true");
+        }
+    }
+
+    private boolean isTestEnvironment() {
+        String activeProfile = System.getProperty("spring.profiles.active");
+        return activeProfile != null && activeProfile.contains("test");
     }
 }

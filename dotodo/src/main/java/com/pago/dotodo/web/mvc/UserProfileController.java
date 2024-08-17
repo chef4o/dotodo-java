@@ -52,10 +52,14 @@ public class UserProfileController extends BaseController {
     public ModelAndView getEditPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
         UserProfileView profileDetails = userService.getProfileDetails(userDetails.getId());
 
+        String dateToEdit = profileDetails.getDob() != null
+                ? dateTimeUtil.formatToISODate(profileDetails.getDob(), "d MMMM yyyy")
+                : "";
+
         return this.view("index", attributeBuilder.build(
                 "pageName", PAGE_NAME,
                 "updateUser", true,
-                "dateDoEdit", dateTimeUtil.formatToISODate(profileDetails.getDob(), "d MMMM yyyy"),
+                "dateDoEdit", dateToEdit,
                 "profileDetails", profileDetails
         ));
     }
@@ -75,16 +79,22 @@ public class UserProfileController extends BaseController {
 
         loadCustomErrors(valueErrors, profileEditDetails, userDetails.getId());
 
+        String dateToEdit = profileEditDetails.getDob() != null
+                ? dateTimeUtil.formatToISODate(profileEditDetails.getDob(), "d MMMM yyyy")
+                : "";
+
         if (!valueErrors.isEmpty()) {
             return this.view("index", attributeBuilder.build(
                     "pageName", PAGE_NAME,
                     "updateUser", true,
                     "valueErrors", valueErrors,
-                    "profileDetails", profileEditDetails
+                    "profileDetails", profileEditDetails,
+                    "dateDoEdit", dateToEdit,
+                    "blockDobEdit", valueErrors.get("dob") != null
             ));
         }
 
-        userService.editUserDetails(profileEditDetails);
+        userService.editUserDetails(profileEditDetails, userDetails);
 
         return super.redirect("/profile");
     }
@@ -135,6 +145,10 @@ public class UserProfileController extends BaseController {
 
         if (userService.existsOnOtherAccount("username", profileEditDetails, userId)) {
             valueErrors.put("username", "Username exists on other account");
+        }
+
+        if (userService.dateOfBirthMismatch(profileEditDetails, userId)) {
+            valueErrors.put("dob", "You need to contact support to change the date of birth");
         }
     }
 }

@@ -37,7 +37,7 @@ spring:
     hidden-method:
       filter:
         enabled: true
-#cloudinady:
-#  api-key:
-#  api-secret:
-#  cloud-name:
+cloudinady:
+  api-key: ${IMG_UPL_API_KEY}
+  api-secret: ${IMG_UPL_API_SECRET}
+  cloud-name: ${IMG_UPL_API_NAME}

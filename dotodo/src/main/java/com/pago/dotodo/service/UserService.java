@@ -6,6 +6,7 @@ import com.pago.dotodo.model.entity.UserEntity;
 import com.pago.dotodo.model.view.UserProfileView;
 import com.pago.dotodo.repository.AddressRepository;
 import com.pago.dotodo.repository.UserRepository;
+import com.pago.dotodo.security.CustomAuthUserDetails;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,17 +24,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final AddressRepository addressRepository;
+    private final CloudService cloudService;
 
     @Autowired
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, AddressRepository addressRepository) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, AddressRepository addressRepository, CloudService cloudService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.addressRepository = addressRepository;
+        this.cloudService = cloudService;
     }
 
     public UserProfileView getProfileDetails(Long id) {
-        return this.modelMapper
-                .map(userRepository.findById(id), UserProfileView.class)
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return modelMapper.map(userEntity, UserProfileView.class)
                 .setFullName();
     }
 
@@ -49,11 +54,12 @@ public class UserService {
     }
 
     public UserEntity getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow();
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("User not found with id: " + id));
     }
 
-    public UserEntity getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow();
+    public Optional<UserEntity> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public Optional<UserEntity> getUserByUsername(String username) {
@@ -84,9 +90,9 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void editUserDetails(UserProfileView profileEditDetails) {
+    public void editUserDetails(UserProfileView profileEditDetails, CustomAuthUserDetails userDetails) {
         UserEntity user = userRepository
-                .findByEmail(profileEditDetails.getEmail())
+                .findById(userDetails.getId())
                 .orElseThrow();
 
         if (!Objects.equals(user.getFirstName(), profileEditDetails.getFirstName())) {
@@ -105,14 +111,9 @@ public class UserService {
             user.setEmail(profileEditDetails.getEmail());
         }
 
-        if (user.getDateOfBirth() == null && profileEditDetails.getDob() != null) {
+        if (user.getDateOfBirth() == null &&
+                (profileEditDetails.getDob() != null && !profileEditDetails.getDob().isBlank())) {
             user.setDateOfBirth(modelMapper.map(profileEditDetails.getDob(), LocalDate.class));
-        } else if (user.getDateOfBirth() != null && profileEditDetails.getDob() != null) {
-            throw new RuntimeException("Date of birth cannot be edited");
-        }
-
-        if (!Objects.equals(user.getImageUrl(), profileEditDetails.getImgUrl())) {
-            user.setImageUrl(profileEditDetails.getImgUrl());
         }
 
         if (!Objects.equals(user.getPhoneNumber(), profileEditDetails.getPhoneNumber())) {
@@ -127,6 +128,10 @@ public class UserService {
             user.setAddress(address);
         }
 
+        if (profileEditDetails.getProfilePicture() != null && !profileEditDetails.getProfilePicture().isEmpty()) {
+            user.setImageUrl(cloudService.saveImage(profileEditDetails.getProfilePicture()));
+        }
+
         userRepository.saveAndFlush(user);
     }
 
@@ -137,7 +142,7 @@ public class UserService {
 
         if (field.equals("email")) {
             UserDto emailUser = modelMapper.map(getUserByEmail(editedUserDto.getEmail()), UserDto.class);
-            return !emailUser.getEmail().equals(loggedUserDto.getEmail());
+            return emailUser != null && !emailUser.getEmail().equals(loggedUserDto.getEmail());
         }
 
         if (field.equals("username")) {
@@ -145,6 +150,15 @@ public class UserService {
             return usernameUser != null && !usernameUser.getUsername().equals(loggedUserDto.getUsername());
         }
         throw new RuntimeException("Cannot decide on method return result");
+    }
+
+    public boolean dateOfBirthMismatch(UserProfileView editedUser, Long loggedUserId) {
+        LocalDate loggedUsedDob = getUserById(loggedUserId).getDateOfBirth();
+        if (loggedUsedDob != null) {
+            return editedUser.getDob() != null
+                    && !loggedUsedDob.equals(modelMapper.map(editedUser.getDob(), LocalDate.class));
+        }
+        return false;
     }
 
 }

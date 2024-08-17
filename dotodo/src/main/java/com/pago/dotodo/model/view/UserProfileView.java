@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ public class UserProfileView {
     private String username;
     private String email;
     private String dob;
+    private MultipartFile profilePicture;
     private String imgUrl;
     private String phoneNumber;
     private String address;
@@ -81,6 +83,15 @@ public class UserProfileView {
 
     public UserProfileView setDob(String dob) {
         this.dob = dob;
+        return this;
+    }
+
+    public MultipartFile getProfilePicture() {
+        return profilePicture;
+    }
+
+    public UserProfileView setProfilePicture(MultipartFile profilePicture) {
+        this.profilePicture = profilePicture;
         return this;
     }
 

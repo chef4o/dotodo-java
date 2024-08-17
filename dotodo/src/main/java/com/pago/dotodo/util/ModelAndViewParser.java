@@ -19,19 +19,16 @@ public class ModelAndViewParser {
     }
 
     public Map<String, Object> build(Object... attributes) {
-        // Validate that the number of arguments is even
         if (attributes.length % 2 != 0) {
             throw new IllegalArgumentException("Invalid number of arguments. Key-value pairs are required.");
         }
 
-        // Create the map of specific attributes
         Map<String, Object> specificAttributes = IntStream.range(0, attributes.length / 2)
                 .boxed()
                 .collect(HashMap::new,
                         (map, i) -> map.put((String) attributes[i * 2], attributes[i * 2 + 1]),
                         HashMap::putAll);
 
-        // Merge custom attributes with common attributes
         Map<String, Object> combinedAttributes = new HashMap<>(addNavAttributes());
         combinedAttributes.putAll(specificAttributes);
 

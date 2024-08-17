@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dotodo.iml" filepath="$PROJECT_DIR$/.idea/modules/dotodo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/dotodo-java.iml" filepath="$PROJECT_DIR$/.idea/dotodo-java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dotodo.test.iml" filepath="$PROJECT_DIR$/.idea/modules/dotodo.test.iml" />
     </modules>
   </component>
 </project>

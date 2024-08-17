@@ -1,18 +1,12 @@
 <div class="content news">
     <div>
         <h3>Latest news and updates</h3>
-        <ul class="articles">
-            <li class="article" *ngFor="let article of news">
-                <h4><a href="{{article.href}}">{{article.header}}</a></h4>
-                <div>
-                    Posted on <a href="#">{{article.uploadDate | date: 'd MMM yyyy'}}</a> in <a href="#">{{article.category}}</a>
-                </div>
-                <a class="comments" href="#">{{article.comments.length}} Comments</a>
-                <p>{{article.content | shrinkToFit: 260 }}</p>
-                <a class="read-more" href="blog-single-with-image.html">Read More</a>
+        <ul class="articles" th:if="${news != null && news.size() > 0}">
+            <li class="article" th:each="article: ${news}">
+                <th:block th:insert="~{fragments/news-details}"></th:block>
             </li>
         </ul>
-        <div class="paging">
+        <div class="paging" th:if="${news != null && news.size() > 0}">
             <ul>
                 <li class="selected">
                     <a href="#">1</a>
@@ -25,6 +19,10 @@
                 </li>
             </ul>
             <span>Page 1 of 2</span>
+        </div>
+
+        <div class="articles" th:if="${news == null || news.size() > 0}">
+            <p>There are no articles yet.</p>
         </div>
     </div>
 </div>

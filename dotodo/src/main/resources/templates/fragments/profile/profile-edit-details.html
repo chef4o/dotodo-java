@@ -1,8 +1,11 @@
 <div class="profile-edit">
     <a href="/profile" class="xmark"><i class="fa-solid fa-xmark"></i></a>
 
-    <form class="form-edit" th:action="@{'/profile/edit'}" th:method="post">
-        <div th:if="${profileDetails.fullName != null}" class="personal">
+    <form class="form-edit"
+          th:action="@{'/profile/edit'}"
+          th:method="post"
+          enctype="multipart/form-data">
+        <div class="personal">
             <label class="first-name" for="firstName">First name:
                 <input id="firstName" class="name" name="firstName" placeholder="Add first name"
                        th:value="${profileDetails.firstName}">
@@ -19,9 +22,10 @@
                        th:value="${profileDetails.username}">
             </label>
 
-            <label class="dob" for="dateOfBirth">Date of birth:
-                <input id="dateOfBirth" type="date" name="dateOfBirth"
-                       th:value="${dateDoEdit}" disabled>
+            <label class="dob" for="dob">Date of birth:
+                <input id="dob" type="date" name="dob"
+                       th:disabled="${blockDobEdit}"
+                       th:value="${dateDoEdit}">
             </label>
         </div>
 
@@ -34,7 +38,7 @@
                 <i class="fa-solid fa-user"></i>
             </th:block>
 
-            <input type="file" id="imgUrl" name="image" accept="image/*">
+            <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
         </div>
 
         <div class="contact">
@@ -57,7 +61,7 @@
         </div>
 
         <th:block th:if="${valueErrors != null && !valueErrors.isEmpty()}">
-            <div class="error new-note error-list">
+            <div class="error edit-details error-list">
                 <th:block th:each="error: ${valueErrors}">
                     <p class="error" th:text="${valueErrors[error.key]}"></p>
                 </th:block>

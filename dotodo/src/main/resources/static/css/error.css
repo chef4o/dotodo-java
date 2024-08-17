@@ -118,3 +118,10 @@
     padding: 0;
     width: auto;
 }
+
+.profile.error.edit-details {
+    position: absolute;
+    top: 15vw;
+    right: 2vw;
+    text-align: right;
+}

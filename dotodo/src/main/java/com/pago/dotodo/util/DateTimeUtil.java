@@ -76,6 +76,9 @@ public class DateTimeUtil {
     }
 
     public String formatToISODate(String date, String currentFormat) {
+        if (date.isBlank()) {
+            return null;
+        }
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(currentFormat);
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(date, inputFormatter).format(outputFormatter);

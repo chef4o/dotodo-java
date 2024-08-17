@@ -161,7 +161,8 @@
     vertical-align: middle;
 }
 
-.profile-details .edit-btn:hover {
+.profile-details .edit-btn:hover,
+.profile-edit .update-btn:hover {
     background-color: var(--color-menu-soft-gray);
 }
 
@@ -170,7 +171,7 @@
     flex-wrap: wrap;
     position: relative;
     justify-content: space-between;
-    padding: 3vw 2vw 0;
+    padding: 3vw 2vw 1.4vw;
 }
 
 .profile-edit .form-edit .personal,
@@ -194,6 +195,7 @@
 .profile-edit .form-edit input {
     all: unset;
     max-width: 14vw;
+    cursor: text;
 }
 
 .content.profile .form-edit * {
@@ -202,16 +204,15 @@
 
 .profile-edit .xmark {
     position: absolute;
-    right: 1vw;
-    top: 0.5vw;
+    right: 2vw;
+    top: 1vw;
     z-index: 10;
 }
 
 .profile-edit .update-btn {
-    width: 100%;
     position: absolute;
-    top: 13vw;
-    left: 27vw;
+    right: 2vw;
+    bottom: 0.6vw;
 }
 
 #imgUrl {

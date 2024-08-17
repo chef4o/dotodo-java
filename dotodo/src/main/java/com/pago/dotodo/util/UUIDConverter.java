@@ -14,7 +14,6 @@ public class UUIDConverter implements AttributeConverter<UUID, byte[]> {
         if (uuid == null) {
             return null;
         }
-        // Convert UUID to byte[]
         ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
         bb.putLong(uuid.getMostSignificantBits());
         bb.putLong(uuid.getLeastSignificantBits());
@@ -26,7 +25,6 @@ public class UUIDConverter implements AttributeConverter<UUID, byte[]> {
         if (bytes == null) {
             return null;
         }
-        // Convert byte[] to UUID
         ByteBuffer bb = ByteBuffer.wrap(bytes);
         long high = bb.getLong();
         long low = bb.getLong();

@@ -1,11 +1,11 @@
 <div class="user-details">
     <div class="profile-details">
-        <div th:if="${profileDetails.fullName != null}" class="personal">
+        <div th:if="${profileDetails.fullName != null && profileDetails.fullName != ''}" class="personal">
             <p class="name"
                th:text="'Name: ' + ${profileDetails.fullName}"></p>
             <p class="username"
                th:text="'Username: ' + ${profileDetails.username}"></p>
-            <p th:if="${profileDetails.dob != null}" class="dateOfBirth"
+            <p th:if="${profileDetails.dob != null && profileDetails.dob != ''}" class="dateOfBirth"
                th:text="'Birthday: ' + ${profileDetails.dob}"></p>
         </div>
 
@@ -19,9 +19,9 @@
         <div class="contact">
             <p th:if="${profileDetails.email != null}" class="email"
                th:text="'Email: ' + *{profileDetails.email}"></p>
-            <p th:if="${profileDetails.phoneNumber != null}" class="phoneNumber"
+            <p th:if="${profileDetails.phoneNumber != null  && profileDetails.phoneNumber != ''}" class="phoneNumber"
                th:text="'Phone: ' + *{profileDetails.phoneNumber}"></p>
-            <p th:if="${profileDetails.address != null}" class="address"
+            <p th:if="${profileDetails.address != null && profileDetails.address != ''}" class="address"
                th:text="'Address: ' + ${profileDetails.address}"></p>
         </div>
 

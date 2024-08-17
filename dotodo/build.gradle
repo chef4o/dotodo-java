@@ -27,8 +27,13 @@ dependencies {
     implementation 'com.google.code.gson:gson'
     implementation 'commons-validator:commons-validator:1.9.0'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'com.cloudinary:cloudinary-http44:1.39.0'
+    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'org.hsqldb:hsqldb'
 }
 
 tasks.named('test') {
