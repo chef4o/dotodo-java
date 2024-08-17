@@ -1,7 +1,8 @@
 # DoToDo Java Project #
 
 # build project:
-- execute `./run-tests` or navigate to `cd dotodo` and run `./gradlew clean test`
+- navigate to `cd dotodo` and run `./gradlew clean test build`
+- test summary: /dotodo/build/reports/tests/test/index.html
 
 # mail service:
 

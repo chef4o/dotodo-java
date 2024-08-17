@@ -1,5 +1,6 @@
 package com.pago.dotodo.service;
 
+import com.pago.dotodo.model.dto.ContactFormDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.SimpleMailMessage;
@@ -15,38 +16,71 @@ import java.util.Map;
 @Service
 public class EmailService {
 
-    private final String SUPPORT_EMAIL = "support@dotodo.com";
-    private final String TEMPL_FOLDER = "email/";
+    private static final String SUPPORT_EMAIL = "support@dotodo.com";
+    private static final String TEMPL_FOLDER = "email/";
 
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final JavaMailSender javaMailSender;
     private final UserService userService;
-    private final JavaMailSender emailSender;
 
-    public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine, JavaMailSender javaMailSender, UserService userService, JavaMailSender emailSender) {
+    public EmailService(JavaMailSender mailSender, TemplateEngine templateEngine, UserService userService) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
-        this.javaMailSender = javaMailSender;
         this.userService = userService;
-        this.emailSender = emailSender;
     }
 
     public void sendExpiringTodoEmail(String userEmail, String reminderType) {
-        Map<String, String> params = new HashMap<>();
-        params.put("username", userService.getUserByEmail(userEmail).get().getUsername());
-        params.put("subject", "Expiring " + reminderType);
-        params.put("reminderType", reminderType);
+        userService.getUserByEmail(userEmail).ifPresent(user -> {
+            Map<String, String> params = new HashMap<>();
+            params.put("username", user.getUsername());
+            params.put("subject", "Expiring " + reminderType);
+            params.put("reminderType", reminderType);
 
-        generateMessage(userEmail, "expiring-todo", params);
+            generateMessage(userEmail, "expiring-todo", params);
+        });
     }
 
     public void sendBirthdayEmail(String userEmail) {
-        Map<String, String> params = new HashMap<>();
-        params.put("username", userService.getUserByEmail(userEmail).get().getUsername());
-        params.put("subject", "Happy Birthday!");
+        userService.getUserByEmail(userEmail).ifPresent(user -> {
+            Map<String, String> params = new HashMap<>();
+            params.put("username", user.getUsername());
+            params.put("subject", "Happy Birthday!");
 
-        generateMessage(userEmail, "birthday", params);
+            generateMessage(userEmail, "birthday", params);
+        });
+    }
+
+    public void sendContactMessage(ContactFormDto sender) {
+        Map<String, String> params = new HashMap<>();
+
+        params.put("content", sender.getContent());
+        params.put("subject", "Incoming contact");
+
+        if (sender.getName() != null) {
+            params.put("name", sender.getName());
+        }
+
+        if (sender.getEmail() != null) {
+            params.put("email", sender.getEmail());
+        }
+
+        if (sender.getPhone() != null) {
+            params.put("phone", sender.getPhone());
+        }
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+
+        try {
+            mimeMessageHelper.setFrom(sender.getEmail() != null ? sender.getEmail() : "unknown_sender@dotodo.com");
+            mimeMessageHelper.setTo(SUPPORT_EMAIL);
+            mimeMessageHelper.setSubject(params.get("subject"));
+            mimeMessageHelper.setText(generateContent("contact", params), true);
+
+            mailSender.send(mimeMessageHelper.getMimeMessage());
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void generateMessage(String toEmail, String template, Map<String, String> params) {
@@ -59,7 +93,7 @@ public class EmailService {
             mimeMessageHelper.setSubject(params.get("subject"));
             mimeMessageHelper.setText(generateContent(template, params), true);
 
-            javaMailSender.send(mimeMessageHelper.getMimeMessage());
+            mailSender.send(mimeMessageHelper.getMimeMessage());
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
@@ -67,11 +101,7 @@ public class EmailService {
 
     private String generateContent(String templateName, Map<String, String> params) {
         Context ctx = new Context();
-
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            ctx.setVariable(entry.getKey(), entry.getValue());
-        }
-
+        params.forEach(ctx::setVariable);
         return templateEngine.process(TEMPL_FOLDER + templateName, ctx);
     }
 
@@ -80,6 +110,6 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        emailSender.send(message);
+        mailSender.send(message);
     }
 }
