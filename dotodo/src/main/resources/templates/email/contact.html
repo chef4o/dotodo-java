@@ -8,7 +8,7 @@
 
 <h3 th:text="${subject}"></h3>
 
-<p>YOu have received new message from <th:block th:text="${name} != null ? name : ''"></th:block>,</p>
+<p th:if="${name} != null">You have received new message from <th:block th:text="${name}"></th:block></p>
 
 <p th:if="${phone} != null" th:text="'From phone number: ' + ${phone}"></p>
 
