@@ -138,6 +138,19 @@
     box-shadow: var(--left-box-shadow);
     margin-bottom: 1vw;
     padding: 1vw;
-    height: 25vw;
+    height: 12vw;
     overflow: auto;
 }
+
+.content.news .article a {
+    font-size: 1.4vw;
+}
+
+.content.news .article h4 a {
+    font-size: 1.6vw;
+}
+
+.content.news .article p {
+    font-size: 1.2vw;
+}
+
