@@ -1,7 +1,7 @@
 <div class="expiring notes">
-    <h1>Notes close to expiry</h1>
+    <th:block th:if="${expiringNotes != null && expiringNotes.size > 0}">
+        <h1>Notes close to expiry</h1>
 
-    <th:block th:if="${expiringNotes != null}">
         <ul class="notes-list">
             <th:block th:each="note : ${expiringNotes}"
                       th:insert="~{fragments/profile/profile-note-item}">
@@ -9,7 +9,7 @@
         </ul>
     </th:block>
 
-    <th:block th:unless="${expiringNotes != null}">
+    <th:block th:if="${expiringNotes == null || expiringNotes.size == 0}">
         <div class="error-page no-content">Looks like you don't have any notes yet.
             <br/>
             You can start from <a href="/notes">here.</a>
