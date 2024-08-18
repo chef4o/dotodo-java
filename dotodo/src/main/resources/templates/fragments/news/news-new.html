@@ -1,0 +1,15 @@
+<div class="content news">
+    <form class="news new" th:action="@{'/news/new'}" th:method="post">
+        <a href="/news" class="xmark"><i class="fa-solid fa-xmark"></i></a>
+
+        <input class="header" name="header" placeholder="Add header"
+               th:value="${articleDto.header}"/>
+
+        <textarea class="note-text" name="content" placeholder="Add text"
+                  th:text="${articleDto.content}"></textarea>
+
+        <p class="error new-article" th:if="${valueError != null}" th:text="${valueError}"></p>
+
+        <button class="create">Create</button>
+    </form>
+</div>

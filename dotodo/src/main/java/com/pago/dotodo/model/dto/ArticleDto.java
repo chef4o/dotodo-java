@@ -1,11 +1,11 @@
 package com.pago.dotodo.model.dto;
 
-import com.pago.dotodo.model.entity.UserEntity;
-
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 public class ArticleDto {
+    private Long id;
     private String header;
     private String content;
     private LocalDateTime uploadDate;
@@ -13,6 +13,16 @@ public class ArticleDto {
     private Long ownerId;
 
     public ArticleDto() {
+        comments = new HashSet<>();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public ArticleDto setId(Long id) {
+        this.id = id;
+        return this;
     }
 
     public String getHeader() {

@@ -1,9 +1,6 @@
 package com.pago.dotodo.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -20,6 +17,7 @@ public class ArticleEntity extends BaseEntity {
     public ArticleEntity() {
     }
 
+    @Column(name = "header", columnDefinition = "TEXT")
     public String getHeader() {
         return header;
     }
@@ -29,6 +27,7 @@ public class ArticleEntity extends BaseEntity {
         return this;
     }
 
+    @Column(name = "content", columnDefinition = "TEXT")
     public String getContent() {
         return content;
     }

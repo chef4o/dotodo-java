@@ -1,0 +1,10 @@
+<h3><a th:href="@{'/news/view/' + ${article.id}}" th:text="${article.header}"></a></h3>
+<div>
+    Posted on <a href="#" th:text="${article.uploadDate}"></a>
+</div>
+<a class="comments"
+   th:if="${article.comments != null}"
+   th:href="@{'/news/view/' + ${article.id}}"
+   th:text="${article.comments.size()} + 'Comments'"></a>
+<p th:text="${article.content}"></p>
+<a class="read-more" th:href="@{'/news/view/' + ${article.id}}">Read More</a>

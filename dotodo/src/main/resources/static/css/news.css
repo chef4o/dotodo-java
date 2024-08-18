@@ -5,6 +5,10 @@
     padding: 1.6vw;
 }
 
+.content.news div {
+    position: relative;
+}
+
 .content.news h3 {
     font-size: 2.2vw;
     color: var(--color-body-background);
@@ -22,6 +26,7 @@
     background: #fff;
     box-shadow: var(--left-box-shadow);
     margin-bottom: 1vw;
+    padding: 1vw;
 }
 
 .content.news .news-article {
@@ -95,4 +100,44 @@
     font-size: 0.9vw;
     color: #5d5d5d;
     margin-left: 10px;
+}
+
+.content.news .new-article-btn {
+    position: absolute;
+    right: -3vw;
+    top: 1vw;
+}
+
+.content.news .new-article-btn:hover {
+    background-color: var(--color-menu-cool-gray);
+}
+
+.content.news .news.new {
+    display: flex;
+    flex-direction: column;
+    background: none;
+    width: 50vw;
+}
+
+.content.news .news.new input,
+.content.news .news.new textarea {
+    background: none;
+    border: none;
+}
+
+.content.news .news.new textarea {
+    height: 40vw;
+}
+
+.content.news .xmark {
+    text-align: end;
+}
+
+.content.news .article {
+    background: #fff;
+    box-shadow: var(--left-box-shadow);
+    margin-bottom: 1vw;
+    padding: 1vw;
+    height: 29vw;
+    overflow: auto;
 }

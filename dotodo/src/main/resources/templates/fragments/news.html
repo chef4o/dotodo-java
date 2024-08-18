@@ -1,12 +1,15 @@
 <div class="content news">
     <div>
+        <form class="new-article-btn" th:action="@{'/news/new'}" th:method="get">
+            <button type="submit" >Create article</button>
+        </form>
         <h3>Latest news and updates</h3>
-        <ul class="articles" th:if="${news != null && news.size() > 0}">
-            <li class="article" th:each="article: ${news}">
-                <th:block th:insert="~{fragments/news-details}"></th:block>
+        <ul class="articles" th:if="${articles != null && articles.size() > 0}">
+            <li class="article" th:each="article: ${articles}">
+                <th:block th:insert="~{fragments/news/news-details}"></th:block>
             </li>
         </ul>
-        <div class="paging" th:if="${news != null && news.size() > 0}">
+        <div class="paging" th:if="${articles != null && articles.size() > 0}">
             <ul>
                 <li class="selected">
                     <a href="#">1</a>
@@ -21,7 +24,7 @@
             <span>Page 1 of 2</span>
         </div>
 
-        <div class="articles" th:if="${news == null || news.size() > 0}">
+        <div class="articles" th:if="${articles == null || articles.size() == 0}">
             <p>There are no articles yet.</p>
         </div>
     </div>

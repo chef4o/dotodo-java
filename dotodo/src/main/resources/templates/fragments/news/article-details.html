@@ -1,0 +1,10 @@
+<div class="content news">
+    <h3 th:text="${detailedArticle.header}"></h3>
+    <a href="/news">
+        <button>Back</button>
+    </a>
+    <div>
+        <p class="date" th:text="${#temporals.format(detailedArticle.uploadDate, 'yyyy-MM-dd HH:mm')}"></p>
+    </div>
+    <p th:text="${detailedArticle.content}"></p>
+</div>
