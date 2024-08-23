@@ -1,6 +1,7 @@
 package com.pago.dotodo.model.error;
 
 import com.pago.dotodo.util.ModelAndViewParser;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,15 @@ public class GlobalExceptionHandler {
         return new ModelAndView("index", attributeBuilder.build(
                 "pageName", "err",
                 "errorCode", "404",
+                "serverError", e.getMessage()));
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public ModelAndView handleBadRequestException(NoResourceFoundException e) {
+        return new ModelAndView("index", attributeBuilder.build(
+                "pageName", "err",
+                "errorCode", "400",
                 "serverError", e.getMessage()));
     }
 }

@@ -1,7 +1,10 @@
 package com.pago.dotodo.web.mvc;
 
+import com.pago.dotodo.configuration.constraint.modelAttribute.ErrorPageAttribute;
+import com.pago.dotodo.configuration.constraint.modelAttribute.NoteAttribute;
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.dto.NoteEditDto;
+import com.pago.dotodo.model.error.CustomErrorHandler;
 import com.pago.dotodo.model.error.ObjectNotFoundException;
 import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.NoteService;
@@ -16,7 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,15 +26,18 @@ import java.util.Map;
 @RequestMapping("/notes")
 public class NoteController extends BaseController {
 
-    private static final String PAGE_NAME = "notes";
     private final NoteService noteService;
     private final ModelAndViewParser attributeBuilder;
     private final DateTimeUtil dateTimeUtil;
+    private final CustomErrorHandler customErrorHandler;
 
-    public NoteController(NoteService noteService, ModelAndViewParser attributeBuilder, DateTimeUtil dateTimeUtil) {
+    public NoteController(NoteService noteService,
+                          ModelAndViewParser attributeBuilder,
+                          DateTimeUtil dateTimeUtil, CustomErrorHandler customErrorHandler) {
         this.noteService = noteService;
         this.attributeBuilder = attributeBuilder;
         this.dateTimeUtil = dateTimeUtil;
+        this.customErrorHandler = customErrorHandler;
     }
 
     @GetMapping
@@ -42,11 +47,11 @@ public class NoteController extends BaseController {
 
         List<NoteDto> byUserIdOrderByInsTimeDesc = noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId());
 
-        return this.view("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "editNoteId", editNoteId,
-                "viewNoteId", viewNoteId,
-                "notes", byUserIdOrderByInsTimeDesc)
+        return this.view(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                NoteAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
+                NoteAttribute.EDIT_NOTE_ID, editNoteId,
+                NoteAttribute.VIEW_NOTE_ID, viewNoteId,
+                NoteAttribute.NOTES, byUserIdOrderByInsTimeDesc)
         );
     }
 
@@ -55,46 +60,36 @@ public class NoteController extends BaseController {
                                 @ModelAttribute NoteDto noteDto,
                                 @RequestParam(required = false) String emptyValueError) {
 
-        return this.view("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "emptyValueError", emptyValueError,
-                "noteData", noteDto,
-                "createNewNote", true,
-                "notes", noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
+        return this.view(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                NoteAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
+                NoteAttribute.EMPTY_ERROR_VALUE, emptyValueError,
+                NoteAttribute.NOTE_DATA, noteDto,
+                NoteAttribute.CREATE_NEW_NOTE, true,
+                NoteAttribute.NOTES, noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
         );
     }
 
     @PostMapping("/new")
     public ModelAndView addNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                @ModelAttribute NoteDto noteDto) {
+                                @Valid @ModelAttribute NoteDto noteDto,
+                                BindingResult bindingResult) {
 
-        final String valueError;
+        Map<String, String> valueErrors = customErrorHandler
+                .loadNoteErrors(bindingResult, noteDto);
 
-        if (noteDto.getTitle().isBlank() || noteDto.getContent().isBlank()) {
-            valueError = "Title and content are both mandatory";
-        } else if (noteDto.getDueDate() == null || noteDto.getDueDate().isBlank()
-                && (noteDto.getDueTime() != null & !noteDto.getDueTime().isBlank())) {
-            valueError = "Due time cannot be added without a date";
-        } else if (noteDto.getDueDate() != null && !noteDto.getDueDate().isBlank()
-                && !dateTimeUtil.isInFuture(noteDto.getDueDate(), noteDto.getDueTime())) {
-            valueError = "Due date must be in the future";
-        } else {
-            valueError = "";
-        }
-
-        if (!valueError.isBlank()) {
-            return this.view("index", attributeBuilder.build(
-                    "pageName", PAGE_NAME,
-                    "valueError", valueError,
-                    "noteData", noteDto,
-                    "createNewNote", true,
-                    "notes", noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
+        if (!valueErrors.isEmpty()) {
+            return this.view(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                    NoteAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
+                    NoteAttribute.VALUE_ERRORS, valueErrors,
+                    NoteAttribute.NOTE_DATA, noteDto,
+                    NoteAttribute.CREATE_NEW_NOTE, true,
+                    NoteAttribute.NOTES, noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
             );
         }
 
         noteService.addNote(noteDto, userDetails.getId());
 
-        return super.redirect("/notes");
+        return super.redirect("/" + NoteAttribute.LOCAL_VIEW);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -102,16 +97,16 @@ public class NoteController extends BaseController {
                                    @PathVariable Long id) {
         noteService.deleteById(id, userDetails.getId());
 
-        return super.redirect("/notes");
+        return super.redirect("/" + NoteAttribute.LOCAL_VIEW);
     }
 
     @GetMapping("/edit/{id}")
     public ModelAndView getEditNotePage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                         @PathVariable Long id,
                                         @ModelAttribute NoteDto noteToEdit) {
-        return super.redirect("/notes", attributeBuilder.build(
-                "editNoteId", id,
-                "noteToEdit", noteToEdit));
+        return super.redirect("/" + NoteAttribute.LOCAL_VIEW, attributeBuilder.build(
+                NoteAttribute.EDIT_NOTE_ID, id,
+                NoteAttribute.NOTE_TO_EDIT, noteToEdit));
     }
 
     @PostMapping("/edit/{id}")
@@ -120,29 +115,22 @@ public class NoteController extends BaseController {
                                  @Valid @ModelAttribute NoteEditDto noteEditDto,
                                  BindingResult bindingResult) {
 
-        Map<String, String> valueErrors = new HashMap<>();
-
-        if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().forEach(error -> {
-                valueErrors.put(error.getField(), error.getField() + " " + error.getDefaultMessage());
-            });
-        }
-
-        loadCustomErrors(valueErrors, noteEditDto);
+        Map<String, String> valueErrors = customErrorHandler
+                .loadNoteErrors(bindingResult, noteEditDto);
 
         if (!valueErrors.isEmpty()) {
-            return this.view("index", attributeBuilder.build(
-                    "pageName", PAGE_NAME,
-                    "valueErrors", valueErrors,
-                    "noteToEdit", noteEditDto,
-                    "editNoteId", id,
-                    "notes", noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
+            return this.view(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                    NoteAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
+                    NoteAttribute.VALUE_ERRORS, valueErrors,
+                    NoteAttribute.NOTE_TO_EDIT, noteEditDto,
+                    NoteAttribute.EDIT_NOTE_ID, id,
+                    NoteAttribute.NOTES, noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
             );
         }
 
         noteService.editNote(id, noteEditDto, userDetails.getId());
 
-        return super.redirect("/notes");
+        return super.redirect("/" + NoteAttribute.LOCAL_VIEW);
     }
 
 
@@ -152,22 +140,22 @@ public class NoteController extends BaseController {
 
         NoteDto detailedNote = noteService.getById(id, userDetails.getId());
 
-        return super.redirect("/notes", attributeBuilder.build(
-                "viewNoteId", id,
-                "detailedNote", detailedNote));
+        return super.redirect("/" + NoteAttribute.LOCAL_VIEW, attributeBuilder.build(
+                NoteAttribute.VIEW_NOTE_ID, id,
+                NoteAttribute.DETAILED_NOTE, detailedNote));
     }
 
-    @ModelAttribute("noteData")
+    @ModelAttribute(NoteAttribute.NOTE_DATA)
     public NoteDto noteData() {
         return new NoteDto();
     }
 
-    @ModelAttribute("noteEditDto")
+    @ModelAttribute(NoteAttribute.NOTE_TO_EDIT_DTO)
     public NoteEditDto noteEditDto() {
         return new NoteEditDto();
     }
 
-    @ModelAttribute("noteToEdit")
+    @ModelAttribute(NoteAttribute.NOTE_TO_EDIT)
     public NoteDto noteToEdit(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                               @RequestParam(required = false) Long editNoteId) {
 
@@ -186,36 +174,29 @@ public class NoteController extends BaseController {
         return noteToEdit;
     }
 
-    @ModelAttribute("detailedNote")
+    @ModelAttribute(NoteAttribute.DETAILED_NOTE)
     public NoteDto detailedNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                 @RequestParam(required = false) Long viewNoteId) {
         return viewNoteId != null ? noteService.getById(viewNoteId, userDetails.getId()) : null;
     }
 
-    private void loadCustomErrors(Map<String, String> errors, NoteEditDto noteEditDto) {
-        if (noteEditDto.getDueDate() != null && !noteEditDto.getDueDate().isBlank()
-                && !dateTimeUtil.isInFuture(noteEditDto.getDueDate(), noteEditDto.getDueTime())) {
-            errors.put("date", "Due date must be in the future");
-        }
-    }
-
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(ObjectNotFoundException.class)
     public ModelAndView handleObjectNotFoundException(ObjectNotFoundException e) {
-        return new ModelAndView("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "errorCode", "404",
-                "serverError", e.getMessage())
+        return new ModelAndView(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                ErrorPageAttribute.PAGE_NAME, ErrorPageAttribute.LOCAL_VIEW,
+                ErrorPageAttribute.ERROR_CODE, ErrorPageAttribute.ERR_404,
+                ErrorPageAttribute.SERVER_ERROR, e.getMessage())
         );
     }
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(AccessDeniedException.class)
     public ModelAndView handleAccessDeniedException(AccessDeniedException e) {
-        return new ModelAndView("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "errorCode", "403",
-                "serverError", e.getMessage())
+        return new ModelAndView(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                ErrorPageAttribute.PAGE_NAME, ErrorPageAttribute.LOCAL_VIEW,
+                ErrorPageAttribute.ERROR_CODE, ErrorPageAttribute.ERR_403,
+                ErrorPageAttribute.SERVER_ERROR, e.getMessage())
         );
     }
 }

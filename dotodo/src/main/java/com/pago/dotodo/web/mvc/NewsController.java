@@ -1,7 +1,10 @@
 package com.pago.dotodo.web.mvc;
 
 import com.cloudinary.api.exceptions.NotAllowed;
+import com.pago.dotodo.configuration.constraint.modelAttribute.ErrorPageAttribute;
+import com.pago.dotodo.configuration.constraint.modelAttribute.NewsAttribute;
 import com.pago.dotodo.model.dto.ArticleDto;
+import com.pago.dotodo.model.error.CustomErrorHandler;
 import com.pago.dotodo.model.error.ObjectNotFoundException;
 import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.NewsService;
@@ -15,13 +18,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/news")
 public class NewsController extends BaseController {
-    private static final String PAGE_NAME = "news";
     private final ModelAndViewParser attributeBuilder;
     private final NewsService newsService;
 
@@ -34,10 +35,10 @@ public class NewsController extends BaseController {
     public ModelAndView getNewsPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                     @RequestParam(required = false) Long viewArticleId) {
 
-        return this.view("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "viewArticleId", viewArticleId,
-                "articles", newsService.getAll())
+        return this.view(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
+                NewsAttribute.VIEW_ARTICLE_ID, viewArticleId,
+                NewsAttribute.ARTICLES, newsService.getAll())
         );
     }
 
@@ -46,12 +47,11 @@ public class NewsController extends BaseController {
                                    @ModelAttribute ArticleDto articleDto,
                                    @RequestParam(required = false) String emptyValueError) {
 
-        return this.view("index", attributeBuilder.build(
-                "pageName", "news/news-new",
-                "emptyValueError", emptyValueError,
-                "articleDto", articleDto,
-                "createNewNote", true,
-                "articles", newsService.getAll())
+        return this.view(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                NewsAttribute.PAGE_NAME, NewsAttribute.NEW_ARTICLE_VIEW,
+                NewsAttribute.EMPTY_VALUE_ERROR, emptyValueError,
+                NewsAttribute.ARTICLES, articleDto,
+                newsService.getAll())
         );
     }
 
@@ -68,16 +68,16 @@ public class NewsController extends BaseController {
         }
 
         if (!valueError.isBlank()) {
-            return this.view("index", attributeBuilder.build(
-                    "pageName", PAGE_NAME,
-                    "valueError", valueError,
-                    "articleDto", articleDto)
+            return this.view(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                    NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
+                    NewsAttribute.VALUE_ERROR, valueError,
+                    NewsAttribute.ARTICLE_DTO, articleDto)
             );
         }
 
         newsService.addArticle(articleDto, userDetails);
 
-        return super.redirect("/news");
+        return super.redirect("/" + NewsAttribute.LOCAL_VIEW);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -85,17 +85,17 @@ public class NewsController extends BaseController {
                                       @PathVariable Long id) throws NotAllowed {
         newsService.deleteById(id, userDetails);
 
-        return super.redirect("/notes");
+        return super.redirect("/" + NewsAttribute.LOCAL_VIEW);
     }
 
     @GetMapping("/edit/{id}")
     public ModelAndView getEditArticlePage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                            @PathVariable Long id,
                                            @ModelAttribute ArticleDto articleToEdit) {
-        return this.view("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "articleToEdit", articleToEdit,
-                "editArticleId", id)
+        return this.view(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
+                NewsAttribute.ARTICLE_TO_EDIT, articleToEdit,
+                NewsAttribute.EDIT_ARTICLE_ID, id)
         );
     }
 
@@ -105,26 +105,20 @@ public class NewsController extends BaseController {
                                     @Valid @ModelAttribute ArticleDto articleEditDto,
                                     BindingResult bindingResult) throws NotAllowed {
 
-        Map<String, String> valueErrors = new HashMap<>();
-
-        if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().forEach(error -> {
-                valueErrors.put(error.getField(), error.getField() + " " + error.getDefaultMessage());
-            });
-        }
+        Map<String, String> valueErrors = CustomErrorHandler.loadBindingErrors(bindingResult);
 
         if (!valueErrors.isEmpty()) {
-            return this.view("index", attributeBuilder.build(
-                    "pageName", PAGE_NAME,
-                    "valueErrors", valueErrors,
-                    "articleEditDto", articleEditDto,
-                    "editArticleId", id)
+            return this.view(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                    NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
+                    NewsAttribute.VALUE_ERRORS, valueErrors,
+                    NewsAttribute.ARTICLE_TO_EDIT, articleEditDto,
+                    NewsAttribute.EDIT_ARTICLE_ID, id)
             );
         }
 
         newsService.editArticle(id, articleEditDto, userDetails);
 
-        return super.redirect("/news");
+        return super.redirect("/" + NewsAttribute.LOCAL_VIEW);
     }
 
     @GetMapping("/view/{id}")
@@ -133,17 +127,17 @@ public class NewsController extends BaseController {
 
         ArticleDto detailedArticle = newsService.getById(id);
 
-        return new ModelAndView("index", attributeBuilder.build(
-                "pageName", "/news/article-details",
-                "detailedArticle", detailedArticle));
+        return new ModelAndView(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                NewsAttribute.PAGE_NAME, NewsAttribute.NEW_ARTICLE_VIEW,
+                NewsAttribute.DETAILED_ARTICLE, detailedArticle));
     }
 
-    @ModelAttribute("articleDto")
+    @ModelAttribute(NewsAttribute.ARTICLE_DTO)
     public ArticleDto articleDto() {
         return new ArticleDto();
     }
 
-    @ModelAttribute("articleToEdit")
+    @ModelAttribute(NewsAttribute.ARTICLE_TO_EDIT)
     public ArticleDto articleToEdit(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                     @RequestParam(required = false) Long editArticleId) {
 
@@ -154,7 +148,7 @@ public class NewsController extends BaseController {
         return newsService.getById(editArticleId);
     }
 
-    @ModelAttribute("detailedArticle")
+    @ModelAttribute(NewsAttribute.DETAILED_ARTICLE)
     public ArticleDto detailedArticle(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                       @RequestParam(required = false) Long viewArticleId) {
         return viewArticleId != null ? newsService.getById(viewArticleId) : null;
@@ -163,20 +157,20 @@ public class NewsController extends BaseController {
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(ObjectNotFoundException.class)
     public ModelAndView handleObjectNotFoundException(ObjectNotFoundException e) {
-        return new ModelAndView("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "errorCode", "404",
-                "serverError", e.getMessage())
+        return new ModelAndView(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
+                ErrorPageAttribute.ERROR_CODE, ErrorPageAttribute.ERR_404,
+                ErrorPageAttribute.SERVER_ERROR, e.getMessage())
         );
     }
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(AccessDeniedException.class)
     public ModelAndView handleAccessDeniedException(AccessDeniedException e) {
-        return new ModelAndView("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "errorCode", "403",
-                "serverError", e.getMessage())
+        return new ModelAndView(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
+                ErrorPageAttribute.ERROR_CODE, ErrorPageAttribute.ERR_403,
+                ErrorPageAttribute.SERVER_ERROR, e.getMessage())
         );
     }
 }

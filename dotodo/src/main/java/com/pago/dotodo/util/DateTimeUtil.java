@@ -29,22 +29,26 @@ public class DateTimeUtil {
     }
 
     public boolean isInFuture(String date, String time) {
-        try {
-            LocalDate parsedDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        if (!date.isBlank()) {
+            try {
+                LocalDate parsedDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
 
-            if (time == null || time.isEmpty()) {
-                LocalDate today = LocalDate.now();
-                return parsedDate.isAfter(today);
-            } else {
-                LocalTime parsedTime = LocalTime.parse(time, DateTimeFormatter.ISO_LOCAL_TIME);
-                LocalDateTime dateTime = LocalDateTime.of(parsedDate, parsedTime);
+                if (time == null || time.isEmpty()) {
+                    LocalDate today = LocalDate.now();
+                    return parsedDate.isAfter(today);
+                } else {
+                    LocalTime parsedTime = LocalTime.parse(time, DateTimeFormatter.ISO_LOCAL_TIME);
+                    LocalDateTime dateTime = LocalDateTime.of(parsedDate, parsedTime);
 
-                LocalDateTime now = LocalDateTime.now();
-                return dateTime.isAfter(now);
+                    LocalDateTime now = LocalDateTime.now();
+                    return dateTime.isAfter(now);
+                }
+            } catch (DateTimeParseException e) {
+                return false;
             }
-        } catch (DateTimeParseException e) {
-            return true;
         }
+
+        return false;
     }
 
     public List<NoteDto> addDueDaysHours(List<NoteDto> notes) {

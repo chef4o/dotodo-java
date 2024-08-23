@@ -1,6 +1,8 @@
 package com.pago.dotodo.web.mvc;
 
+import com.pago.dotodo.configuration.constraint.modelAttribute.UserProfileAttribute;
 import com.pago.dotodo.model.dto.NoteDto;
+import com.pago.dotodo.model.error.CustomErrorHandler;
 import com.pago.dotodo.model.view.UserProfileView;
 import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.NoteService;
@@ -14,40 +16,66 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Controller to handle user profile related operations.
+ */
 @Controller
 @RequestMapping("/profile")
 public class UserProfileController extends BaseController {
-    private static final String PAGE_NAME = "profile";
 
     private final ModelAndViewParser attributeBuilder;
     private final UserService userService;
     private final NoteService noteService;
     private final DateTimeUtil dateTimeUtil;
+    private final CustomErrorHandler customErrorHandler;
 
+    /**
+     * Constructs the UserProfileController.
+     *
+     * @param attributeBuilder   Utility for building model and view attributes.
+     * @param userService        Service for user-related operations.
+     * @param noteService        Service for note-related operations.
+     * @param dateTimeUtil       Utility for date and time operations.
+     * @param customErrorHandler Handler for custom validation errors.
+     */
     public UserProfileController(ModelAndViewParser attributeBuilder,
                                  UserService userService,
-                                 NoteService noteService, DateTimeUtil dateTimeUtil) {
+                                 NoteService noteService,
+                                 DateTimeUtil dateTimeUtil,
+                                 CustomErrorHandler customErrorHandler) {
         this.attributeBuilder = attributeBuilder;
         this.userService = userService;
         this.noteService = noteService;
         this.dateTimeUtil = dateTimeUtil;
+        this.customErrorHandler = customErrorHandler;
     }
 
+    /**
+     * Retrieves the user profile page.
+     *
+     * @param userDetails The authenticated user's details.
+     * @return ModelAndView with user profile data.
+     */
     @GetMapping
     public ModelAndView getUserProfile(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
         UserProfileView profileDetails = userService.getProfileDetails(userDetails.getId());
 
-        return this.view("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "profileUserId", userDetails.getId(),
-                "profileDetails", profileDetails
+        return this.view(UserProfileAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                UserProfileAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
+                UserProfileAttribute.PROFILE_USER_ID, userDetails.getId(),
+                UserProfileAttribute.PROFILE_DETAILS, profileDetails
         ));
     }
 
+    /**
+     * Retrieves the edit profile page.
+     *
+     * @param userDetails The authenticated user's details.
+     * @return ModelAndView with attributes for the edit page.
+     */
     @GetMapping("/edit")
     public ModelAndView getEditPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
         UserProfileView profileDetails = userService.getProfileDetails(userDetails.getId());
@@ -56,61 +84,75 @@ public class UserProfileController extends BaseController {
                 ? dateTimeUtil.formatToISODate(profileDetails.getDob(), "d MMMM yyyy")
                 : "";
 
-        return this.view("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "updateUser", true,
-                "dateDoEdit", dateToEdit,
-                "profileDetails", profileDetails
+        return this.view(UserProfileAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                UserProfileAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
+                UserProfileAttribute.UPDATE_USER, true,
+                UserProfileAttribute.DATE_TO_EDIT, dateToEdit,
+                UserProfileAttribute.PROFILE_DETAILS, profileDetails
         ));
     }
 
+    /**
+     * Handles the submission of edited profile details.
+     *
+     * @param userDetails        The authenticated user's details.
+     * @param profileEditDetails The details submitted for editing.
+     * @param bindingResult      BindingResult for validation errors.
+     * @return ModelAndView with either success redirect or error messages.
+     */
     @PostMapping("/edit")
     public ModelAndView editNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                  @Valid @ModelAttribute UserProfileView profileEditDetails,
                                  BindingResult bindingResult) {
 
-        Map<String, String> valueErrors = new HashMap<>();
-
-        if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().forEach(error -> {
-                valueErrors.put(error.getField(), error.getField() + " " + error.getDefaultMessage());
-            });
-        }
-
-        loadCustomErrors(valueErrors, profileEditDetails, userDetails.getId());
+        Map<String, String> valueErrors = customErrorHandler
+                .loadUserProfileErrors(bindingResult, profileEditDetails, userDetails.getId());
 
         String dateToEdit = profileEditDetails.getDob() != null
-                ? dateTimeUtil.formatToISODate(profileEditDetails.getDob(), "d MMMM yyyy")
+                ? dateTimeUtil.formatToISODate(profileEditDetails.getDob(), "yyyy-MM-dd")
                 : "";
 
         if (!valueErrors.isEmpty()) {
             return this.view("index", attributeBuilder.build(
-                    "pageName", PAGE_NAME,
-                    "updateUser", true,
-                    "valueErrors", valueErrors,
-                    "profileDetails", profileEditDetails,
-                    "dateDoEdit", dateToEdit,
-                    "blockDobEdit", valueErrors.get("dob") != null
+                    UserProfileAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
+                    UserProfileAttribute.UPDATE_USER, true,
+                    UserProfileAttribute.VALUE_ERROR, valueErrors,
+                    UserProfileAttribute.PROFILE_DETAILS, profileEditDetails,
+                    UserProfileAttribute.DATE_TO_EDIT, dateToEdit,
+                    UserProfileAttribute.BLOCK_DOB_EDIT, valueErrors.get("dob") != null
             ));
         }
 
         userService.editUserDetails(profileEditDetails, userDetails);
-
-        return super.redirect("/profile");
+        return super.redirect("/" + UserProfileAttribute.PAGE_NAME);
     }
 
+    /**
+     * Retrieves the detailed view of a note.
+     *
+     * @param userDetails The authenticated user's details.
+     * @param id          The ID of the note to view.
+     * @return ModelAndView with detailed note information.
+     */
     @GetMapping("/notes/{id}")
     public ModelAndView getViewNoteDetailPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                               @PathVariable Long id) {
 
         NoteDto detailedNote = noteService.getById(id, userDetails.getId());
 
-        return super.redirect("/profile", attributeBuilder.build(
-                "viewNoteId", id,
-                "detailedNote", detailedNote
+        return super.redirect("/" + UserProfileAttribute.LOCAL_VIEW, attributeBuilder.build(
+                UserProfileAttribute.VIEW_NOTE_ID, id,
+                UserProfileAttribute.DETAILED_NOTE, detailedNote
         ));
     }
 
+    /**
+     * Deletes a note by its ID.
+     *
+     * @param userDetails The authenticated user's details.
+     * @param id          The ID of the note to delete.
+     * @return ModelAndView redirecting to the profile page.
+     */
     @DeleteMapping("/delete/{id}")
     public ModelAndView deleteNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                    @PathVariable Long id) {
@@ -119,36 +161,38 @@ public class UserProfileController extends BaseController {
         return super.redirect("/profile");
     }
 
-    @ModelAttribute("detailedNote")
+    /**
+     * Model attribute method for detailed note.
+     *
+     * @param userDetails The authenticated user's details.
+     * @param viewNoteId  The ID of the note to view, if any.
+     * @return The detailed note or null if not available.
+     */
+    @ModelAttribute(UserProfileAttribute.DETAILED_NOTE)
     public NoteDto detailedNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                 @RequestParam(required = false) Long viewNoteId) {
         return viewNoteId != null ? noteService.getById(viewNoteId, userDetails.getId()) : null;
     }
 
-    @ModelAttribute("profileDetails")
+    /**
+     * Model attribute method for profile details.
+     *
+     * @param userDetails The authenticated user's details.
+     * @return The user's profile details.
+     */
+    @ModelAttribute(UserProfileAttribute.PROFILE_DETAILS)
     public UserProfileView profileDetails(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
         return userService.getProfileDetails(userDetails.getId());
     }
 
     /**
-     * Fetches expiring notes and makes them available as a model attribute.
+     * Model attribute method for expiring notes.
+     *
+     * @param userDetails The authenticated user's details.
+     * @return List of notes that are expiring soon.
      */
-    @ModelAttribute("expiringNotes")
+    @ModelAttribute(UserProfileAttribute.EXPIRING_NOTES)
     public List<NoteDto> expiringNotes(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
         return dateTimeUtil.addDueDaysHours(noteService.getExpiringNotes(userDetails.getId(), 5));
-    }
-
-    private void loadCustomErrors(Map<String, String> valueErrors, UserProfileView profileEditDetails, Long userId) {
-        if (userService.existsOnOtherAccount("email", profileEditDetails, userId)) {
-            valueErrors.put("email", "Email exists on other account");
-        }
-
-        if (userService.existsOnOtherAccount("username", profileEditDetails, userId)) {
-            valueErrors.put("username", "Username exists on other account");
-        }
-
-        if (userService.dateOfBirthMismatch(profileEditDetails, userId)) {
-            valueErrors.put("dob", "You need to contact support to change the date of birth");
-        }
     }
 }

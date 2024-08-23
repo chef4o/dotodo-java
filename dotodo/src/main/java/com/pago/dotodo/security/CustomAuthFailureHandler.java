@@ -25,7 +25,6 @@ public class CustomAuthFailureHandler implements AuthenticationFailureHandler {
         request.getSession().setAttribute("username",
                 request.getParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY));
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.sendRedirect("/auth/login?error=true");
 
         if (!isTestEnvironment()) {
             response.sendRedirect("/auth/login?error=true");

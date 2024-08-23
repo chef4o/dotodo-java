@@ -197,7 +197,8 @@ select:focus {
 }
 
 .note .due-date p {
-    padding: 0 0.5vw 0 0;
+    padding: 0 0.5vw 0.4vw 0;
+    margin: 0;
 }
 
 .note .due-time {

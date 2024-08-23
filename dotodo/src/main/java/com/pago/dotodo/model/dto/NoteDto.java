@@ -1,9 +1,11 @@
 package com.pago.dotodo.model.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class NoteDto {
+public class NoteDto implements Date {
     private Long id;
     private String title;
     private String content;
@@ -26,6 +28,7 @@ public class NoteDto {
         return this;
     }
 
+    @NotBlank
     public String getTitle() {
         return title;
     }
@@ -35,6 +38,7 @@ public class NoteDto {
         return this;
     }
 
+    @NotBlank
     public String getContent() {
         return content;
     }
@@ -44,6 +48,7 @@ public class NoteDto {
         return this;
     }
 
+    @Override
     public String getDueDate() {
         return dueDate;
     }
@@ -53,6 +58,7 @@ public class NoteDto {
         return this;
     }
 
+    @Override
     public String getDueTime() {
         return dueTime;
     }
@@ -62,6 +68,7 @@ public class NoteDto {
         return this;
     }
 
+    @Override
     public Boolean getDueDateOnly() {
         return dueDateOnly;
     }

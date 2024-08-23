@@ -2,7 +2,7 @@ package com.pago.dotodo.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class NoteEditDto {
+public class NoteEditDto implements Date {
     private Long id;
     private String title;
     private String content;
@@ -42,6 +42,7 @@ public class NoteEditDto {
         return this;
     }
 
+    @Override
     public String getDueDate() {
         return dueDate;
     }
@@ -51,6 +52,7 @@ public class NoteEditDto {
         return this;
     }
 
+    @Override
     public String getDueTime() {
         return dueTime;
     }

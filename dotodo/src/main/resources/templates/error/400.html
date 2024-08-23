@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<th:block th:insert="~{fragments/head}"></th:block>
+<body>
+<div id="root">
+    <main th:class="${pageName ?: 'home'}">
+        <th:block th:insert="~{fragments/nav}"></th:block>
+        <th:block th:insert="~{fragments/footer}"></th:block>
+        <div class="content err">
+            <div class="error-page not-found">
+                <i class="fa-solid fa-ghost"></i>
+                <p>ERROR 400</p>
+                <p>Bad request</p>
+                <p th:text="${serverError}"></p>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
