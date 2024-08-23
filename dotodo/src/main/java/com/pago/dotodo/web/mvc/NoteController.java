@@ -104,7 +104,7 @@ public class NoteController extends BaseController {
      * @param userDetails   The authenticated user's details.
      * @param noteDto       The DTO for the note being created.
      * @param bindingResult BindingResult for validation errors.
-     * @return Redirects to the notes page or redisplays the note creation page with errors.
+     * @return Redirects to the notes page or re-displays the note creation page with errors.
      */
     @PostMapping("/new")
     public ModelAndView addNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
@@ -147,14 +147,12 @@ public class NoteController extends BaseController {
     /**
      * Displays the page for editing an existing note.
      *
-     * @param userDetails The authenticated user's details.
      * @param id          The ID of the note to be edited.
      * @param noteToEdit  The DTO for the note being edited.
      * @return Redirects to the notes page with the note in edit mode.
      */
     @GetMapping("/edit/{id}")
-    public ModelAndView getEditNotePage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                        @PathVariable Long id,
+    public ModelAndView getEditNotePage(@PathVariable Long id,
                                         @ModelAttribute NoteDto noteToEdit) {
         return super.redirect("/" + NoteAttribute.LOCAL_VIEW, attributeBuilder.build(
                 NoteAttribute.EDIT_NOTE_ID, id,
@@ -168,7 +166,7 @@ public class NoteController extends BaseController {
      * @param id            The ID of the note being edited.
      * @param noteEditDto   The DTO for the note being edited.
      * @param bindingResult BindingResult for validation errors.
-     * @return Redirects to the notes page or redisplays the edit page with errors.
+     * @return Redirects to the notes page or re-displays the edit page with errors.
      */
     @PostMapping("/edit/{id}")
     public ModelAndView editNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
