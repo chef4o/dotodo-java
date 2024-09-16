@@ -1,5 +1,7 @@
 package com.pago.dotodo.web.mvc;
 
+import com.pago.dotodo.configuration.constraint.modelAttribute.CommonAttribute;
+import com.pago.dotodo.configuration.constraint.modelAttribute.NoteAttribute;
 import com.pago.dotodo.configuration.constraint.modelAttribute.UserProfileAttribute;
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.error.CustomErrorHandler;
@@ -63,8 +65,8 @@ public class UserProfileController extends BaseController {
     public ModelAndView getUserProfile(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
         UserProfileView profileDetails = userService.getProfileDetails(userDetails.getId());
 
-        return this.view(UserProfileAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                UserProfileAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
+        return this.view(CommonAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                CommonAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
                 UserProfileAttribute.PROFILE_USER_ID, userDetails.getId(),
                 UserProfileAttribute.PROFILE_DETAILS, profileDetails
         ));
@@ -84,10 +86,10 @@ public class UserProfileController extends BaseController {
                 ? dateTimeUtil.formatToISODate(profileDetails.getDob(), "d MMMM yyyy")
                 : "";
 
-        return this.view(UserProfileAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                UserProfileAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
+        return this.view(CommonAttribute.GLOBAL_VIEW, attributeBuilder.build(
+                CommonAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
                 UserProfileAttribute.UPDATE_USER, true,
-                UserProfileAttribute.DATE_TO_EDIT, dateToEdit,
+                CommonAttribute.DATE_TO_EDIT, dateToEdit,
                 UserProfileAttribute.PROFILE_DETAILS, profileDetails
         ));
     }
@@ -114,17 +116,17 @@ public class UserProfileController extends BaseController {
 
         if (!valueErrors.isEmpty()) {
             return this.view("index", attributeBuilder.build(
-                    UserProfileAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
+                    CommonAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
                     UserProfileAttribute.UPDATE_USER, true,
-                    UserProfileAttribute.VALUE_ERROR, valueErrors,
+                    CommonAttribute.VALUE_ERROR, valueErrors,
                     UserProfileAttribute.PROFILE_DETAILS, profileEditDetails,
-                    UserProfileAttribute.DATE_TO_EDIT, dateToEdit,
+                    CommonAttribute.DATE_TO_EDIT, dateToEdit,
                     UserProfileAttribute.BLOCK_DOB_EDIT, valueErrors.get("dob") != null
             ));
         }
 
         userService.editUserDetails(profileEditDetails, userDetails);
-        return super.redirect("/" + UserProfileAttribute.PAGE_NAME);
+        return super.redirect("/" + UserProfileAttribute.LOCAL_VIEW);
     }
 
     /**
@@ -141,8 +143,8 @@ public class UserProfileController extends BaseController {
         NoteDto detailedNote = noteService.getById(id, userDetails.getId());
 
         return super.redirect("/" + UserProfileAttribute.LOCAL_VIEW, attributeBuilder.build(
-                UserProfileAttribute.VIEW_NOTE_ID, id,
-                UserProfileAttribute.DETAILED_NOTE, detailedNote
+                NoteAttribute.VIEW_NOTE_ID, id,
+                NoteAttribute.DETAILED_NOTE, detailedNote
         ));
     }
 
@@ -168,7 +170,7 @@ public class UserProfileController extends BaseController {
      * @param viewNoteId  The ID of the note to view, if any.
      * @return The detailed note or null if not available.
      */
-    @ModelAttribute(UserProfileAttribute.DETAILED_NOTE)
+    @ModelAttribute(NoteAttribute.DETAILED_NOTE)
     public NoteDto detailedNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                 @RequestParam(required = false) Long viewNoteId) {
         return viewNoteId != null ? noteService.getById(viewNoteId, userDetails.getId()) : null;
@@ -191,7 +193,7 @@ public class UserProfileController extends BaseController {
      * @param userDetails The authenticated user's details.
      * @return List of notes that are expiring soon.
      */
-    @ModelAttribute(UserProfileAttribute.EXPIRING_NOTES)
+    @ModelAttribute(NoteAttribute.EXPIRING_NOTES)
     public List<NoteDto> expiringNotes(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
         return dateTimeUtil.addDueDaysHours(noteService.getExpiringNotes(userDetails.getId(), 5));
     }
