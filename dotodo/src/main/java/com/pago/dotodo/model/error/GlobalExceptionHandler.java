@@ -1,11 +1,15 @@
 package com.pago.dotodo.model.error;
 
+import com.pago.dotodo.configuration.constraint.error.ExceptionErrors;
+import com.pago.dotodo.configuration.constraint.modelAttribute.CommonAttribute;
+import com.pago.dotodo.configuration.constraint.modelAttribute.ErrorPageAttribute;
 import com.pago.dotodo.util.ModelAndViewParser;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -18,21 +22,38 @@ public class GlobalExceptionHandler {
         this.attributeBuilder = attributeBuilder;
     }
 
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ModelAndView handleObjectNotFoundException(NoResourceFoundException e) {
-        return new ModelAndView("index", attributeBuilder.build(
-                "pageName", "err",
-                "errorCode", "404",
-                "serverError", e.getMessage()));
+    private ModelAndView buildErrorResponse(String errorMessage, HttpStatus status) {
+        ModelAndView modelAndView = new ModelAndView(CommonAttribute.GLOBAL_VIEW,
+                attributeBuilder.build(
+                        CommonAttribute.PAGE_NAME, ErrorPageAttribute.LOCAL_VIEW,
+                        ErrorPageAttribute.ERROR_CODE, status.value(),
+                        ErrorPageAttribute.SERVER_ERROR, errorMessage)
+        );
+        modelAndView.setStatus(status);
+        return modelAndView;
     }
 
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(BadRequestException.class)
-    public ModelAndView handleBadRequestException(NoResourceFoundException e) {
-        return new ModelAndView("index", attributeBuilder.build(
-                "pageName", "err",
-                "errorCode", "400",
-                "serverError", e.getMessage()));
+    @ExceptionHandler({BadRequestException.class, MethodArgumentTypeMismatchException.class})
+    public ModelAndView handleBadRequestException(Exception e) {
+        String errorMessage;
+        if (e instanceof MethodArgumentTypeMismatchException ex) {
+            errorMessage = ex.getValue() != null
+                    ? String.format(ExceptionErrors.INVALID_PARAMETER, ex.getValue().toString())
+                    : String.format(ExceptionErrors.INVALID_PARAMETER, "Null");
+        } else {
+            errorMessage = e.getMessage();
+        }
+
+        return buildErrorResponse(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ModelAndView handleAccessForbiddenException(AccessDeniedException e) {
+        return buildErrorResponse(e.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler({NoResourceFoundException.class, ObjectNotFoundException.class})
+    public ModelAndView handleObjectNotFoundException(Exception e) {
+        return buildErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
