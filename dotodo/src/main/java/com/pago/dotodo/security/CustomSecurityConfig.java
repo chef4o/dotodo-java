@@ -1,6 +1,7 @@
 package com.pago.dotodo.security;
 
 import com.pago.dotodo.model.enums.RoleEnum;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -9,16 +10,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Configuration
 public class CustomSecurityConfig {
     private static final String[] allowedPages = {
             "/",
             "/home",
             "/contacts",
+            "/contacts/send",
             "/news",
+            "/news/view/*",
             "/about",
             "/auth/login",
             "/auth/register",
             "/auth/logout"
+    };
+
+    private static final String[] adminOnlyPages = {
+            "/news/new",
+            "/news/edit",
+            "/news/edit/**",
+            "/news/delete",
+            "/news/delete/**",
+            "/admin-panel",
+            "/admin-panel/**",
     };
 
     private static final String[] administrationRoles = {
@@ -27,8 +41,12 @@ public class CustomSecurityConfig {
             RoleEnum.MODERATOR.name()
     };
 
-    public static String[] getAdministrationRoles() {
+    public String[] getAdministrationRoles() {
         return administrationRoles;
+    }
+
+    public String[] getAdminAccessPages() {
+        return adminOnlyPages;
     }
 
     public static RequestMatcher getAllowedPages() {

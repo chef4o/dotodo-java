@@ -44,7 +44,6 @@ public class SecurityBeanConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(CustomSecurityConfig.getAllowedPages()).permitAll()
-                        .requestMatchers("/admin-panel").hasAnyRole(CustomSecurityConfig.getAdministrationRoles())
                         .anyRequest().authenticated())
                 .formLogin(login -> login
                         .loginPage("/auth/login")
