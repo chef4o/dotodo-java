@@ -1,5 +1,9 @@
 package com.pago.dotodo.model.dto;
 
+import com.pago.dotodo.configuration.constraint.error.FormErrors;
+import jakarta.validation.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+
 public class ContactFormDto {
     private String name;
     private String email;
@@ -18,6 +22,7 @@ public class ContactFormDto {
         return this;
     }
 
+    @Email(message = FormErrors.INVALID_EMAIL)
     public String getEmail() {
         return email;
     }
@@ -36,6 +41,7 @@ public class ContactFormDto {
         return this;
     }
 
+    @Length(min = 10, message = FormErrors.TEXT_TOO_SHORT)
     public String getContent() {
         return content;
     }

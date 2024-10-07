@@ -3,6 +3,7 @@ package com.pago.dotodo.web.mvc;
 import com.pago.dotodo.configuration.constraint.modelAttribute.CommonAttribute;
 import com.pago.dotodo.configuration.constraint.modelAttribute.NoteAttribute;
 import com.pago.dotodo.configuration.constraint.modelAttribute.UserProfileAttribute;
+import com.pago.dotodo.model.dto.EditUserProfile;
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.error.CustomErrorHandler;
 import com.pago.dotodo.model.view.UserProfileView;
@@ -22,7 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controller to handle user profile related operations.
+ * Controller to handle user profile-related operations.
+ * This includes viewing and editing profile information, and managing user notes.
  */
 @Controller
 @RequestMapping("/profile")
@@ -56,16 +58,16 @@ public class UserProfileController extends BaseController {
     }
 
     /**
-     * Retrieves the user profile page.
+     * Retrieves the user's profile page.
      *
-     * @param userDetails The authenticated user's details.
-     * @return ModelAndView with user profile data.
+     * @param userDetails The authenticated user's details (retrieved from security context).
+     * @return ModelAndView containing user profile data.
      */
     @GetMapping
     public ModelAndView getUserProfile(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
         UserProfileView profileDetails = userService.getProfileDetails(userDetails.getId());
 
-        return this.view(CommonAttribute.GLOBAL_VIEW, attributeBuilder.build(
+        return this.globalView(attributeBuilder.build(
                 CommonAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
                 UserProfileAttribute.PROFILE_USER_ID, userDetails.getId(),
                 UserProfileAttribute.PROFILE_DETAILS, profileDetails
@@ -73,24 +75,24 @@ public class UserProfileController extends BaseController {
     }
 
     /**
-     * Retrieves the edit profile page.
+     * Retrieves the profile edit page.
      *
      * @param userDetails The authenticated user's details.
-     * @return ModelAndView with attributes for the edit page.
+     * @return ModelAndView with attributes to edit the profile.
      */
     @GetMapping("/edit")
-    public ModelAndView getEditPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
-        UserProfileView profileDetails = userService.getProfileDetails(userDetails.getId());
+    public ModelAndView getEditProfile(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
+        EditUserProfile editProfileDetails = userService.getEditProfileDetails(userDetails.getId());
 
-        String dateToEdit = profileDetails.getDob() != null
-                ? dateTimeUtil.formatToISODate(profileDetails.getDob(), "d MMMM yyyy")
+        String dateToEdit = editProfileDetails.getDob() != null
+                ? dateTimeUtil.formatToISODate(editProfileDetails.getDob(), "d MMMM yyyy")
                 : "";
 
-        return this.view(CommonAttribute.GLOBAL_VIEW, attributeBuilder.build(
+        return this.globalView(attributeBuilder.build(
                 CommonAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
                 UserProfileAttribute.UPDATE_USER, true,
                 CommonAttribute.DATE_TO_EDIT, dateToEdit,
-                UserProfileAttribute.PROFILE_DETAILS, profileDetails
+                UserProfileAttribute.EDIT_PROFILE_DETAILS, editProfileDetails
         ));
     }
 
@@ -98,43 +100,42 @@ public class UserProfileController extends BaseController {
      * Handles the submission of edited profile details.
      *
      * @param userDetails        The authenticated user's details.
-     * @param profileEditDetails The details submitted for editing.
-     * @param bindingResult      BindingResult for validation errors.
-     * @return ModelAndView with either success redirect or error messages.
+     * @param editProfileDetails The DTO containing edited profile details.
+     * @param bindingResult      Contains validation errors (if any) during form submission.
+     * @return ModelAndView with either success redirect or error messages displayed on the form.
      */
     @PostMapping("/edit")
-    public ModelAndView editNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                 @Valid @ModelAttribute UserProfileView profileEditDetails,
-                                 BindingResult bindingResult) {
+    public ModelAndView editProfile(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
+                                    @Valid @ModelAttribute EditUserProfile editProfileDetails,
+                                    BindingResult bindingResult) {
 
         Map<String, String> valueErrors = customErrorHandler
-                .loadUserProfileErrors(bindingResult, profileEditDetails, userDetails.getId());
+                .loadUserProfileErrors(bindingResult, editProfileDetails, userDetails.getId());
 
-        String dateToEdit = profileEditDetails.getDob() != null
-                ? dateTimeUtil.formatToISODate(profileEditDetails.getDob(), "yyyy-MM-dd")
+        String dateToEdit = editProfileDetails.getDob() != null
+                ? dateTimeUtil.formatToISODate(editProfileDetails.getDob(), "yyyy-MM-dd")
                 : "";
 
         if (!valueErrors.isEmpty()) {
-            return this.view("index", attributeBuilder.build(
+            return this.globalView(attributeBuilder.build(
                     CommonAttribute.PAGE_NAME, UserProfileAttribute.LOCAL_VIEW,
                     UserProfileAttribute.UPDATE_USER, true,
-                    CommonAttribute.VALUE_ERROR, valueErrors,
-                    UserProfileAttribute.PROFILE_DETAILS, profileEditDetails,
-                    CommonAttribute.DATE_TO_EDIT, dateToEdit,
-                    UserProfileAttribute.BLOCK_DOB_EDIT, valueErrors.get("dob") != null
+                    CommonAttribute.VALUE_ERRORS, valueErrors,
+                    UserProfileAttribute.EDIT_PROFILE_DETAILS, editProfileDetails,
+                    CommonAttribute.DATE_TO_EDIT, dateToEdit
             ));
         }
 
-        userService.editUserDetails(profileEditDetails, userDetails);
+        userService.editUserDetails(editProfileDetails, userDetails);
         return super.redirect("/" + UserProfileAttribute.LOCAL_VIEW);
     }
 
     /**
-     * Retrieves the detailed view of a note.
+     * Displays the detailed view of a specific note.
      *
      * @param userDetails The authenticated user's details.
      * @param id          The ID of the note to view.
-     * @return ModelAndView with detailed note information.
+     * @return Redirect to the profile page with the note details.
      */
     @GetMapping("/notes/{id}")
     public ModelAndView getViewNoteDetailPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
@@ -149,11 +150,11 @@ public class UserProfileController extends BaseController {
     }
 
     /**
-     * Deletes a note by its ID.
+     * Deletes a specific note by its ID.
      *
      * @param userDetails The authenticated user's details.
      * @param id          The ID of the note to delete.
-     * @return ModelAndView redirecting to the profile page.
+     * @return Redirects to the profile page after the note is deleted.
      */
     @DeleteMapping("/delete/{id}")
     public ModelAndView deleteNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
@@ -164,11 +165,22 @@ public class UserProfileController extends BaseController {
     }
 
     /**
-     * Model attribute method for detailed note.
+     * Provides the user's edit profile details as a model attribute for views.
+     *
+     * @param userDetails The authenticated user's details.
+     * @return The user's profile details for editing.
+     */
+    @ModelAttribute(UserProfileAttribute.EDIT_PROFILE_DETAILS)
+    public EditUserProfile editProfileDetails(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
+        return userService.getEditProfileDetails(userDetails.getId());
+    }
+
+    /**
+     * Provides a detailed note to the view model if a note is selected for viewing.
      *
      * @param userDetails The authenticated user's details.
      * @param viewNoteId  The ID of the note to view, if any.
-     * @return The detailed note or null if not available.
+     * @return The detailed note DTO or null if no note is selected.
      */
     @ModelAttribute(NoteAttribute.DETAILED_NOTE)
     public NoteDto detailedNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
@@ -177,7 +189,7 @@ public class UserProfileController extends BaseController {
     }
 
     /**
-     * Model attribute method for profile details.
+     * Provides the user's profile details as a model attribute for views.
      *
      * @param userDetails The authenticated user's details.
      * @return The user's profile details.
@@ -188,7 +200,7 @@ public class UserProfileController extends BaseController {
     }
 
     /**
-     * Model attribute method for expiring notes.
+     * Provides a list of the user's expiring notes as a model attribute for views.
      *
      * @param userDetails The authenticated user's details.
      * @return List of notes that are expiring soon.

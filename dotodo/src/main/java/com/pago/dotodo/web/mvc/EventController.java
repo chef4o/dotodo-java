@@ -1,5 +1,7 @@
 package com.pago.dotodo.web.mvc;
 
+import com.pago.dotodo.configuration.constraint.modelAttribute.CommonAttribute;
+import com.pago.dotodo.configuration.constraint.modelAttribute.EventAttribute;
 import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.EventService;
 import com.pago.dotodo.util.DateTimeUtil;
@@ -16,7 +18,6 @@ import java.util.Date;
 @RequestMapping("/events")
 public class EventController extends BaseController {
 
-    private static final String PAGE_NAME = "events";
     private final EventService eventService;
     private final ModelAndViewParser attributeBuilder;
 
@@ -27,10 +28,10 @@ public class EventController extends BaseController {
 
     @GetMapping
     public ModelAndView getEvents(@AuthenticationPrincipal CustomAuthUserDetails userDetails) {
-        return this.view("index", attributeBuilder.build(
-                "pageName", PAGE_NAME,
-                "events", eventService.getAll(userDetails.getId()),
-                "currentDate", new Date())
+        return this.globalView(attributeBuilder.build(
+                CommonAttribute.PAGE_NAME, EventAttribute.LOCAL_VIEW,
+                EventAttribute.ALL_EVENTS, eventService.getAll(userDetails.getId()),
+                CommonAttribute.CURRENT_DATE_FIELD, new Date())
         );
     }
 }

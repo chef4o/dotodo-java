@@ -1,17 +1,15 @@
 package com.pago.dotodo.web.mvc;
 
 import com.cloudinary.api.exceptions.NotAllowed;
-import com.pago.dotodo.configuration.constraint.modelAttribute.ErrorPageAttribute;
+import com.pago.dotodo.configuration.constraint.modelAttribute.CommonAttribute;
 import com.pago.dotodo.configuration.constraint.modelAttribute.NewsAttribute;
 import com.pago.dotodo.model.dto.ArticleDto;
 import com.pago.dotodo.model.error.CustomErrorHandler;
-import com.pago.dotodo.model.error.ObjectNotFoundException;
 import com.pago.dotodo.security.CustomAuthUserDetails;
+import com.pago.dotodo.service.AuthService;
 import com.pago.dotodo.service.NewsService;
 import com.pago.dotodo.util.ModelAndViewParser;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,52 +23,54 @@ import java.util.Map;
 public class NewsController extends BaseController {
     private final ModelAndViewParser attributeBuilder;
     private final NewsService newsService;
+    private final CustomErrorHandler customErrorHandler;
+    private final AuthService authService;
 
-    public NewsController(ModelAndViewParser attributeBuilder, NewsService newsService) {
+    public NewsController(ModelAndViewParser attributeBuilder,
+                          NewsService newsService,
+                          CustomErrorHandler customErrorHandler,
+                          AuthService authService) {
         this.attributeBuilder = attributeBuilder;
         this.newsService = newsService;
+        this.customErrorHandler = customErrorHandler;
+        this.authService = authService;
     }
 
     @GetMapping
-    public ModelAndView getNewsPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                    @RequestParam(required = false) Long viewArticleId) {
+    public ModelAndView getNewsPage(@RequestParam(required = false) Long viewArticleId) {
 
-        return this.view(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
+        return this.globalView(attributeBuilder.build(
+                CommonAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
                 NewsAttribute.VIEW_ARTICLE_ID, viewArticleId,
                 NewsAttribute.ARTICLES, newsService.getAll())
         );
     }
 
     @GetMapping("/new")
-    public ModelAndView addArticle(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                   @ModelAttribute ArticleDto articleDto,
-                                   @RequestParam(required = false) String emptyValueError) {
+    public ModelAndView addArticle(@ModelAttribute ArticleDto articleDto) {
 
-        return this.view(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                NewsAttribute.PAGE_NAME, NewsAttribute.NEW_ARTICLE_VIEW,
-                NewsAttribute.EMPTY_VALUE_ERROR, emptyValueError,
-                NewsAttribute.ARTICLES, articleDto,
-                newsService.getAll())
+//        authService.validateAdminAccess();
+
+        return this.globalView(attributeBuilder.build(
+                CommonAttribute.PAGE_NAME, NewsAttribute.NEW_ARTICLE_VIEW,
+                NewsAttribute.ARTICLE_DTO, articleDto,
+                NewsAttribute.ARTICLES, newsService.getAll())
         );
     }
 
     @PostMapping("/new")
     public ModelAndView addNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                @ModelAttribute ArticleDto articleDto) throws NotAllowed {
+                                @Valid @ModelAttribute ArticleDto articleDto,
+                                BindingResult bindingResult) throws NotAllowed {
 
-        String valueError;
+//        authService.validateAdminAccess();
 
-        if (articleDto.getHeader().isBlank() || articleDto.getContent().isBlank()) {
-            valueError = "Header and content are both mandatory";
-        } else {
-            valueError = "";
-        }
+        Map<String, String> valueErrors = customErrorHandler.loadNewsErrors(bindingResult, articleDto);
 
-        if (!valueError.isBlank()) {
-            return this.view(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                    NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
-                    NewsAttribute.VALUE_ERROR, valueError,
+        if (!valueErrors.isEmpty()) {
+            return this.globalView(attributeBuilder.build(
+                    CommonAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
+                    CommonAttribute.VALUE_ERRORS, valueErrors,
                     NewsAttribute.ARTICLE_DTO, articleDto)
             );
         }
@@ -89,12 +89,11 @@ public class NewsController extends BaseController {
     }
 
     @GetMapping("/edit/{id}")
-    public ModelAndView getEditArticlePage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                           @PathVariable Long id,
-                                           @ModelAttribute ArticleDto articleToEdit) {
-        return this.view(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
-                NewsAttribute.ARTICLE_TO_EDIT, articleToEdit,
+    public ModelAndView getEditArticlePage(@PathVariable Long id,
+                                           @ModelAttribute ArticleDto articleEditDto) {
+        return this.globalView(attributeBuilder.build(
+                CommonAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
+                NewsAttribute.ARTICLE_TO_EDIT, articleEditDto,
                 NewsAttribute.EDIT_ARTICLE_ID, id)
         );
     }
@@ -108,9 +107,9 @@ public class NewsController extends BaseController {
         Map<String, String> valueErrors = CustomErrorHandler.loadBindingErrors(bindingResult);
 
         if (!valueErrors.isEmpty()) {
-            return this.view(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                    NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
-                    NewsAttribute.VALUE_ERRORS, valueErrors,
+            return this.globalView(attributeBuilder.build(
+                    CommonAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
+                    CommonAttribute.VALUE_ERRORS, valueErrors,
                     NewsAttribute.ARTICLE_TO_EDIT, articleEditDto,
                     NewsAttribute.EDIT_ARTICLE_ID, id)
             );
@@ -122,13 +121,12 @@ public class NewsController extends BaseController {
     }
 
     @GetMapping("/view/{id}")
-    public ModelAndView getViewArticleDetailPage(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                                 @PathVariable Long id) {
+    public ModelAndView getViewArticleDetailPage(@PathVariable Long id) {
 
         ArticleDto detailedArticle = newsService.getById(id);
 
-        return new ModelAndView(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                NewsAttribute.PAGE_NAME, NewsAttribute.NEW_ARTICLE_VIEW,
+        return this.globalView(attributeBuilder.build(
+                CommonAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
                 NewsAttribute.DETAILED_ARTICLE, detailedArticle));
     }
 
@@ -138,39 +136,12 @@ public class NewsController extends BaseController {
     }
 
     @ModelAttribute(NewsAttribute.ARTICLE_TO_EDIT)
-    public ArticleDto articleToEdit(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                    @RequestParam(required = false) Long editArticleId) {
-
-        if (editArticleId == null) {
-            return null;
-        }
-
-        return newsService.getById(editArticleId);
+    public ArticleDto articleToEdit(@RequestParam(required = false) Long editArticleId) {
+        return editArticleId != null ? newsService.getById(editArticleId) : null;
     }
 
     @ModelAttribute(NewsAttribute.DETAILED_ARTICLE)
-    public ArticleDto detailedArticle(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                      @RequestParam(required = false) Long viewArticleId) {
+    public ArticleDto detailedArticle(@RequestParam(required = false) Long viewArticleId) {
         return viewArticleId != null ? newsService.getById(viewArticleId) : null;
-    }
-
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ObjectNotFoundException.class)
-    public ModelAndView handleObjectNotFoundException(ObjectNotFoundException e) {
-        return new ModelAndView(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
-                ErrorPageAttribute.ERROR_CODE, ErrorPageAttribute.ERR_404,
-                ErrorPageAttribute.SERVER_ERROR, e.getMessage())
-        );
-    }
-
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(AccessDeniedException.class)
-    public ModelAndView handleAccessDeniedException(AccessDeniedException e) {
-        return new ModelAndView(NewsAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                NewsAttribute.PAGE_NAME, NewsAttribute.LOCAL_VIEW,
-                ErrorPageAttribute.ERROR_CODE, ErrorPageAttribute.ERR_403,
-                ErrorPageAttribute.SERVER_ERROR, e.getMessage())
-        );
     }
 }

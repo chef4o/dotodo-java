@@ -17,6 +17,7 @@
 }
 
 .content.about-us .main-info p {
+    white-space: normal;
     font-size: 1.2vw;
     font-weight: 300;
     text-align: justify;

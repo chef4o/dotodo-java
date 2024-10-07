@@ -1,8 +1,10 @@
 package com.pago.dotodo.service;
 
+import com.pago.dotodo.model.dto.EditUserProfile;
 import com.pago.dotodo.model.dto.UserDto;
 import com.pago.dotodo.model.entity.AddressEntity;
 import com.pago.dotodo.model.entity.UserEntity;
+import com.pago.dotodo.model.enums.RoleEnum;
 import com.pago.dotodo.model.view.UserProfileView;
 import com.pago.dotodo.repository.AddressRepository;
 import com.pago.dotodo.repository.UserRepository;
@@ -25,13 +27,15 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final AddressRepository addressRepository;
     private final CloudService cloudService;
+    private final RoleService roleService;
 
     @Autowired
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, AddressRepository addressRepository, CloudService cloudService) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper, AddressRepository addressRepository, CloudService cloudService, RoleService roleService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.addressRepository = addressRepository;
         this.cloudService = cloudService;
+        this.roleService = roleService;
     }
 
     public UserProfileView getProfileDetails(Long id) {
@@ -39,6 +43,12 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return modelMapper.map(userEntity, UserProfileView.class)
                 .setFullName();
+    }
+
+    public EditUserProfile getEditProfileDetails(Long id) {
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return modelMapper.map(userEntity, EditUserProfile.class);
     }
 
     private List<UserEntity> getAllEntities() {
@@ -55,7 +65,7 @@ public class UserService {
 
     public UserEntity getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("User not found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("User with id: " + id + " not found"));
     }
 
     public Optional<UserEntity> getUserByEmail(String email) {
@@ -90,7 +100,18 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void editUserDetails(UserProfileView profileEditDetails, CustomAuthUserDetails userDetails) {
+    public List<UserDto> getLowerLevelUsers(Long id) {
+        RoleEnum currentUserHighestRole = roleService.getHighestRole(getUserById(id).getRoles());
+
+        return userRepository
+                .findAll()
+                .stream()
+                .filter(user -> roleService.hasLowerRole(user.getRoles(), currentUserHighestRole))
+                .map(userEntity -> modelMapper.map(userEntity, UserDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public void editUserDetails(EditUserProfile profileEditDetails, CustomAuthUserDetails userDetails) {
         UserEntity user = userRepository
                 .findById(userDetails.getId())
                 .orElseThrow();
@@ -111,19 +132,30 @@ public class UserService {
             user.setEmail(profileEditDetails.getEmail());
         }
 
-        if (user.getDateOfBirth() == null &&
-                (profileEditDetails.getDob() != null && !profileEditDetails.getDob().isBlank())) {
+        if (profileEditDetails.getDob() != null && !profileEditDetails.getDob().isBlank()) {
             user.setDateOfBirth(modelMapper.map(profileEditDetails.getDob(), LocalDate.class));
+        } else if (user.getDateOfBirth() != null && profileEditDetails.getDob().isEmpty()) {
+            user.setDateOfBirth(null);
         }
 
         if (!Objects.equals(user.getPhoneNumber(), profileEditDetails.getPhoneNumber())) {
             user.setPhoneNumber(profileEditDetails.getPhoneNumber());
         }
 
-        if (user.getAddress() != null && !Objects.equals(user.getAddress().toString(), profileEditDetails.getAddress())) {
-            user.getAddress().setStreet(profileEditDetails.getAddress());
+        if (user.getAddress() != null) {
+            if (user.getAddress().getStreet() == null ||
+                    !user.getAddress().getStreet().equals(profileEditDetails.getStreet())) {
+                user.getAddress().setStreet(profileEditDetails.getStreet());
+            }
+
+            if (user.getAddress().getTown() == null ||
+                    !user.getAddress().getTown().equals(profileEditDetails.getTown())) {
+                user.getAddress().setTown(profileEditDetails.getTown());
+            }
         } else if (user.getAddress() == null) {
-            AddressEntity address = new AddressEntity().setStreet(profileEditDetails.getAddress());
+            AddressEntity address = new AddressEntity()
+                    .setStreet(profileEditDetails.getStreet())
+                    .setTown(profileEditDetails.getTown());
             addressRepository.saveAndFlush(address);
             user.setAddress(address);
         }
@@ -135,7 +167,7 @@ public class UserService {
         userRepository.saveAndFlush(user);
     }
 
-    public boolean existsOnOtherAccount(String field, UserProfileView editedUser, Long loggedUserId) {
+    public boolean existsOnOtherAccount(String field, EditUserProfile editedUser, Long loggedUserId) {
 
         UserDto loggedUserDto = modelMapper.map(getUserById(loggedUserId), UserDto.class);
         UserDto editedUserDto = modelMapper.map(editedUser, UserDto.class);
@@ -152,10 +184,11 @@ public class UserService {
         throw new RuntimeException("Cannot decide on method return result");
     }
 
-    public boolean dateOfBirthMismatch(UserProfileView editedUser, Long loggedUserId) {
+    public boolean dateOfBirthMismatch(EditUserProfile editedUser, Long loggedUserId) {
         LocalDate loggedUsedDob = getUserById(loggedUserId).getDateOfBirth();
+
         if (loggedUsedDob != null) {
-            return editedUser.getDob() != null
+            return editedUser.getDob() != null && !editedUser.getDob().isEmpty()
                     && !loggedUsedDob.equals(modelMapper.map(editedUser.getDob(), LocalDate.class));
         }
         return false;

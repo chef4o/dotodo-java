@@ -1,18 +1,16 @@
 package com.pago.dotodo.web.mvc;
 
-import com.pago.dotodo.configuration.constraint.modelAttribute.ErrorPageAttribute;
+import com.pago.dotodo.configuration.constraint.modelAttribute.CommonAttribute;
 import com.pago.dotodo.configuration.constraint.modelAttribute.NoteAttribute;
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.dto.NoteEditDto;
 import com.pago.dotodo.model.error.CustomErrorHandler;
-import com.pago.dotodo.model.error.ObjectNotFoundException;
 import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.NoteService;
 import com.pago.dotodo.util.DateTimeUtil;
 import com.pago.dotodo.util.ModelAndViewParser;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,7 +23,6 @@ import java.util.Map;
 /**
  * Controller for handling all note-related operations.
  * This controller manages the creation, editing, deletion, and viewing of notes.
- * It also handles custom error scenarios such as access denied and object not found.
  */
 @Controller
 @RequestMapping("/notes")
@@ -44,6 +41,7 @@ public class NoteController extends BaseController {
      * @param dateTimeUtil       Utility for date and time operations.
      * @param customErrorHandler Handler for custom validation errors.
      */
+    @Autowired
     public NoteController(NoteService noteService,
                           ModelAndViewParser attributeBuilder,
                           DateTimeUtil dateTimeUtil, CustomErrorHandler customErrorHandler) {
@@ -68,8 +66,8 @@ public class NoteController extends BaseController {
 
         List<NoteDto> byUserIdOrderByInsTimeDesc = noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId());
 
-        return this.view(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                NoteAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
+        return this.globalView(attributeBuilder.build(
+                CommonAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
                 NoteAttribute.EDIT_NOTE_ID, editNoteId,
                 NoteAttribute.VIEW_NOTE_ID, viewNoteId,
                 NoteAttribute.NOTES, byUserIdOrderByInsTimeDesc)
@@ -79,19 +77,16 @@ public class NoteController extends BaseController {
     /**
      * Displays the page for creating a new note.
      *
-     * @param userDetails     The authenticated user's details.
-     * @param noteDto         The DTO for the note being created.
-     * @param emptyValueError Optional error message for empty value fields.
+     * @param userDetails The authenticated user's details.
+     * @param noteDto     The DTO for the note being created.
      * @return ModelAndView for the note creation page.
      */
     @GetMapping("/new")
     public ModelAndView addNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
-                                @ModelAttribute NoteDto noteDto,
-                                @RequestParam(required = false) String emptyValueError) {
+                                @ModelAttribute NoteDto noteDto) {
 
-        return this.view(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                NoteAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
-                NoteAttribute.EMPTY_ERROR_VALUE, emptyValueError,
+        return this.globalView(attributeBuilder.build(
+                CommonAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
                 NoteAttribute.NOTE_DATA, noteDto,
                 NoteAttribute.CREATE_NEW_NOTE, true,
                 NoteAttribute.NOTES, noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
@@ -115,9 +110,9 @@ public class NoteController extends BaseController {
                 .loadNoteErrors(bindingResult, noteDto);
 
         if (!valueErrors.isEmpty()) {
-            return this.view(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                    NoteAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
-                    NoteAttribute.VALUE_ERRORS, valueErrors,
+            return this.globalView(attributeBuilder.build(
+                    CommonAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
+                    CommonAttribute.VALUE_ERRORS, valueErrors,
                     NoteAttribute.NOTE_DATA, noteDto,
                     NoteAttribute.CREATE_NEW_NOTE, true,
                     NoteAttribute.NOTES, noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
@@ -147,8 +142,8 @@ public class NoteController extends BaseController {
     /**
      * Displays the page for editing an existing note.
      *
-     * @param id          The ID of the note to be edited.
-     * @param noteToEdit  The DTO for the note being edited.
+     * @param id         The ID of the note to be edited.
+     * @param noteToEdit The DTO for the note being edited.
      * @return Redirects to the notes page with the note in edit mode.
      */
     @GetMapping("/edit/{id}")
@@ -178,9 +173,9 @@ public class NoteController extends BaseController {
                 .loadNoteErrors(bindingResult, noteEditDto);
 
         if (!valueErrors.isEmpty()) {
-            return this.view(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                    NoteAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
-                    NoteAttribute.VALUE_ERRORS, valueErrors,
+            return this.globalView(attributeBuilder.build(
+                    CommonAttribute.PAGE_NAME, NoteAttribute.LOCAL_VIEW,
+                    CommonAttribute.VALUE_ERRORS, valueErrors,
                     NoteAttribute.NOTE_TO_EDIT, noteEditDto,
                     NoteAttribute.EDIT_NOTE_ID, id,
                     NoteAttribute.NOTES, noteService.getByUserIdOrderByInsTimeDesc(userDetails.getId()))
@@ -267,37 +262,5 @@ public class NoteController extends BaseController {
     public NoteDto detailedNote(@AuthenticationPrincipal CustomAuthUserDetails userDetails,
                                 @RequestParam(required = false) Long viewNoteId) {
         return viewNoteId != null ? noteService.getById(viewNoteId, userDetails.getId()) : null;
-    }
-
-    /**
-     * Handles ObjectNotFoundException by returning a 404 error page.
-     *
-     * @param e The ObjectNotFoundException that was thrown.
-     * @return ModelAndView for the 404 error page.
-     */
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ObjectNotFoundException.class)
-    public ModelAndView handleObjectNotFoundException(ObjectNotFoundException e) {
-        return new ModelAndView(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                ErrorPageAttribute.PAGE_NAME, ErrorPageAttribute.LOCAL_VIEW,
-                ErrorPageAttribute.ERROR_CODE, ErrorPageAttribute.ERR_404,
-                ErrorPageAttribute.SERVER_ERROR, e.getMessage())
-        );
-    }
-
-    /**
-     * Handles AccessDeniedException by returning a 403 error page.
-     *
-     * @param e The AccessDeniedException that was thrown.
-     * @return ModelAndView for the 403 error page.
-     */
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(AccessDeniedException.class)
-    public ModelAndView handleAccessDeniedException(AccessDeniedException e) {
-        return new ModelAndView(NoteAttribute.GLOBAL_VIEW, attributeBuilder.build(
-                ErrorPageAttribute.PAGE_NAME, ErrorPageAttribute.LOCAL_VIEW,
-                ErrorPageAttribute.ERROR_CODE, ErrorPageAttribute.ERR_403,
-                ErrorPageAttribute.SERVER_ERROR, e.getMessage())
-        );
     }
 }
