@@ -1,19 +1,22 @@
 <div class="content admin-panel" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <th:block sec:authorize="!isAuthenticated()" th:if="!hasAccessPermission">
-        <th:block th:insert="~{fragments/error/error-403}"></th:block>
+    <th:block sec:authorize="!isAuthenticated()">
+        <th:block th:insert="~{'error/403'}"></th:block>
     </th:block>
 
-    <th:block sec:authorize="isAuthenticated()" th:if="hasAdminPanelAccess">
+    <th:block sec:authorize="!isAuthenticated()" th:if="${serverError != null}">
+        <th:block th:insert="~{'error/' + ${errorCode}}"></th:block>
+    </th:block>
 
+    <th:block sec:authorize="isAuthenticated()" th:if="${serverError == null}">
         <h1>Admin panel</h1>
 
         <div class="admin-panel-container">
             <th:block th:if="${lowerLevelUsers != null}">
                 <table class="admin-panel-users">
                     <tr class="fields">
-                        <th id="header-nickname">Username</th>
                         <th id="header-email">Email</th>
-                        <th id="header-role">Role</th>
+                        <th id="header-username">Username</th>
+                        <th id="header-role">Roles</th>
                     </tr>
                     <tr class="fill-space"></tr>
                 </table>
@@ -35,7 +38,6 @@
                 <i class="fa-solid fa-screwdriver-wrench"></i>
                 <p>No users available for administration.</p>
             </div>
-
         </th>
     </th:block>
 </div>

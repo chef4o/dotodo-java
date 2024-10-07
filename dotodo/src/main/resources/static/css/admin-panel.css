@@ -49,14 +49,14 @@
     width: 20%;
 }
 
-.admin-panel-users .fields #header-nickname,
+.admin-panel-users .fields #header-username,
 .admin-panel-users .fields #header-email {
     width: 35%;
 }
 
 .admin-panel-users .fields #header-role,
 .admin-panel-users .fields .change-roles {
-    width: 15%;
+    width: 30%;
 }
 
 .update-form,

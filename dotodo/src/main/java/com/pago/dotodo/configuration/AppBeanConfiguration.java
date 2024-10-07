@@ -2,6 +2,7 @@ package com.pago.dotodo.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pago.dotodo.model.dto.EditUserProfile;
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.dto.NoteEditDto;
 import com.pago.dotodo.model.entity.NoteEntity;
@@ -181,6 +182,38 @@ public class AppBeanConfiguration {
 
                 if (source.getAddress() != null) {
                     destination.setAddress(source.getAddress().toString());
+                }
+
+                return destination;
+            }
+        });
+
+        modelMapper.addConverter(new Converter<UserEntity, EditUserProfile>() {
+            @Override
+            public EditUserProfile convert(MappingContext<UserEntity, EditUserProfile> context) {
+                UserEntity source = context.getSource();
+                EditUserProfile destination = new EditUserProfile();
+                destination.setFirstName(source.getFirstName());
+                destination.setLastName(source.getLastName());
+                destination.setUsername(source.getUsername());
+                destination.setEmail(source.getEmail());
+                destination.setImgUrl(source.getImageUrl());
+                destination.setPhoneNumber(source.getPhoneNumber());
+
+                if (source.getDateOfBirth() != null) {
+                    destination.setDob(source
+                            .getDateOfBirth()
+                            .format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
+                }
+
+                if (source.getAddress() != null) {
+                    if (source.getAddress().getTown() != null) {
+                        destination.setTown(source.getAddress().getTown());
+                    }
+
+                    if (source.getAddress().getStreet() != null) {
+                        destination.setStreet(source.getAddress().getStreet());
+                    }
                 }
 
                 return destination;
