@@ -81,7 +81,7 @@ public class DateTimeUtil {
 
     public String formatToISODate(String date, String currentFormat) {
         if (date.isBlank()) {
-            return null;
+            return "";
         }
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(currentFormat);
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

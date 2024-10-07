@@ -3,6 +3,7 @@ package com.pago.dotodo.model.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class NoteEntity extends BaseEntity {
     }
 
     @NotBlank
+    @Length(max = 255)
     public String getTitle() {
         return title;
     }
@@ -36,6 +38,7 @@ public class NoteEntity extends BaseEntity {
     }
 
     @NotBlank
+    @Column(columnDefinition = "TEXT")
     public String getContent() {
         return content;
     }

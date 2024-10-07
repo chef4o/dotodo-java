@@ -6,7 +6,9 @@
 
         <th:block th:if="${note.dueDaysHours != null and #maps.size(note.dueDaysHours) > 0}">
             <div class="due" th:if="${note.dueDaysHours['days'] != null && note.dueDaysHours['days'] != 0}"
-                 th:text="${'Due in ' + note.dueDaysHours['days'] + ' days'}"></div>
+                 th:text="${note.dueDaysHours['days'] > 1
+                            ? 'Due in ' + note.dueDaysHours['days'] + ' days'
+                            : 'Due in a day'}"></div>
 
             <div class="due" th:if="${note.dueDaysHours['hours'] != null && note.dueDaysHours['hours'] >= 1}"
                  th:text="${'Due in ' + note.dueDaysHours['hours'] + ' hours'}"></div>

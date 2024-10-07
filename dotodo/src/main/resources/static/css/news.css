@@ -7,6 +7,7 @@
 
 .content.news div {
     position: relative;
+    width: 100%;
 }
 
 .content.news h3 {
@@ -18,7 +19,6 @@
 .content.news .articles {
     list-style: none;
     padding: 0;
-    width: 50vw;
     gap: 0.6vw;
 }
 
@@ -29,29 +29,25 @@
     padding: 1vw;
 }
 
-.content.news .news-article {
-    width: 55.5vw;
-}
-
-.content.news .news-article {
+.content.news .article {
     padding: 1vw 2vw;
 }
 
-.content.news .news-article img {
+.content.news .article img {
     width: 100%;
     height: auto;
 }
 
-.content.news .news-article h4 {
+.content.news .article h4 {
     font-size: 1.6vw;
     margin-top: 0.5vw;
 }
 
-.content.news .news-article .article-info * {
+.content.news .article .article-info * {
     font-size: 1.2vw;
 }
 
-.content.news .news-article p {
+.content.news .article p {
     font-size: 1.1vw;
     line-height: 1.74vw;
     text-align: justify;
@@ -59,17 +55,17 @@
     overflow: hidden;
 }
 
-.content.news .news-article a {
+.content.news .article a {
     color: var(--color-sky-blue);
     font-size: 1.2vw;
     text-decoration: none;
 }
 
-.content.news .news-article .comments {
+.content.news .article .comments {
     font-size: 0.9vw;
 }
 
-.content.news .news-article .read-more {
+.content.news .article .read-more {
     font-size: 1.1vw;
 }
 
@@ -104,7 +100,7 @@
 
 .content.news .new-article-btn {
     position: absolute;
-    right: -3vw;
+    right: 0vw;
     top: 1vw;
 }
 
@@ -126,7 +122,7 @@
 }
 
 .content.news .news.new textarea {
-    height: 40vw;
+    height: 45vw;
 }
 
 .content.news .xmark {
@@ -138,16 +134,16 @@
     box-shadow: var(--left-box-shadow);
     margin-bottom: 1vw;
     padding: 1vw;
-    height: 12vw;
     overflow: auto;
-}
-
-.content.news .article a {
-    font-size: 1.4vw;
 }
 
 .content.news .article h4 a {
     font-size: 1.6vw;
+}
+
+.content.news .article .posted-on,
+.content.news .article .posted-on a {
+    font-size: 1.4vw;
 }
 
 .content.news .article p {

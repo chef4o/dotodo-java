@@ -91,7 +91,7 @@ class NoteServiceTest {
     @Test
     void testGetById_Success() {
         when(noteRepository.findById(anyLong())).thenReturn(Optional.of(noteEntity));
-        doNothing().when(authService).checkAccessControl(anyLong(), anyLong());
+        doNothing().when(authService).validateOwnerAccess(anyLong(), anyLong());
         when(modelMapper.map(any(NoteEntity.class), eq(NoteDto.class))).thenReturn(noteDto);
 
         NoteDto result = noteService.getById(1L, 1L);
@@ -112,7 +112,7 @@ class NoteServiceTest {
 
         noteService.getById(1L, 1L);
 
-        verify(authService, times(1)).checkAccessControl(anyLong(), anyLong());
+        verify(authService, times(1)).validateOwnerAccess(anyLong(), anyLong());
     }
 
     @Test
@@ -139,12 +139,12 @@ class NoteServiceTest {
     void testDeleteById_Success() {
         when(noteRepository.findById(anyLong())).thenReturn(Optional.of(noteEntity));
         when(modelMapper.map(any(NoteEntity.class), eq(NoteDto.class))).thenReturn(noteDto);
-        doNothing().when(authService).checkAccessControl(noteEntity.getOwner().getId(), 1L);
+        doNothing().when(authService).validateOwnerAccess(noteEntity.getOwner().getId(), 1L);
         doNothing().when(noteRepository).deleteById(anyLong());
 
         noteService.deleteById(1L, 1L);
 
-        verify(authService, times(1)).checkAccessControl(noteEntity.getOwner().getId(), 1L);
+        verify(authService, times(1)).validateOwnerAccess(noteEntity.getOwner().getId(), 1L);
         verify(noteRepository, times(1)).deleteById(1L);
     }
 

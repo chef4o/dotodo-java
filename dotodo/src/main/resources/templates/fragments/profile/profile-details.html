@@ -1,10 +1,10 @@
 <div class="user-details">
     <div class="profile-details">
-        <div th:if="${profileDetails.fullName != null && profileDetails.fullName != ''}" class="personal">
-            <p class="name"
-               th:text="'Name: ' + ${profileDetails.fullName}"></p>
+        <div class="personal">
             <p class="username"
                th:text="'Username: ' + ${profileDetails.username}"></p>
+            <p th:if="${profileDetails.fullName != null && profileDetails.fullName != ''}" class="name"
+               th:text="'Name: ' + ${profileDetails.fullName}"></p>
             <p th:if="${profileDetails.dob != null && profileDetails.dob != ''}" class="dateOfBirth"
                th:text="'Birthday: ' + ${profileDetails.dob}"></p>
         </div>

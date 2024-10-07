@@ -6,7 +6,6 @@ import com.pago.dotodo.model.error.ObjectNotFoundException;
 import com.pago.dotodo.repository.EventRepository;
 import com.pago.dotodo.util.DateTimeUtil;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -47,7 +46,7 @@ public class EventService {
         EventEntity eventEntity = this.eventRepository.findById(eventId)
                 .orElseThrow(() -> new ObjectNotFoundException("event", eventId));
 
-        authService.checkAccessControl(eventEntity.getOwner().getId(), currentUserId);
+        authService.validateOwnerAccess(eventEntity.getOwner().getId(), currentUserId);
 
         return modelMapper.map(eventEntity, EventDto.class);
     }

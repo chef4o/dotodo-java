@@ -8,6 +8,7 @@
 .home .intro p {
     text-align: justify;
     color: var(--color-body-background);
+    white-space: normal;
 }
 
 .home .intro h3 {

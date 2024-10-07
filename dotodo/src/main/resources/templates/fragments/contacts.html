@@ -2,13 +2,14 @@
     <th:block th:if="${emailSent == false}">
         <h2>Contact Me</h2>
 
+        <p th:if="${valueErrors == null || valueErrors.isEmpty()}">Please use this form to contact me for any question,
+            request or suggestion you might have.</p>
 
-        <p th:if="${valueError == null || valueError == ''}">
-            Please use this form to contact me for any question, request or suggestion you might have.</p>
-
-        <p th:if="${valueError != null && valueError.length > 0}"
-           class="error"
-           th:text="${valueError}"></p>
+        <th:block th:if="${valueErrors != null && !valueErrors.isEmpty()}">
+            <th:block th:each="error: ${valueErrors}">
+                <p class="error" th:text="${valueErrors[error.key]}"></p>
+            </th:block>
+        </th:block>
 
         <form class="form contact-us"
               th:method="post"
@@ -17,12 +18,15 @@
             <h4>Send Us A Quick Message</h4>
 
             <input type="text" name="name" placeholder="Name"
+                   autocomplete="on"
                    th:value="${contactFormDto.name}"/>
 
             <input type="text" name="email" placeholder="Email address"
+                   autocomplete="on"
                    th:value="${contactFormDto.email}"/>
 
             <input type="text" name="phone" placeholder="Phone Number"
+                   autocomplete="on"
                    th:value="${contactFormDto.phone}"/>
 
             <textarea name="content" cols="30" rows="10" placeholder="Your Comment"
@@ -36,6 +40,5 @@
         <i class="fa-solid fa-envelope-circle-check"></i>
         <h3>Thank you for your message! <br/> I'll get back to you in due course.</h3>
     </div>
-
 
 </div>

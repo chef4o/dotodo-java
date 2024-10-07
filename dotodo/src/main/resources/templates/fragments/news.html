@@ -1,5 +1,5 @@
 <div class="content news">
-    <div>
+    <div th:if="${detailedArticle == null && articleEditDto == null}">
         <form class="new-article-btn" th:action="@{'/news/new'}" th:method="get">
             <button type="submit" >Create article</button>
         </form>
@@ -28,4 +28,8 @@
             <p>There are no articles yet.</p>
         </div>
     </div>
+
+    <th:block th:if="${detailedArticle != null}" th:insert="~{fragments/news/article-details}"></th:block>
+
+    <th:block th:if="${articleEditDto != null}" th:insert="~{fragments/news/edit-article-item}"></th:block>
 </div>

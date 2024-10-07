@@ -15,7 +15,6 @@
 
     <label class="due-time" for="dueTime">
         <input id="dueTime" type="time" name="dueTime" th:value="${noteData.dueTime}">
-        <i class="fa-regular fa-clock"></i>
     </label>
 
     <th:block th:if="${valueErrors != null && !valueErrors.isEmpty()}">

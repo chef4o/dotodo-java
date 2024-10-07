@@ -47,6 +47,10 @@ public class CloudService {
             cloudinary.uploader().upload(tmpFile, params);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            if (tmpFile.exists()) {
+                tmpFile.delete();
+            }
         }
 
         return String.format(IMG_FOLDER + imageId + "." + getFileExtension(Objects.requireNonNull(image.getOriginalFilename())));

@@ -12,7 +12,7 @@
                 <label for="email">Email</label>
                 <div class="form-input">
                     <i class="fa-solid fa-envelope"></i>
-                    <input th:class="${errors != null && errors['email'] != null ? 'error-field' : ''}"
+                    <input th:class="${valueErrors != null && valueErrors['email'] != null ? 'error-field' : ''}"
                            required id="email" name="email" type="text" th:value="${userRegisterInfo.email}"/>
 
                     <!-- more value props:
@@ -21,14 +21,14 @@
                 </div>
 
                 <div class="error auth register"
-                     th:text="${errors != null && errors['email'] != null ? errors['email'] : ''}"></div>
+                     th:text="${valueErrors != null && valueErrors['email'] != null ? valueErrors['email'] : ''}"></div>
             </div>
 
             <div class="username">
                 <label for="username">Username</label>
                 <div class="form-input">
                     <i class="fa-solid fa-user"></i>
-                    <input th:class="${errors != null && errors['username'] != null ? 'error-field' : ''}"
+                    <input th:class="${valueErrors != null && valueErrors['username'] != null ? 'error-field' : ''}"
                            required
                            minlength="5"
                            maxlength="128"
@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="error auth register"
-                     th:text="${errors != null && errors['username'] != null ? errors['username'] : ''}"></div>
+                     th:text="${valueErrors != null && valueErrors['username'] != null ? valueErrors['username'] : ''}"></div>
             </div>
         </div>
 
@@ -48,7 +48,7 @@
                 <label for="rawPassword">Password</label>
                 <div class="form-input">
                     <i class="fa-solid fa-key"></i>
-                    <input th:class="${errors != null && errors['rawPassword'] != null ? 'error-field' : ''}"
+                    <input th:class="${valueErrors != null && valueErrors['rawPassword'] != null ? 'error-field' : ''}"
                            required
                            minlength="6"
                            id="rawPassword" name="rawPassword" type="password"/>
@@ -59,13 +59,13 @@
 
                 <div class="password-error-container">
                     <div class="error auth register"
-                         th:text="${errors != null && errors['rawPassword'] != null ? errors['rawPassword'] : ''}">
+                         th:text="${valueErrors != null && valueErrors['rawPassword'] != null ? valueErrors['rawPassword'] : ''}">
                     </div>
 
-                    <i th:if="${errors != null && errors['rawPassword'] != null}"
+                    <i th:if="${valueErrors != null && valueErrors['rawPassword'] != null}"
                        class="error fa-solid fa-triangle-exclamation"></i>
 
-                    <div th:if="${errors != null && errors['rawPassword'] != null}"
+                    <div th:if="${valueErrors != null && valueErrors['rawPassword'] != null}"
                          class="password-info">Password must be at least 6 characters long
                         and should contain at least one number, uppercase and lowercase letter.
                     </div>
@@ -78,18 +78,18 @@
                 <label for="rePassword">Repeat password</label>
                 <div class="form-input">
                     <i class="fa-solid fa-key"></i>
-                    <input th:class="${errors != null && errors['rePassword'] != null ? 'error-field' : ''}"
+                    <input th:class="${valueErrors != null && valueErrors['rePassword'] != null ? 'error-field' : ''}"
                            id="rePassword" name="rePassword" type="password"/>
                 </div>
 
                 <div class="error auth register"
-                     th:text="${errors != null && errors['rePassword'] != null ? errors['rePassword'] : ''}"></div>
+                     th:text="${valueErrors != null && valueErrors['rePassword'] != null ? valueErrors['rePassword'] : ''}"></div>
             </div>
         </div>
     </div>
 
-    <div th:if="${errors != null && errors['register'] != null}" class="error auth register user-exists"
-         th:text="${errors['register']}"></div>
+    <div th:if="${valueErrors != null && valueErrors['register'] != null}" class="error auth register user-exists"
+         th:text="${valueErrors['register']}"></div>
 
     <button class="register">Register</button>
 </form>

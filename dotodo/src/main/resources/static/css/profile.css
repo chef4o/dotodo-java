@@ -21,14 +21,20 @@
     width: 100%;
 }
 
+.content.profile .user-details .profile-details p {
+    font-size: 1.4vw;
+}
+
 .content.profile .user-details .profile-image {
     width: 30%;
     text-align: center;
 }
 
-.content.profile .user-details .profile-image img {
+.content.profile .user-details .profile-image img,
+.content.profile .profile-edit .form-edit .profile-image img {
     height: 12vw;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .content.profile .user-details .profile-image i,
@@ -37,12 +43,22 @@
 }
 
 .content.profile .user-details .profile-details .personal,
+.content.profile .user-details .profile-details .contact,
+.profile-edit .form-edit .personal,
+.profile-edit .form-edit .contact {
+    width: 36%;
+    font-size: 1.6vw;
+}
+
+.content.profile .user-details .profile-details .personal,
 .content.profile .user-details .profile-details .contact {
     display: flex;
     flex-direction: column;
-    gap: 1vw;
-    width: 35%;
-    font-size: 1.6vw;
+}
+
+.profile-edit .form-edit .personal,
+.profile-edit .form-edit .contact {
+    padding-top: 3vw;
 }
 
 .content.profile .user-details .profile-details .contact {
@@ -171,21 +187,19 @@
     flex-wrap: wrap;
     position: relative;
     justify-content: space-between;
-    padding: 3vw 2vw 1.4vw;
+    padding: 1vw 2vw 1.4vw;
 }
 
-.profile-edit .form-edit .personal,
-.profile-edit .form-edit .contact {
-    width: 36%;
+.profile-edit .form-edit .personal .dob input {
+    width: 10vw;
 }
 
 .profile-edit .form-edit .profile-image {
-    width: 15%;
+    width: 22%;
 }
 
 .profile-edit .form-edit label {
     display: flex;
-    padding: 0.4vw 0;
     justify-content: stretch;
     width: max-content;
     max-width: 25vw;
@@ -193,13 +207,14 @@
 }
 
 .profile-edit .form-edit input {
-    all: unset;
+    background: transparent;
+    border: none;
     max-width: 14vw;
     cursor: text;
 }
 
 .content.profile .form-edit * {
-    font-size: 1.6vw;
+    font-size: 1.4vw;
 }
 
 .profile-edit .xmark {
@@ -212,16 +227,42 @@
 .profile-edit .update-btn {
     position: absolute;
     right: 2vw;
-    bottom: 0.6vw;
+    bottom: 1.4vw;
 }
 
 #imgUrl {
     font-size: 1.2vw;
 }
 
-.form-edit .profile-image {
+.content.profile .profile-edit .form-edit .profile-image {
     display: flex;
     flex-direction: column;
     gap: 1vw;
     padding-top: 1vw;
+    align-items: center;
+}
+
+.content.profile .profile-edit .custom-file-upload {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1vw;
+}
+
+.content.profile .profile-edit .file-button {
+    width: 100%;
+    justify-content: center;
+    font-size: 1vw;
+    background-color: var(--color-menu-dark-soft-gray-transparent-01);
+    padding: 0.1rem 1.2rem;
+    cursor: pointer;
+}
+
+.content.profile .profile-edit .file-button:hover {
+    background-color: var(--color-menu-dark-soft-gray-transparent-04);
+}
+
+.content.profile .profile-edit #file-chosen {
+    font-size: 0.7rem;
 }

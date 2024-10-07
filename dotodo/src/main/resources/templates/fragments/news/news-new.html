@@ -1,15 +1,19 @@
-<div class="content news">
-    <form class="news new" th:action="@{'/news/new'}" th:method="post">
-        <a href="/news" class="xmark"><i class="fa-solid fa-xmark"></i></a>
+<form class="news new" th:action="@{'/news/new'}" th:method="post">
+    <a href="/news" class="xmark"><i class="fa-solid fa-xmark"></i></a>
 
-        <input class="header" name="header" placeholder="Add header"
-               th:value="${articleDto.header}"/>
+    <input class="header" name="header" placeholder="Add header"
+           th:value="${articleDto.header}"/>
 
-        <textarea class="note-text" name="content" placeholder="Add text"
-                  th:text="${articleDto.content}"></textarea>
+    <textarea class="note-text" name="content" placeholder="Add text"
+              th:text="${articleDto.content}"></textarea>
 
-        <p class="error new-article" th:if="${valueError != null}" th:text="${valueError}"></p>
+    <th:block th:if="${valueErrors != null && !valueErrors.isEmpty()}">
+        <div class="error new-note error-list">
+            <th:block th:each="error: ${valueErrors}">
+                <p class="error" th:text="${valueErrors[error.key]}"></p>
+            </th:block>
+        </div>
+    </th:block>
 
-        <button class="create">Create</button>
-    </form>
-</div>
+    <button class="create">Create</button>
+</form>

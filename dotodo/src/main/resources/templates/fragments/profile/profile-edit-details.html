@@ -8,56 +8,66 @@
         <div class="personal">
             <label class="first-name" for="firstName">First name:
                 <input id="firstName" class="name" name="firstName" placeholder="Add first name"
-                       th:value="${profileDetails.firstName}">
+                       th:value="${editProfileDetails.firstName}">
             </label>
 
             <label class="last-name" for="lastName">Last name:
                 <input id="lastName" class="name" name="lastName" placeholder="Add last name"
-                       th:value="${profileDetails.lastName}">
+                       th:value="${editProfileDetails.lastName}">
             </label>
 
             <label class="username" for="username">Username:
                 <input id="username" class="username" name="username" placeholder="Add username"
-                       required
-                       th:value="${profileDetails.username}">
+                       required autocomplete="on"
+                       th:value="${editProfileDetails.username}">
             </label>
 
             <label class="dob" for="dob">Date of birth:
                 <input id="dob" type="date" name="dob"
-                       th:disabled="${blockDobEdit}"
+                       th:class="${valueErrors != null && valueErrors['dob'] != null ? 'error' : ''}"
                        th:value="${dateToEdit}">
             </label>
         </div>
 
         <div class="profile-image">
-            <th:block th:if="${profileDetails.imgUrl != null}">
-                <img th:src="${profileDetails.imgUrl}" alt=""/>
+            <th:block th:if="${editProfileDetails.imgUrl != null}">
+                <img th:src="${editProfileDetails.imgUrl}" alt=""/>
             </th:block>
 
-            <th:block th:if="${profileDetails.imgUrl == null}">
+            <th:block th:if="${editProfileDetails.imgUrl == null}">
                 <i class="fa-solid fa-user"></i>
             </th:block>
 
-            <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+            <script th:src="@{/js/uploadProfileAvatar.js}"></script>
+
+            <div class="custom-file-upload">
+                <label for="profilePicture" class="file-button">Update avatar</label>
+                <span id="file-chosen">No file selected</span>
+                <input type="file" id="profilePicture" name="profilePicture" accept="image/*" hidden>
+            </div>
         </div>
 
         <div class="contact">
-            <label class="email" for="email">Email:
-                <input id="email" class="email" name="email" placeholder="Add email"
-                       required
-                       th:value="${profileDetails.email}">
+            <label class="email" for="emailAddress">Email:
+                <input id="emailAddress" class="email" name="email" placeholder="Add email"
+                       required autocomplete="on"
+                       th:value="${editProfileDetails.email}">
             </label>
 
             <label class="phone" for="phoneNumber">Phone:
                 <input id="phoneNumber" class="phoneNumber" name="phoneNumber" placeholder="Add phone #"
-                       th:value="${profileDetails.phoneNumber}">
+                       th:value="${editProfileDetails.phoneNumber}">
             </label>
 
-            <label class="address" for="address">Address:
-                <input id="address" class="address" name="address" placeholder="Add address"
-                       th:value="${profileDetails.address}">
+            <label class="address" for="street">Address:
+                <input id="street" class="address" name="street" placeholder="Add address"
+                       th:value="${editProfileDetails.street}">
             </label>
 
+            <label class="address" for="town">Town/City:
+                <input id="town" class="address" name="town" placeholder="Add town/city"
+                       th:value="${editProfileDetails.town}">
+            </label>
         </div>
 
         <th:block th:if="${valueErrors != null && !valueErrors.isEmpty()}">

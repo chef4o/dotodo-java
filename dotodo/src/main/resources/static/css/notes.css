@@ -59,7 +59,6 @@
 }
 
 .note p {
-    width: 16vw;
     margin-top: 0.4vw;
     padding-top: 0.6vw;
     word-wrap: break-word;
@@ -90,6 +89,7 @@
 
 .note.active.details {
     background-color: var(--color-menu-soft-sky-blue);
+    padding: 0.7vw 1vw;
 }
 
 .note .delete-btn,
@@ -149,13 +149,15 @@
 
 .note.inactive p {
     height: 8vw;
+    width: 16vw;
 }
 
 .note.new .note-text,
 .note.active .note-text {
     height: 9vw;
+    width: 45vw;
     resize: none;
-    padding: 0.4vw 9vw 0.4vw 0.4vw;
+    padding: 0.4vw 0 0.4vw 0.4vw;
     margin-top: 0.6vw;
 }
 
@@ -163,6 +165,10 @@
 .note.new .xmark {
     position: absolute;
     right: 1vw;
+}
+
+.note.active.details .xmark {
+    top: 1vw;
 }
 
 .note.new button {
@@ -197,13 +203,13 @@ select:focus {
 }
 
 .note .due-date p {
-    padding: 0 0.5vw 0.4vw 0;
+    padding: 0 0.5vw 0.2vw 0;
     margin: 0;
 }
 
 .note .due-time {
-    top: 7.1vw;
-    right: 1.5vw;
+    top: 6.8vw;
+    right: 0.9vw;
     display: flex;
     gap: 0.1vw;
     align-items: center;
@@ -223,13 +229,20 @@ select:focus {
     padding-right: 0.6vw;
 }
 
+.note.active.details .due-date .time {
+    padding-top: unset;
+}
+
+.note.active.details .due-date .time .fa-clock {
+    position: absolute;
+    right: 0.6vw;
+    font-size: 0.85vw;
+}
+
 .notes .due-date input,
 .notes .due-time input {
     font-size: 1vw;
     background: none;
     border: none;
-}
-
-.notes .due-time input {
-    display: flex;
+    width: 7.6vw;
 }

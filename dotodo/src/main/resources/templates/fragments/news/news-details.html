@@ -1,5 +1,5 @@
 <h4><a th:href="@{'/news/view/' + ${article.id}}" th:text="${article.header}"></a></h4>
-<div>
+<div class="posted-on">
     Posted on <a href="#"
                  th:text="${#temporals.format(article.uploadDate, 'yyyy-MM-dd HH:mm')}"></a>
 </div>

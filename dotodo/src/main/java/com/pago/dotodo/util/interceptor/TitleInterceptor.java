@@ -16,7 +16,7 @@ public class TitleInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
-                           Object handler, ModelAndView modelAndView) throws Exception {
+                           Object handler, ModelAndView modelAndView) {
 
         if (modelAndView != null) {
             modelAndView.getModel().forEach((key, value) -> {
@@ -32,7 +32,6 @@ public class TitleInterceptor implements HandlerInterceptor {
         }
     }
 
-    // General method to modify titles if applicable
     private Object modifyTitleIfApplicable(Object item) {
         try {
             // Reflectively check for getTitle and setTitle methods
@@ -56,7 +55,6 @@ public class TitleInterceptor implements HandlerInterceptor {
         }
     }
 
-    // Method to modify title length
     private String modifyTitle(String title) {
         if (title != null && title.length() > TITLE_VIEW_MAX_LENGTH) {
             return title.substring(0, TITLE_VIEW_MAX_LENGTH) + "...";
