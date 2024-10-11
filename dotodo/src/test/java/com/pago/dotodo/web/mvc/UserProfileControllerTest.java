@@ -1,5 +1,6 @@
 package com.pago.dotodo.web.mvc;
 
+import com.pago.dotodo.model.dto.EditUserProfile;
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.dto.UserProfileView;
 import com.pago.dotodo.security.CustomAuthUserDetails;
@@ -52,6 +53,7 @@ public class UserProfileControllerTest {
 
     private CustomAuthUserDetails userDetails;
     private UserProfileView userProfileView;
+    private EditUserProfile editUserProfile;
 
     @BeforeEach
     void setUp() {
@@ -61,13 +63,22 @@ public class UserProfileControllerTest {
                 "password", Collections.emptyList());
 
         userProfileView = new UserProfileView();
-        userProfileView.setFirstName("John");
-        userProfileView.setLastName("Wick");
-        userProfileView.setUsername("johnwick");
-        userProfileView.setEmail("john.wick@example.com");
-        userProfileView.setDob("1990-01-01");
-        userProfileView.setPhoneNumber("+3592233445");
-        userProfileView.setAddress("123 Main St");
+        userProfileView.setFirstName("John")
+                .setLastName("Wick")
+                .setUsername("johnwick")
+                .setEmail("john.wick@example.com")
+                .setDob("1990-01-01")
+                .setPhoneNumber("+3592233445")
+                .setAddress("123 Main St");
+
+        editUserProfile = new EditUserProfile();
+        editUserProfile.setFirstName("John")
+                .setLastName("Wick")
+                .setUsername("johnwick")
+                .setEmail("john.wick@example.com")
+                .setDob("1990-01-01")
+                .setPhoneNumber("+3592233445")
+                .setStreet("123 Main St");
     }
 
     @Test
@@ -93,9 +104,9 @@ public class UserProfileControllerTest {
 
     @Test
     void testEditProfile_Success() throws Exception {
-        when(userService.existsOnOtherAccount("email", userProfileView, 1L)).thenReturn(false);
-        when(userService.existsOnOtherAccount("username", userProfileView, 1L)).thenReturn(false);
-        when(userService.dateOfBirthMismatch(userProfileView, 1L)).thenReturn(false);
+        when(userService.existsOnOtherAccount("email", editUserProfile, 1L)).thenReturn(false);
+        when(userService.existsOnOtherAccount("username", editUserProfile, 1L)).thenReturn(false);
+        when(userService.dateOfBirthMismatch(editUserProfile, 1L)).thenReturn(false);
 
         mockMvc.perform(post("/profile/edit")
                         .with(user(userDetails))
