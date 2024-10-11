@@ -67,7 +67,7 @@ public class InitService {
                 .setUsername("normal")
                 .setFirstName("Stef")
                 .setPassword(passwordEncoder.encode(defaultPassword))
-                .addRole(roleRepository
+                .setRole(roleRepository
                         .findRoleEntityByRole(RoleEnum.NORMAL)
                         .orElseThrow());
         userRepository.save(user);
@@ -80,7 +80,7 @@ public class InitService {
                 .setUsername("admin")
                 .setFirstName("StefSupAdm")
                 .setPassword(passwordEncoder.encode(defaultPassword))
-                .addRole(roleRepository
+                .setRole(roleRepository
                         .findRoleEntityByRole(RoleEnum.SUPER_ADMIN)
                         .orElseThrow());
         userRepository.save(user);
@@ -93,7 +93,7 @@ public class InitService {
                 .setUsername("moderator")
                 .setFirstName("StefMod")
                 .setPassword(passwordEncoder.encode(defaultPassword))
-                .addRole(roleRepository
+                .setRole(roleRepository
                         .findRoleEntityByRole(RoleEnum.MODERATOR)
                         .orElseThrow());
         userRepository.save(user);

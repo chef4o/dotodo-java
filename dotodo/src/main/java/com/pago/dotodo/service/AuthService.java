@@ -92,9 +92,9 @@ public class AuthService {
 
     private void assignUserRole(UserRegisterDto userRegisterDto) {
         if (!this.dbExists()) {
-            userRegisterDto.getRoles().add(String.valueOf(RoleEnum.SUPER_ADMIN));
+            userRegisterDto.setRole(String.valueOf(RoleEnum.SUPER_ADMIN));
         } else {
-            userRegisterDto.getRoles().add(String.valueOf(RoleEnum.LIGHT));
+            userRegisterDto.setRole(String.valueOf(RoleEnum.LIGHT));
         }
     }
 

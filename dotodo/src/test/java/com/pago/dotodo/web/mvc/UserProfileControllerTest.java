@@ -1,7 +1,7 @@
 package com.pago.dotodo.web.mvc;
 
 import com.pago.dotodo.model.dto.NoteDto;
-import com.pago.dotodo.model.view.UserProfileView;
+import com.pago.dotodo.model.dto.UserProfileView;
 import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.InitService;
 import com.pago.dotodo.service.NoteService;

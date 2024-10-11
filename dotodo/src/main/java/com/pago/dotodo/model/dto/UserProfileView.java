@@ -1,4 +1,4 @@
-package com.pago.dotodo.model.view;
+package com.pago.dotodo.model.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +16,7 @@ public class UserProfileView {
     private String email;
     private String dob;
     private MultipartFile profilePicture;
-    private String imgUrl;
+    private String imageUrl;
     private String phoneNumber;
     private String address;
 
@@ -96,12 +96,12 @@ public class UserProfileView {
     }
 
     @URL
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public UserProfileView setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public UserProfileView setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
         return this;
     }
 

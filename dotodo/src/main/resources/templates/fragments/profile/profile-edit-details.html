@@ -30,11 +30,11 @@
         </div>
 
         <div class="profile-image">
-            <th:block th:if="${editProfileDetails.imgUrl != null}">
-                <img th:src="${editProfileDetails.imgUrl}" alt=""/>
+            <th:block th:if="${editProfileDetails.imageUrl != null}">
+                <img th:src="${editProfileDetails.imageUrl}" alt=""/>
             </th:block>
 
-            <th:block th:if="${editProfileDetails.imgUrl == null}">
+            <th:block th:if="${editProfileDetails.imageUrl == null}">
                 <i class="fa-solid fa-user"></i>
             </th:block>
 

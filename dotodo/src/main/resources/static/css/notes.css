@@ -33,7 +33,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin: 2vw;
+    margin: 1.7vw 2vw;
     gap: 1.4vw;
 }
 
@@ -173,8 +173,7 @@
 
 .note.new button {
     position: absolute;
-    bottom: -11vw;
-    right: 0.6vw;
+    left: 1vw;
 }
 
 input:focus,

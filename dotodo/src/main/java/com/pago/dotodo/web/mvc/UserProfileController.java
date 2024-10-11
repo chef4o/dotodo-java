@@ -6,7 +6,7 @@ import com.pago.dotodo.configuration.constraint.modelAttribute.UserProfileAttrib
 import com.pago.dotodo.model.dto.EditUserProfile;
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.error.CustomErrorHandler;
-import com.pago.dotodo.model.view.UserProfileView;
+import com.pago.dotodo.model.dto.UserProfileView;
 import com.pago.dotodo.security.CustomAuthUserDetails;
 import com.pago.dotodo.service.NoteService;
 import com.pago.dotodo.service.UserService;

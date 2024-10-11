@@ -13,7 +13,7 @@ public class EditUserProfile {
     private String email;
     private String dob;
     private MultipartFile profilePicture;
-    private String imgUrl;
+    private String imageUrl;
     private String phoneNumber;
     private String street;
     private String town;
@@ -80,12 +80,12 @@ public class EditUserProfile {
     }
 
     @URL
-    public String getImgUrl() {
-        return imgUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public EditUserProfile setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public EditUserProfile setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
         return this;
     }
 

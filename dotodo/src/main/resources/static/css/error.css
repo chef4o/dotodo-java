@@ -28,6 +28,10 @@
     margin-top: 9vw;
 }
 
+.error-page.no-content {
+    width: unset;
+}
+
 .error-page h1 {
     font-size: 3vw;
 }

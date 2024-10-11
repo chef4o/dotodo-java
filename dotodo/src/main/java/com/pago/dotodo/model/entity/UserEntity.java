@@ -9,8 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -26,11 +24,10 @@ public class UserEntity extends BaseEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String imageUrl;
-    private List<RoleEntity> roles;
+    private RoleEntity role;
     private AddressEntity address;
 
     public UserEntity() {
-        this.roles = new ArrayList<>();
     }
 
     @Column(name = "first_name")
@@ -140,18 +137,13 @@ public class UserEntity extends BaseEntity {
         return this;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    public List<RoleEntity> getRoles() {
-        return roles;
+    @ManyToOne(fetch = FetchType.EAGER)
+    public RoleEntity getRole() {
+        return role;
     }
 
-    public UserEntity setRoles(List<RoleEntity> roles) {
-        this.roles = roles;
-        return this;
-    }
-
-    public UserEntity addRole(RoleEntity role) {
-        this.roles.add(role);
+    public UserEntity setRole(RoleEntity role) {
+        this.role = role;
         return this;
     }
 

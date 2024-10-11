@@ -4,7 +4,6 @@ import com.pago.dotodo.configuration.constraint.error.FormErrors;
 import com.pago.dotodo.configuration.constraint.modelAttribute.CommonAttribute;
 import com.pago.dotodo.configuration.constraint.modelAttribute.ContactAttribute;
 import com.pago.dotodo.model.dto.*;
-import com.pago.dotodo.model.view.UserProfileView;
 import com.pago.dotodo.service.UserService;
 import com.pago.dotodo.util.DateTimeUtil;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -73,16 +72,16 @@ public class CustomErrorHandler {
     }
 
     public Map<String, String> loadNoteErrors(BindingResult bindingResult,
-                                              Date noteDto) {
+                                              Date noteDate) {
         Map<String, String> valueErrors = loadBindingErrors(bindingResult);
 
         if (valueErrors.get(CommonAttribute.DATE_FIELD) == null) {
-            if (noteDto.getDueDate() == null || noteDto.getDueDate().isBlank()
-                    && (noteDto.getDueTime() != null & !noteDto.getDueTime().isBlank())) {
+            if (noteDate.getDueDate() == null || noteDate.getDueDate().isBlank()
+                    && (noteDate.getDueTime() != null & !noteDate.getDueTime().isBlank())) {
 
                 valueErrors.put(CommonAttribute.DATE_FIELD, FormErrors.TIME_WITHOUT_DATE);
-            } else if (noteDto.getDueDate() != null && !noteDto.getDueDate().isBlank()
-                    && !dateTimeUtil.isInFuture(noteDto.getDueDate(), noteDto.getDueTime())) {
+            } else if (noteDate.getDueDate() != null && !noteDate.getDueDate().isBlank()
+                    && !dateTimeUtil.isInFuture(noteDate.getDueDate(), noteDate.getDueTime())) {
 
                 valueErrors.put(CommonAttribute.DATE_FIELD, FormErrors.PAST_DUE_DATE);
             }
@@ -105,7 +104,8 @@ public class CustomErrorHandler {
         return bindingResult.getFieldErrors().stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
-                        error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : ""
+                        error -> error.getDefaultMessage() != null ? error.getDefaultMessage() : "",
+                        (existingValue, newValue) -> existingValue + "; " + newValue
                 ));
     }
 

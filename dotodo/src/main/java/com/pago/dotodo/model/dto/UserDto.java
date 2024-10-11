@@ -1,23 +1,20 @@
 package com.pago.dotodo.model.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UserDto {
     private Long id;
     private String firstName;
     private String lastName;
     private String fullName;
     private String email;
-    private String dob;
+    private String dateOfBirth;
     private String username;
     private String password;
     private String avatarUrl;
     private String address;
-    private List<String> roles;
+    private String role;
 
     public UserDto() {
-        this.roles = new ArrayList<>();
+
     }
 
     public Long getId() {
@@ -65,12 +62,12 @@ public class UserDto {
         return this;
     }
 
-    public String getDob() {
-        return dob;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public UserDto setDob(String dob) {
-        this.dob = dob;
+    public UserDto setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
         return this;
     }
 
@@ -114,12 +111,12 @@ public class UserDto {
         return this;
     }
 
-    public List<String> getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public UserDto setRoles(List<String> roles) {
-        this.roles = roles;
+    public UserDto setRole(String role) {
+        this.role = role;
         return this;
     }
 

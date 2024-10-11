@@ -1,7 +1,13 @@
-.content.admin-panel h1 {
-    font-size: 2.4vw;
-    text-align: center;
+.content.admin-panel .header-menu {
+    display: flex;
+    align-items: center;
     padding: 2vw;
+    gap: 1vw;
+}
+
+.content.admin-panel .header-menu * {
+    font-size: 2vw;
+    color: var(--color-menu-cool-gray);
 }
 
 .content.admin-panel .no-users {
@@ -29,10 +35,11 @@
 
 .admin-panel-container * {
     display: flex;
+    font-size: 1vw;
 }
 
 .admin-panel-users {
-    padding: 0.6rem;
+    padding: 1vw;
     background-color: var(--color-menu-dark-soft-gray-transparent-04);
 }
 
@@ -52,6 +59,14 @@
 .admin-panel-users .fields #header-username,
 .admin-panel-users .fields #header-email {
     width: 35%;
+}
+
+.admin-panel-users .fields #header-username {
+    padding-left: 0.6vw;
+}
+
+.admin-panel-users .fields #header-role {
+    padding-left: 0.4vw;
 }
 
 .admin-panel-users .fields #header-role,
@@ -82,13 +97,13 @@
 }
 
 .update-form .param {
-    padding-left: 0.6rem;
+    padding-left: 1vw;
     width: 35%;
 }
 
 .update-form .param-group .param-role,
 .update-form .param-group .change-roles {
-    width: 15%;
+    width: 30%;
 }
 
 .update-form .btn-group {
@@ -98,7 +113,7 @@
 .update-form a {
     width: 50%;
     justify-content: center;
-    padding: 0.4rem;
+    padding: 0.8vw;
 }
 
 .update-form a:hover {
@@ -107,7 +122,7 @@
 
 .update-form .admin-panel-users th {
     text-align: left;
-    padding: 0.6rem;
+    padding: 1vw;
 }
 
 .update-form input,

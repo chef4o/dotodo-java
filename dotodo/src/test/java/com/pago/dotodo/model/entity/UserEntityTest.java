@@ -116,17 +116,17 @@ public class UserEntityTest {
                 .setUsername("johndoe")
                 .setPassword("password123");
 
-        RoleEntity role = new RoleEntity();
-        role.setRole(RoleEnum.NORMAL);
+        RoleEntity role = new RoleEntity()
+                .setRole(RoleEnum.NORMAL);
 
         AddressEntity address = new AddressEntity();
         address.setStreet("123 Main St");
         address.setTown("Anytown");
 
-        user.addRole(role);
+        user.setRole(role);
         user.setAddress(address);
 
-        assertEquals(1, user.getRoles().size(), "Expected one role assigned to user");
+        assertEquals(role, user.getRole(), "Expected proper role assigned to user");
         assertNotNull(user.getAddress(), "Expected non-null address for user");
     }
 }

@@ -3,7 +3,6 @@ package com.pago.dotodo.security;
 import com.pago.dotodo.model.entity.UserEntity;
 import com.pago.dotodo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AppUserDetailsService implements UserDetailsService {
@@ -36,14 +34,7 @@ public class AppUserDetailsService implements UserDetailsService {
                 user.getFirstName(),
                 user.getUsername(),
                 user.getPassword(),
-                getAuthorities(user)
+                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().getRole().name()))
         );
-    }
-
-    private List<GrantedAuthority> getAuthorities(UserEntity user) {
-        return user.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole().name()))
-                .collect(Collectors.toList());
     }
 }

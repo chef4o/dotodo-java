@@ -9,10 +9,10 @@
                th:text="'Birthday: ' + ${profileDetails.dob}"></p>
         </div>
 
-        <div th:if="${profileDetails.imgUrl != null}" class="profile-image">
-            <img th:src="${profileDetails.imgUrl}" alt=""/>
+        <div th:if="${profileDetails.imageUrl != null}" class="profile-image">
+            <img th:src="${profileDetails.imageUrl}" alt=""/>
         </div>
-        <div th:unless="${profileDetails.imgUrl != null}" class="profile-image">
+        <div th:unless="${profileDetails.imageUrl != null}" class="profile-image">
             <i class="fa-solid fa-user"></i>
         </div>
 

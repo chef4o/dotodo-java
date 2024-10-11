@@ -5,11 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.pago.dotodo.model.dto.EditUserProfile;
 import com.pago.dotodo.model.dto.NoteDto;
 import com.pago.dotodo.model.dto.NoteEditDto;
+import com.pago.dotodo.model.dto.UserProfileView;
 import com.pago.dotodo.model.entity.NoteEntity;
 import com.pago.dotodo.model.entity.RoleEntity;
 import com.pago.dotodo.model.entity.UserEntity;
 import com.pago.dotodo.model.enums.RoleEnum;
-import com.pago.dotodo.model.view.UserProfileView;
 import com.pago.dotodo.repository.RoleRepository;
 import com.pago.dotodo.util.DateTimeUtil;
 import org.modelmapper.Converter;
@@ -117,7 +117,7 @@ public class AppBeanConfiguration {
                 if (mappingContext.getSource() == null) {
                     return null;
                 }
-                return mappingContext.getSource().getRole().toString();
+                return mappingContext.getSource().getRole().name();
             }
         });
 
@@ -126,17 +126,17 @@ public class AppBeanConfiguration {
             public NoteDto convert(MappingContext<NoteEntity, NoteDto> context) {
                 NoteEntity source = context.getSource();
                 NoteDto destination = new NoteDto();
-                destination.setId(source.getId());
-                destination.setTitle(source.getTitle());
-                destination.setContent(source.getContent());
+                destination.setId(source.getId())
+                        .setTitle(source.getTitle())
+                        .setContent(source.getContent());
 
                 if (source.getDueDate() != null) {
-                    destination.setDueDate(dateTimeUtil.formatDateToString(source.getDueDate()));
-                    destination.setDueTime(dateTimeUtil.formatTimeToString(source.getDueDate()));
+                    destination.setDueDate(dateTimeUtil.formatDateToString(source.getDueDate()))
+                            .setDueTime(dateTimeUtil.formatTimeToString(source.getDueDate()));
                 }
 
-                destination.setDueDateOnly(source.getDueDateOnly());
-                destination.setOwnerId(source.getOwner().getId());
+                destination.setDueDateOnly(source.getDueDateOnly())
+                        .setOwnerId(source.getOwner().getId());
 
                 return destination;
             }
@@ -147,12 +147,12 @@ public class AppBeanConfiguration {
             public NoteEditDto convert(MappingContext<NoteEntity, NoteEditDto> context) {
                 NoteEntity source = context.getSource();
                 NoteEditDto destination = new NoteEditDto();
-                destination.setTitle(source.getTitle());
-                destination.setContent(source.getContent());
+                destination.setTitle(source.getTitle())
+                        .setContent(source.getContent());
 
                 if (source.getDueDate() != null) {
-                    destination.setDueDate(dateTimeUtil.formatDateToString(source.getDueDate()));
-                    destination.setDueTime(dateTimeUtil.formatTimeToString(source.getDueDate()));
+                    destination.setDueDate(dateTimeUtil.formatDateToString(source.getDueDate()))
+                            .setDueTime(dateTimeUtil.formatTimeToString(source.getDueDate()));
                 }
 
                 destination.setDueDateOnly(source.getDueDateOnly());
@@ -166,19 +166,21 @@ public class AppBeanConfiguration {
             public UserProfileView convert(MappingContext<UserEntity, UserProfileView> context) {
                 UserEntity source = context.getSource();
                 UserProfileView destination = new UserProfileView();
-                destination.setFirstName(source.getFirstName());
-                destination.setLastName(source.getLastName());
-                destination.setFullName();
-                destination.setUsername(source.getUsername());
-                destination.setEmail(source.getEmail());
-                destination.setImgUrl(source.getImageUrl());
-                destination.setPhoneNumber(source.getPhoneNumber());
+
+                destination.setFirstName(source.getFirstName())
+                        .setLastName(source.getLastName())
+                        .setUsername(source.getUsername())
+                        .setEmail(source.getEmail())
+                        .setImageUrl(source.getImageUrl())
+                        .setPhoneNumber(source.getPhoneNumber());
 
                 if (source.getDateOfBirth() != null) {
                     destination.setDob(source
                             .getDateOfBirth()
                             .format(DateTimeFormatter.ofPattern("d MMMM yyyy")));
                 }
+
+                destination.setFullName();
 
                 if (source.getAddress() != null) {
                     destination.setAddress(source.getAddress().toString());
@@ -193,12 +195,13 @@ public class AppBeanConfiguration {
             public EditUserProfile convert(MappingContext<UserEntity, EditUserProfile> context) {
                 UserEntity source = context.getSource();
                 EditUserProfile destination = new EditUserProfile();
-                destination.setFirstName(source.getFirstName());
-                destination.setLastName(source.getLastName());
-                destination.setUsername(source.getUsername());
-                destination.setEmail(source.getEmail());
-                destination.setImgUrl(source.getImageUrl());
-                destination.setPhoneNumber(source.getPhoneNumber());
+
+                destination.setFirstName(source.getFirstName())
+                        .setLastName(source.getLastName())
+                        .setUsername(source.getUsername())
+                        .setEmail(source.getEmail())
+                        .setImageUrl(source.getImageUrl())
+                        .setPhoneNumber(source.getPhoneNumber());
 
                 if (source.getDateOfBirth() != null) {
                     destination.setDob(source

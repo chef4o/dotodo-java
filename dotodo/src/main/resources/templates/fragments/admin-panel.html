@@ -8,7 +8,10 @@
     </th:block>
 
     <th:block sec:authorize="isAuthenticated()" th:if="${serverError == null}">
-        <h1>Admin panel</h1>
+        <div class="header-menu">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            <h1>Admin panel</h1>
+        </div>
 
         <div class="admin-panel-container">
             <th:block th:if="${lowerLevelUsers != null}">
@@ -16,7 +19,7 @@
                     <tr class="fields">
                         <th id="header-email">Email</th>
                         <th id="header-username">Username</th>
-                        <th id="header-role">Roles</th>
+                        <th id="header-role">Role</th>
                     </tr>
                     <tr class="fill-space"></tr>
                 </table>

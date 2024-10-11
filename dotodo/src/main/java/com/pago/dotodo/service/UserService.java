@@ -5,7 +5,7 @@ import com.pago.dotodo.model.dto.UserDto;
 import com.pago.dotodo.model.entity.AddressEntity;
 import com.pago.dotodo.model.entity.UserEntity;
 import com.pago.dotodo.model.enums.RoleEnum;
-import com.pago.dotodo.model.view.UserProfileView;
+import com.pago.dotodo.model.dto.UserProfileView;
 import com.pago.dotodo.repository.AddressRepository;
 import com.pago.dotodo.repository.UserRepository;
 import com.pago.dotodo.security.CustomAuthUserDetails;
@@ -27,15 +27,14 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final AddressRepository addressRepository;
     private final CloudService cloudService;
-    private final RoleService roleService;
 
     @Autowired
-    public UserService(UserRepository userRepository, ModelMapper modelMapper, AddressRepository addressRepository, CloudService cloudService, RoleService roleService) {
+    public UserService(UserRepository userRepository, ModelMapper modelMapper,
+                       AddressRepository addressRepository, CloudService cloudService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.addressRepository = addressRepository;
         this.cloudService = cloudService;
-        this.roleService = roleService;
     }
 
     public UserProfileView getProfileDetails(Long id) {
@@ -101,12 +100,14 @@ public class UserService {
     }
 
     public List<UserDto> getLowerLevelUsers(Long id) {
-        RoleEnum currentUserHighestRole = roleService.getHighestRole(getUserById(id).getRoles());
+        RoleEnum currentUserRole = getUserById(id)
+                .getRole()
+                .getRole();
 
         return userRepository
                 .findAll()
                 .stream()
-                .filter(user -> roleService.hasLowerRole(user.getRoles(), currentUserHighestRole))
+                .filter(user -> user.getRole().getRole().ordinal() < currentUserRole.ordinal())
                 .map(userEntity -> modelMapper.map(userEntity, UserDto.class))
                 .collect(Collectors.toList());
     }

@@ -1,10 +1,10 @@
 package com.pago.dotodo.model.dto;
 
 import com.pago.dotodo.util.validation.PasswordMatch;
-import jakarta.validation.constraints.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @PasswordMatch(rawPassword = "rawPassword", rePassword = "rePassword")
 public class UserRegisterDto {
@@ -15,10 +15,9 @@ public class UserRegisterDto {
     private String rawPassword;
     private String rePassword;
     private String password;
-    private List<String> roles;
+    private String role;
 
     public UserRegisterDto() {
-        this.roles = new ArrayList<>();
     }
 
     @NotBlank(message = "Email is required")
@@ -75,12 +74,12 @@ public class UserRegisterDto {
         return this;
     }
 
-    public List<String> getRoles() {
-        return roles;
+    public String getRole() {
+        return role;
     }
 
-    public UserRegisterDto setRoles(List<String> roles) {
-        this.roles = roles;
+    public UserRegisterDto setRole(String role) {
+        this.role = role;
         return this;
     }
 }

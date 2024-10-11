@@ -32,8 +32,7 @@ public class AdminPanelController extends BaseController {
 
         return this.globalView(attributeBuilder.build(
                 CommonAttribute.PAGE_NAME, AdminPanelAttribute.LOCAL_VIEW,
-                AdminPanelAttribute.LOWER_LEVEL_USERS, userService.getLowerLevelUsers(userDetails.getId()),
-                AdminPanelAttribute.ADMIN_ROLES, String.join(",", securityConfig.getAdministrationRoles())
+                AdminPanelAttribute.LOWER_LEVEL_USERS, userService.getLowerLevelUsers(userDetails.getId())
         ));
     }
 
