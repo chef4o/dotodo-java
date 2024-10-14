@@ -1,14 +1,14 @@
 package com.pago.dotodo.web.mvc;
 
-import com.pago.dotodo.user.model.dto.EditUserProfile;
-import com.pago.dotodo.note.model.dto.NoteDto;
-import com.pago.dotodo.user.model.dto.UserProfileView;
 import com.pago.dotodo.common.security.CustomAuthUserDetails;
-import com.pago.dotodo.main.service.InitService;
-import com.pago.dotodo.note.service.NoteService;
-import com.pago.dotodo.user.service.UserService;
 import com.pago.dotodo.common.util.DateTimeUtil;
 import com.pago.dotodo.common.util.ModelAndViewParser;
+import com.pago.dotodo.main.service.InitService;
+import com.pago.dotodo.note.model.dto.NoteDto;
+import com.pago.dotodo.note.service.NoteService;
+import com.pago.dotodo.user.model.dto.EditUserProfile;
+import com.pago.dotodo.user.model.dto.UserProfileView;
+import com.pago.dotodo.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -104,8 +104,8 @@ public class UserProfileControllerTest {
 
     @Test
     void testEditProfile_Success() throws Exception {
-        when(userService.existsOnOtherAccount("email", editUserProfile, 1L)).thenReturn(false);
-        when(userService.existsOnOtherAccount("username", editUserProfile, 1L)).thenReturn(false);
+        when(userService.existsOnOtherAccount("email", editUserProfile.getEmail(), 1L)).thenReturn(false);
+        when(userService.existsOnOtherAccount("username", editUserProfile.getUsername(), 1L)).thenReturn(false);
         when(userService.dateOfBirthMismatch(editUserProfile, 1L)).thenReturn(false);
 
         mockMvc.perform(post("/profile/edit")
