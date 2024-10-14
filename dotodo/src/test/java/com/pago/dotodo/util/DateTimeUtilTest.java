@@ -1,7 +1,8 @@
 package com.pago.dotodo.util;
 
-import com.pago.dotodo.model.dto.NoteDto;
-import com.pago.dotodo.service.InitService;
+import com.pago.dotodo.note.model.dto.NoteDto;
+import com.pago.dotodo.main.service.InitService;
+import com.pago.dotodo.common.util.DateTimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

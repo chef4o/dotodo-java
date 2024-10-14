@@ -1,12 +1,12 @@
 package com.pago.dotodo.web.mvc;
 
-import com.pago.dotodo.model.dto.NoteDto;
-import com.pago.dotodo.model.dto.NoteEditDto;
-import com.pago.dotodo.security.CustomAuthUserDetails;
-import com.pago.dotodo.service.InitService;
-import com.pago.dotodo.service.NoteService;
-import com.pago.dotodo.util.DateTimeUtil;
-import com.pago.dotodo.util.ModelAndViewParser;
+import com.pago.dotodo.note.model.dto.NoteDto;
+import com.pago.dotodo.note.model.dto.NoteEditDto;
+import com.pago.dotodo.common.security.CustomAuthUserDetails;
+import com.pago.dotodo.main.service.InitService;
+import com.pago.dotodo.note.service.NoteService;
+import com.pago.dotodo.common.util.DateTimeUtil;
+import com.pago.dotodo.common.util.ModelAndViewParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

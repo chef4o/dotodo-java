@@ -1,6 +1,8 @@
 package com.pago.dotodo.util.validation;
 
-import com.pago.dotodo.service.InitService;
+import com.pago.dotodo.main.service.InitService;
+import com.pago.dotodo.common.util.validation.PasswordMatch;
+import com.pago.dotodo.common.util.validation.PasswordMatcher;
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

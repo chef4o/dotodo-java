@@ -1,7 +1,7 @@
 package com.pago.dotodo.web.mvc;
 
-import com.pago.dotodo.service.InitService;
-import com.pago.dotodo.util.ModelAndViewParser;
+import com.pago.dotodo.main.service.InitService;
+import com.pago.dotodo.common.util.ModelAndViewParser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

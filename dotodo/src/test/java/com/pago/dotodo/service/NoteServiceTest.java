@@ -1,12 +1,14 @@
 package com.pago.dotodo.service;
 
-import com.pago.dotodo.model.dto.NoteDto;
-import com.pago.dotodo.model.dto.NoteEditDto;
-import com.pago.dotodo.model.entity.NoteEntity;
-import com.pago.dotodo.model.entity.UserEntity;
-import com.pago.dotodo.model.error.ObjectNotFoundException;
-import com.pago.dotodo.repository.NoteRepository;
-import com.pago.dotodo.util.DateTimeUtil;
+import com.pago.dotodo.note.model.dto.NoteDto;
+import com.pago.dotodo.note.model.dto.NoteEditDto;
+import com.pago.dotodo.note.model.entity.NoteEntity;
+import com.pago.dotodo.user.model.entity.UserEntity;
+import com.pago.dotodo.common.error.ObjectNotFoundException;
+import com.pago.dotodo.note.repository.NoteRepository;
+import com.pago.dotodo.auth.service.AuthService;
+import com.pago.dotodo.note.service.NoteService;
+import com.pago.dotodo.common.util.DateTimeUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

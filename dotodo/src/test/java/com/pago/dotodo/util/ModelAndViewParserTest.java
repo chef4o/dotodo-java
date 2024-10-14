@@ -1,7 +1,8 @@
 package com.pago.dotodo.util;
 
-import com.pago.dotodo.service.InitService;
-import com.pago.dotodo.service.LayoutService;
+import com.pago.dotodo.main.service.InitService;
+import com.pago.dotodo.main.service.LayoutService;
+import com.pago.dotodo.common.util.ModelAndViewParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

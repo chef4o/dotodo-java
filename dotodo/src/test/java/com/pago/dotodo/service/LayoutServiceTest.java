@@ -1,6 +1,7 @@
 package com.pago.dotodo.service;
 
-import com.pago.dotodo.model.elements.MenuItem;
+import com.pago.dotodo.main.model.elements.MenuItem;
+import com.pago.dotodo.main.service.LayoutService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

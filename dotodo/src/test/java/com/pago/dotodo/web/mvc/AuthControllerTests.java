@@ -1,6 +1,6 @@
 package com.pago.dotodo.web.mvc;
 
-import com.pago.dotodo.service.InitService;
+import com.pago.dotodo.main.service.InitService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

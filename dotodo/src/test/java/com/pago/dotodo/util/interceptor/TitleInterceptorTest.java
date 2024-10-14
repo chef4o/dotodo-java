@@ -1,6 +1,7 @@
 package com.pago.dotodo.util.interceptor;
 
-import com.pago.dotodo.service.InitService;
+import com.pago.dotodo.main.service.InitService;
+import com.pago.dotodo.common.util.interceptor.TitleInterceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;

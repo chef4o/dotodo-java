@@ -1,7 +1,10 @@
 package com.pago.dotodo.model.entity;
 
-import com.pago.dotodo.model.enums.RoleEnum;
-import com.pago.dotodo.service.InitService;
+import com.pago.dotodo.user.model.entity.AddressEntity;
+import com.pago.dotodo.user.model.entity.RoleEntity;
+import com.pago.dotodo.user.model.entity.UserEntity;
+import com.pago.dotodo.user.model.enums.RoleEnum;
+import com.pago.dotodo.main.service.InitService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

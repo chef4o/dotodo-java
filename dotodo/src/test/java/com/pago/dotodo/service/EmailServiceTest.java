@@ -1,5 +1,6 @@
 package com.pago.dotodo.service;
 
+import com.pago.dotodo.common.service.EmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

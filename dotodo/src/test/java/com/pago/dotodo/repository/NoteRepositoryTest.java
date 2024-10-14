@@ -1,8 +1,10 @@
 package com.pago.dotodo.repository;
 
-import com.pago.dotodo.model.entity.NoteEntity;
-import com.pago.dotodo.model.entity.UserEntity;
-import com.pago.dotodo.service.InitService;
+import com.pago.dotodo.note.model.entity.NoteEntity;
+import com.pago.dotodo.user.model.entity.UserEntity;
+import com.pago.dotodo.note.repository.NoteRepository;
+import com.pago.dotodo.user.repository.UserRepository;
+import com.pago.dotodo.main.service.InitService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;

@@ -1,6 +1,6 @@
-<form class="update-form" enctype="multipart/form-data"
+<form class="update-form"
       th:method="patch"
-      th:action="@{/auth/login}">
+      th:action="@{'/admin-panel/edit/' + ${user.id}}">
     <div class="param-group">
         <div class="param">
             <input id="email" type="text" name="email" th:value="${user.email}" required>
@@ -11,7 +11,7 @@
         </div>
 
         <th:block th:if="${userToEdit != null && userToEdit.id == user.id}">
-            <select class="change-roles" name="new-role" required>
+            <select class="change-roles" name="role" required>
                 <option th:each="possibleRole : ${possibleRoles}"
                         th:id="${user.role}"
                         th:selected="${possibleRole == user.role}"
@@ -29,10 +29,18 @@
     </div>
 
     <div class="btn-group">
-        <a class="admin-form-btn"
+        <button class="admin-form-btn"
            onclick="return confirm('Are you sure that you want to update the marked user?');"
-           th:href="@{'/admin-panel/edit/' + ${user.id}}">Update</a>
+           th:href="@{'/admin-panel/edit/' + ${user.id}}">Update</button>
         <a class="admin-form-btn"
            th:href="@{'/admin-panel'}">Cancel</a>
     </div>
+
+    <th:block th:if="${valueErrors != null && !valueErrors.isEmpty()}">
+        <div class="error new-note error-list">
+            <th:block th:each="error: ${valueErrors}">
+                <p class="error" th:text="${valueErrors[error.key]}"></p>
+            </th:block>
+        </div>
+    </th:block>
 </form>
